@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}
+    Profile
+{% endblock title %}
+
+{% if errors %}
+    {{errors}}
+{% endif %}
+
+{% block content %}
+{% if current_user%}
+    <h1>Welcome {{current_user.username}}</h1>
+    <h3>Your id = {{current_user.id}}</h3>
+    
+{% endif %}
+
+<div id="search">
+    <form action="/search" method="post">
+        <label for="search-date">Date</label>
+        <input type="date" name="search-date" id="search-date">
+    </form>
+</div>
+
+{% if entries %}
+    {% for entry in entries %}
+    <h3>{{entry.entry_name}} </h3>
+    
+        {% for key in entry.entry_data %}
+            {{key}} ::
+            {{entry.entry_data[key]}}
+            <br>
+        {% endfor %}
+        <hr>
+    {% endfor %}
+{% endif %}
+
+{% if totalCals %}
+    {% for date in totalCals %}
+        <h4>{{date.entry_date}}</h4>
+        Kcal: {{date.total_value}}
+    {% endfor %}
+
+{% endif %}
+
+
+{% endblock  %}
+
+{% block scripts %}
+    
+{% endblock scripts %}

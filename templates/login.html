@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+    Login
+{% endblock title %}
+
+{% block content %}
+<h1>login </h1>
+<br>
+{% if errors %}
+    {{errors}}
+{% endif %}
+<br>
+<form action="/login" method="post">
+    {{form.hidden_tag()}}
+    {{form.username.label}} {{form.username()}}
+    <br>
+    {{form.email.label}} {{form.email()}}
+    <br>
+    {{form.password.label}} {{form.password()}}
+    <br>
+    {{form.submit()}}
+</form>
+
+{% endblock  %}
+
+{% block scripts %}
+    
+{% endblock scripts %}

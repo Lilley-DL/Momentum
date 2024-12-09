@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    
+<div id="top-nav">
+
+    <a href="{{url_for('index')}}">Home</a>
+    {% if current_user.is_authenticated %}
+        <a href="{{url_for('profile')}}">Profile</a>        
+        <a href="{{url_for('createEntry')}}">Create entry</a>        
+        <a href="{{url_for('logout')}}">Logout</a>
+        {% else %}
+        <a href="{{url_for('login')}}">Login</a>
+        <a href="{{url_for('signup')}}">Signup</a>
+    {% endif %}
+</div>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+    {% block content %}
+        
+    {% endblock content %}
+</body>
+{% block scripts %}
+    <!-- add a script that will check for the presence of flashed messages then put a timeout on them -->
+{% endblock scripts %}
+</html>
