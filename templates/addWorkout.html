@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}
+    Add Workout
+{% endblock title %}
+
+{% if errors %}
+    {{errors}}
+{% endif %}
+
+{% block content %}
+{% if current_user%}
+    <h3>Welcome {{current_user.username}}</h3>
+{% endif %}
+
+<h4>Current workout</h4>
+
+
+{% endblock  %}
+
+{% block scripts %}
+    
+{% endblock scripts %}

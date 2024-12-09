@@ -181,15 +181,13 @@ def profile():
     
     #get the entries for this user 
     try:
-        response = supabase.table("entry").select("*").eq("user_id", current_user.id).execute()
-        r2 = supabase.table("accumulated_calories_for_user").select("*").execute()
-        totalCalories = r2.data
-
+        response = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).execute()
+  
         entries = response.data if response.data else []
         app.logger.info(f"SUPA RETREIVED {entries}")
 
         # Render profile page for authenticated users
-        return render_template("profile.html", user=current_user, entries=entries,totalCals = totalCalories)
+        return render_template("profile.html", user=current_user, entries=entries)
     except Exception as e:
         flash(e)
         return render_template("profile.html", user=current_user)
@@ -244,6 +242,11 @@ def createEntry():
 
     return render_template("createEntry.html")
 
+@app.route("/add-workout",methods=['GET','POST'])
+@flask_login.login_required
+def addWorkout():
+    if request.method == 'GET':
+        return render_template("addWorkout.html")
 
 @app.route("/logout")
 def logout():
