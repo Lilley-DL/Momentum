@@ -67,7 +67,7 @@ def load_user(user_id):
     try:
         response = supabase.auth.get_user()
         user_data = response.user
-        app.logger.info(f"USER INFO FOR LOAD _USER {user_data}")
+        #app.logger.info(f"USER INFO FOR LOAD _USER {user_data}")
         if user_data:
             user_id = user_data.id
             username = user_data.email
@@ -113,7 +113,7 @@ def signup():
 
         try:
             app.logger.info("Am i here ?")
-            hashed_password = supabase.auth.sign_up({"email":email,"password":password})
+            response = supabase.auth.sign_up({"email":email,"password":password})
             return redirect('/login')
         except Exception as e:
             # Handle potential errors during Supabase interaction
@@ -245,6 +245,61 @@ def createEntry():
 @app.route("/add-workout",methods=['GET','POST'])
 @flask_login.login_required
 def addWorkout():
+
+    if flask_login.current_user.is_authenticated:
+        workoutObject = {}
+        movementsObject = {}
+
+        if request.method == 'POST':
+            #get ther form values 
+            #DONT FORGET the reps&sets and rthe movements will be lists 
+            movements = request.form.getlist("movement")
+            reps = request.form.getlist("reps")
+
+            workoutObject['name'] = request.form.get("workout-name")
+            workoutObject['date'] = request.form.get("date")
+            workoutObject['weight_format'] = request.form.get("weight-format")
+            workoutObject['movements'] = movements
+            workoutObject['sets'] = []
+            workoutObject['category'] = request.form.get("category")
+            workoutObject['effort'] = request.form.get("effort")
+
+            app.logger.info(request.form)
+
+            #split the string on the underscore to get the movement and the reps and weight ? 
+            #check movements length 
+            for m in movements:
+
+                weights = request.form.getlist(m+"_weight")
+                reps = request.form.getlist(m+"_reps")
+
+                combined = list(zip(weights,reps))
+
+                movementsObject['movement'] = m
+                movementsObject['sets'] = combined
+
+                c2 = [combined]
+                
+                # workoutObject['movements'] += c2
+                # workoutObject['movements'] += m
+                workoutObject['sets'] += c2
+
+            data = json.dumps(workoutObject)
+            app.logger.info(f" WORKOUT :: {data}")
+            #test writing to dtaabase
+            # con = get_db()
+            # cur = con.cursor()
+
+            # sql = "INSERT INTO workout (data_json,user_id) VALUES (?,?)"
+            # values = (data,loggedin.id,)
+            # cur.execute(sql,values)
+            # con.commit()
+
+            return redirect(url_for('addWorkout'))
+
+        else:
+            return render_template("addWorkout.html")
+
     if request.method == 'GET':
         return render_template("addWorkout.html")
 
