@@ -33,16 +33,12 @@ else:
     #use supabase here ?
     DATABASE_URL = os.environ.get('DATABASE_URL')
 
-
-
 class SignupForm(FlaskForm):
-    username = StringField('Username: ',validators=[DataRequired()])
     email = EmailField('Email: ',validators=[DataRequired()])
     password = PasswordField('Password: ',validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 class LoginForm(FlaskForm):
-    username = StringField('Username: ',validators=[DataRequired()])
     email = EmailField('Email: ',validators=[DataRequired()])
     password = PasswordField('Password: ',validators=[DataRequired()])
     submit = SubmitField("Submit")
@@ -108,8 +104,6 @@ def signup():
     
     if form.validate_on_submit():
         app.logger.info(f" AFTER VALID SUBMIT :: {form}")
-        username = form.username.data
-        form.username.data = ''
 
         email = form.email.data
         form.email.data = ''
@@ -118,19 +112,9 @@ def signup():
         form.password.data = ''
 
         try:
-            # Check for existing user
-            response = supabase.table('users').select('user_id').eq('email',email).execute()
-            user_exists = len(response.data) > 0
-
-            if not user_exists:
-                # No existing user, register new user
-                hashed_password = supabase.auth.sign_up({"email":email,"password":password})
-                return redirect('/login')
-            else:
-                # User already exists, display error
-                # return render_template('signup.html', errors="Email already in use")
-                flash("email was elrady in use")
-                return redirect("/signup")
+            app.logger.info("Am i here ?")
+            hashed_password = supabase.auth.sign_up({"email":email,"password":password})
+            return redirect('/login')
         except Exception as e:
             # Handle potential errors during Supabase interaction
             print(f"Error during signup: {e}")
@@ -144,16 +128,12 @@ def signup():
 
 @app.route('/login',methods=['GET','POST'])
 def login():
-    username = None
     email = None
     password = None
 
     form = LoginForm()
 
     if form.validate_on_submit(): ##POST
-        username = form.username.data
-        form.username.data = ''
-
         email = form.email.data
         form.email.data = ''
 
@@ -200,16 +180,20 @@ def profile():
         return redirect('/login')  # Redirect unauthenticated users
     
     #get the entries for this user 
-    
-    response = supabase.table("entry").select("*").eq("user_id", current_user.id).execute()
-    r2 = supabase.table("accumulated_calories_for_user").select("*").execute()
-    totalCalories = r2.data
+    try:
+        response = supabase.table("entry").select("*").eq("user_id", current_user.id).execute()
+        r2 = supabase.table("accumulated_calories_for_user").select("*").execute()
+        totalCalories = r2.data
 
-    entries = response.data if response.data else []
-    app.logger.info(f"SUPA RETREIVED {entries}")
+        entries = response.data if response.data else []
+        app.logger.info(f"SUPA RETREIVED {entries}")
 
-    # Render profile page for authenticated users
-    return render_template("profile.html", user=current_user, entries=entries,totalCals = totalCalories)
+        # Render profile page for authenticated users
+        return render_template("profile.html", user=current_user, entries=entries,totalCals = totalCalories)
+    except Exception as e:
+        flash(e)
+        return render_template("profile.html", user=current_user)
+
 
 @app.route("/createEntry",methods=['GET','POST'])
 @flask_login.login_required
