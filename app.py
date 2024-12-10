@@ -231,7 +231,7 @@ def createEntry():
         }
 
         try:
-            response = supabase.table("entry").insert(data).execute()
+            response = supabase.table("macro_entry").insert(data).execute()
             app.logger.info(f"RESPONSE FROM SUPA INSERT = {response}")
         except Exception as e:
             app.logger.info(f"RESPONSE FROM SUPA error = {e}")
@@ -246,7 +246,7 @@ def createEntry():
 @flask_login.login_required
 def addWorkout():
 
-    if flask_login.current_user.is_authenticated:
+    if flask_login.current_user.is_authenticated: #probably dont need this 
         workoutObject = {}
         movementsObject = {}
 
@@ -263,8 +263,6 @@ def addWorkout():
             workoutObject['sets'] = []
             workoutObject['category'] = request.form.get("category")
             workoutObject['effort'] = request.form.get("effort")
-
-            app.logger.info(request.form)
 
             #split the string on the underscore to get the movement and the reps and weight ? 
             #check movements length 
@@ -286,6 +284,22 @@ def addWorkout():
 
             data = json.dumps(workoutObject)
             app.logger.info(f" WORKOUT :: {data}")
+
+            supaData = {
+                "workout_json":workoutObject,
+                "user_id": flask_login.current_user.id
+            }
+
+            try:
+                response = supabase.table("workout").insert(supaData).execute()
+                app.logger.info(f"Workout added sucesfully :: ")
+                return redirect(url_for('addWorkout'))
+            except Exception as e:
+                app.logger.info(f"SOMETHING WENT WRONG ADDING WORKOUT :: {e}")
+
+                flash(f"Something went wrong {e}")
+                return redirect(url_for('addWorkout'))
+
             #test writing to dtaabase
             # con = get_db()
             # cur = con.cursor()
@@ -295,13 +309,47 @@ def addWorkout():
             # cur.execute(sql,values)
             # con.commit()
 
-            return redirect(url_for('addWorkout'))
+            #return redirect(url_for('addWorkout'))
 
         else:
             return render_template("addWorkout.html")
 
     if request.method == 'GET':
         return render_template("addWorkout.html")
+
+##EMAIL STUFF
+@app.route("/confirm",methods=['GET'])
+def confirmEmail():
+    
+    token = request.args.get('access_token')
+    tokenType = request.args.get('type')
+
+    app.logger.info(f"User confirm token :: {token}")
+    app.logger.info(f"REQUEST ARGS:: {request.args}")
+
+    form = LoginForm()
+
+    #check validity 
+    if tokenType == 'signup' and token:
+        try:
+            response = supabase.auth.get_user(token)
+            app.logger.info(f"SUPA RESPONSE  =  {response}")
+            if response is not None:
+                # Verification successful, redirect to a welcome page or login page
+                flash("Email Confirmed Succesfully ")
+                return redirect(url_for('login'))
+            else:
+                # Handle error, e.g., display an error message
+                flash('Invalid verification link')
+                return redirect(url_for('login'))
+                #return render_template('login.html',form=form)
+        except Exception as e:
+        # Handle unexpected errors
+            flash(f"Something went wrong {e}")
+            return render_template('login.html',form=form)
+    else:
+        flash("Something went wrong again")
+        return render_template("confirm.html")
 
 @app.route("/logout")
 def logout():

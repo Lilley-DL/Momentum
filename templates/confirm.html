@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}
+    Login
+{% endblock title %}
+
+{% block content %}
+<h1>Confirm email </h1>
+<br>
+{% if errors %}
+    {{errors}}
+{% endif %}
+
+{% endblock  %}
+
+{% block scripts %}
+
+<script>
+    // Extract fragment parameters from the URL
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+
+    // Get the access token and type
+    const accessToken = params.get('access_token');
+    const type = params.get('type');
+
+    // Redirect to the server with query parameters
+    if (accessToken && type) {
+      window.location.href = `/confirm?access_token=${accessToken}&type=${type}`;
+    } else {
+      // Handle error or display a message
+      document.body.innerHTML = '<h1>Invalid or expired confirmation link</h1>';
+    }
+  </script>
+    
+{% endblock scripts %}
