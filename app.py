@@ -23,6 +23,19 @@ login_manager.login_view = "login"
 
 db = None
 
+class Workout:
+    def __init__(self,data):
+        self.dateTime = data['date']
+        # self.workout_data = json.loads(data['workout_json'])
+        self.workout_data = data['workout_json']
+        
+        self.sets = self.workout_data['sets']
+
+        self.zippedSets = list(zip(self.workout_data['movements'],self.workout_data['sets']))
+
+    def __str__(self):
+        return json.dumps(self.workout_data)
+
 #database thingssssss
 #should allow for development using a dev database
 if app.debug:
@@ -181,13 +194,24 @@ def profile():
     
     #get the entries for this user 
     try:
-        response = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).execute()
+        macroResponse = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).execute()
   
-        entries = response.data if response.data else []
-        app.logger.info(f"SUPA RETREIVED {entries}")
+        macroEntries = macroResponse.data if macroResponse.data else []
+        
+        workoutResponse = supabase.table("workout_for_user_by_date").select("*").execute()
+        app.logger.info(f" WORKOUT RESPONSE :: {workoutResponse.data}")
+
+        workoutObjects = []
+        for w in workoutResponse.data:
+            # app.logger.info(f" WORKOUT OBJECT :: {w['workout_json']}")
+            wobject = Workout(w)
+            app.logger.info(f" WORKOUT OBJECT :: {wobject}")
+            workoutObjects.append(wobject)
+
+        #app.logger.info(f" WORKOUT OBJECTS :: {workoutObjects}")
 
         # Render profile page for authenticated users
-        return render_template("profile.html", user=current_user, entries=entries)
+        return render_template("profile.html", user=current_user, entries=macroEntries, workoutObjects = workoutObjects)
     except Exception as e:
         flash(e)
         return render_template("profile.html", user=current_user)
@@ -228,6 +252,7 @@ def createEntry():
         data = {
             "entry_data":macros,
             "entry_name":entryName,
+            "user_id": flask_login.current_user.id
         }
 
         try:

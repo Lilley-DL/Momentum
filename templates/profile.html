@@ -21,8 +21,27 @@
         <label for="search-date">Date</label>
         <input type="date" name="search-date" id="search-date">
     </form>
-</div>
+{% if workoutObjects %}
+    {% for workout in workoutObjects %}
+    <br>
+        {{workout.dateTime}}
+        
+        {{workout['name']}} 
+         <br>
+        {% for set in workout.zippedSets %}
+				<span id="movement-name">{{set[0]}}</span>
+				<br>
+				{% for reps in set[1] %}
+					{{reps[0]}}kg for {{reps[1]}} reps
+				{% endfor %}
+				<br>
+        {% endfor %}
+    {% endfor %}
+{% endif %}</div>
 
+
+
+<h3>Food entries</h3>
 {% if entries %}
     {% for entry in entries %}
     <h3>{{entry.entry_name}} </h3>
