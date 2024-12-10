@@ -15,6 +15,7 @@
 {% block scripts %}
 
 <script>
+    //this code changes the way the URL is formatted so the confirm endpoint can actualy use it
     // Extract fragment parameters from the URL
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);

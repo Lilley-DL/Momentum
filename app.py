@@ -256,10 +256,20 @@ def addWorkout():
             movements = request.form.getlist("movement")
             reps = request.form.getlist("reps")
 
-            workoutObject['name'] = request.form.get("workout-name")
+            cleanMovements = []
+            cleanReps = []
+
+            for mov in movements:
+                app.logger.info(f"UNCLEAN :: {mov}")
+                app.logger.info(f"CLEAN :: {clean(mov)}")
+                cleanMovements.append(clean(mov))
+            
+
+            workoutObject['name'] = clean(request.form.get("workout-name"))
             workoutObject['date'] = request.form.get("date")
             workoutObject['weight_format'] = request.form.get("weight-format")
-            workoutObject['movements'] = movements
+            # workoutObject['movements'] = movements
+            workoutObject['movements'] = cleanMovements
             workoutObject['sets'] = []
             workoutObject['category'] = request.form.get("category")
             workoutObject['effort'] = request.form.get("effort")
@@ -268,12 +278,21 @@ def addWorkout():
             #check movements length 
             for m in movements:
 
+                cleanWeights = []
+                cleanReps = []
                 weights = request.form.getlist(m+"_weight")
                 reps = request.form.getlist(m+"_reps")
 
-                combined = list(zip(weights,reps))
+                for w in weights:
+                    cleanWeights.append(clean(w))
+                
+                for r in reps:
+                    cleanReps.append(clean(r))
 
-                movementsObject['movement'] = m
+                # combined = list(zip(weights,reps))
+                combined = list(zip(cleanWeights,cleanReps))
+
+                movementsObject['movement'] = clean(m)
                 movementsObject['sets'] = combined
 
                 c2 = [combined]
@@ -300,17 +319,6 @@ def addWorkout():
                 flash(f"Something went wrong {e}")
                 return redirect(url_for('addWorkout'))
 
-            #test writing to dtaabase
-            # con = get_db()
-            # cur = con.cursor()
-
-            # sql = "INSERT INTO workout (data_json,user_id) VALUES (?,?)"
-            # values = (data,loggedin.id,)
-            # cur.execute(sql,values)
-            # con.commit()
-
-            #return redirect(url_for('addWorkout'))
-
         else:
             return render_template("addWorkout.html")
 
@@ -333,7 +341,7 @@ def confirmEmail():
     if tokenType == 'signup' and token:
         try:
             response = supabase.auth.get_user(token)
-            app.logger.info(f"SUPA RESPONSE  =  {response}")
+            
             if response is not None:
                 # Verification successful, redirect to a welcome page or login page
                 flash("Email Confirmed Succesfully ")
