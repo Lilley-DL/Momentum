@@ -9,16 +9,36 @@
     margin: 5vh 1vw;
     display: flex;
     flex-direction: row;
-    gap: 20vw;
-    justify-content: center;
+    gap: 5vw;
+    justify-content: flex-start;
     align-items: center;
     font-size: xx-large;
 }
 
+#main-content{
+    min-height: 60vh;
+}
+
+footer{
+    position: absolute;
+    bottom: 0;
+    background-color: #6494AA;
+    max-height: 15vh ;
+    min-height: 15vh;
+    min-width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    /* gap: 3vw; */
+    justify-content: space-evenly;
+    align-items: center;
+}
 
 @media screen and (max-width:500px) {
     #top-nav{
-        display:none;
+        /* display:none; */
+        margin: 2vh 1vw;
+        font-size: larger;
     }
 }
 

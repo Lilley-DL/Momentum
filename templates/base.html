@@ -12,7 +12,7 @@
 <div id="top-nav">
 
     <!-- <a href="{{url_for('index')}}">Home</a> -->
-    <a href="{{url_for('index')}}"><img src="{{ url_for('static', filename='mmtmlogov1.svg') }}" alt="" srcset=""></a>
+    <a href="{{url_for('index')}}"><img src="{{ url_for('static', filename='mmtmlogov1.svg') }}" alt="" srcset="" width=150></a>
     {% if current_user.is_authenticated %}
         <a href="{{url_for('profile')}}">Profile</a>        
         <!-- <a href="{{url_for('createEntry')}}">Create entry</a>         -->
@@ -32,11 +32,18 @@
     </ul>
   {% endif %}
 {% endwith %}
-
-    {% block content %}
-        
-    {% endblock content %}
-</body>
+      {% block content %}  
+      {% endblock content %}
+    <footer>
+      <a href="#">Contact</a>
+      <a href="#">Support the developer</a>
+      <div id="social">
+        <a href="#">Facebook</a>
+        <a href="#">Twitter</a>
+      </div>
+      <a href="#">Copyright</a>
+    </footer>
+  </body>
 {% block scripts %}
     <!-- add a script that will check for the presence of flashed messages then put a timeout on them -->
 {% endblock scripts %}
