@@ -63,6 +63,23 @@
         <br>
     </form>
 
+    <button id="timer-show" type="button">Rest timer</button>
+    <dialog id="timer-dialog">
+        <label for="interval">Set interval (minutes):</label>
+        <select name="rest-duration-select" id="rest-duration-select">
+            <option value="1" selected >1</option>
+            <option value="1">2</option>
+            <option value="1">3</option>
+            <option value="1">4</option>
+            <option value="1">5</option>
+            <option value="1">6</option>
+            <option value="1">7</option>
+            <option value="1">8</option>
+        </select>
+        <span id="rest-timer"></span>
+        <button id="rest-close">Close</button>
+    </dialog>
+
 {% endblock  %}
 
 {% block scripts %}
@@ -83,6 +100,10 @@
     let addMovementButton = document.getElementById("add_movementbutton")
 
     let weightFormat = document.getElementById("weight-format")
+
+    var timerShowButton = document.getElementById("timer-show")
+    var closeTimer = document.getElementById("rest-close")
+    var timerDialog = document.getElementById("timer-dialog")
 
     addMovementButton.addEventListener("click",function(e){
         event.preventDefault()
@@ -276,8 +297,18 @@
     function displayWarning(message){
         let warningText = document.getElementById("warning")
         warningText.innerText = message
-
     }
+
+    //rest timer 
+
+    timerShowButton.addEventListener("click", function(e){
+        timerDialog.showModal()
+    })
+
+    closeTimer.addEventListener("click", function(e){
+        timerDialog.close()
+    })
+
 
 
 </script>
