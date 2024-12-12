@@ -9,13 +9,17 @@
     margin: 5vh 1vw;
     display: flex;
     flex-direction: row;
-    /* gap: 1rem; */
-    justify-content: space-evenly;
+    gap: 20vw;
+    justify-content: center;
+    align-items: center;
+    font-size: xx-large;
 }
 
 
-@media screen and (min-width:600px) {
-    
+@media screen and (max-width:500px) {
+    #top-nav{
+        display:none;
+    }
 }
 
 

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='momentum_favi2.ico') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
     <title>{% block title %}{% endblock title %}</title>
 </head>
@@ -10,7 +11,8 @@
     
 <div id="top-nav">
 
-    <a href="{{url_for('index')}}">Home</a>
+    <!-- <a href="{{url_for('index')}}">Home</a> -->
+    <a href="{{url_for('index')}}"><img src="{{ url_for('static', filename='mmtmlogov1.svg') }}" alt="" srcset=""></a>
     {% if current_user.is_authenticated %}
         <a href="{{url_for('profile')}}">Profile</a>        
         <!-- <a href="{{url_for('createEntry')}}">Create entry</a>         -->
