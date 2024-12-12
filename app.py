@@ -216,6 +216,24 @@ def profile():
         flash(e)
         return render_template("profile.html", user=current_user)
 
+@app.route("/view/meals")
+@flask_login.login_required
+def viewMeals():
+    current_user = flask_login.current_user  # Automatically set by Flask-Login
+
+    # Safely handle the user object
+    if not current_user.is_authenticated:
+        app.logger.info("User is not authenticated. Redirecting to login.")
+        return redirect('/login')  # Redirect unauthenticated users
+    
+    try:
+        macroResponse = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).execute()
+        macroEntries = macroResponse.data if macroResponse.data else []
+        return render_template("viewMeals.html",entries=macroEntries)
+    except Exception as e:
+        flash(e)
+        return render_template("viewMeals.html")
+
 
 @app.route("/createEntry",methods=['GET','POST'])
 @flask_login.login_required
