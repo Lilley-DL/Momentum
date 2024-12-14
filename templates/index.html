@@ -5,7 +5,33 @@
 
 
 {% block content %}
-<h1>Welcome to The workout tracker (Momentum)</h1>
+<h1>Welcome to Momentum, the workout tracking app</h1>
+
+{% if current_user.is_authenticated %}
+    <div id="logging-nav" class="nav-card-wrapper">
+        <h3>Logging</h3>
+        <div class="card-links">
+            <div class="card-link">
+                <a href="{{url_for('createEntry')}}"><img src="{{ url_for('static', filename='icons/food_icon1.svg') }}" alt="" width="60"></a> 
+                <a href="{{url_for('createEntry')}}">Add meal</a> 
+            </div>
+            <div class="card-link">
+                <a href="{{url_for('addWorkout')}}"><img src="{{ url_for('static', filename='icons/dumbell_icon.svg') }}" alt="" width="60"></a> 
+                <a href="{{url_for('addWorkout')}}">Add workout</a> 
+            </div>
+        </div>
+    </div>
+
+    <div id="profile-nav" class="nav-card-wrapper">
+        <h3>View</h3>
+        <div class="card-links">
+            <a href="{{url_for('viewMeals')}}">Meals</a> 
+            <a href="#">Workouts</a>
+            <a href="#">Profile</a>
+        </div>
+    </div>
+{% endif %}
+        
 
 {% endblock  %}
 
