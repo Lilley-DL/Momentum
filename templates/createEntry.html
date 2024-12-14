@@ -33,10 +33,166 @@
             <br>
             <input type="submit" value="Submit">
         </form>
+        <button id="showCalc">Calculator</button>
+        <dialog id="calculator-modal">
+            
+            <input type="text" name="calcResult" id="calcResult">
 
+            <div id="calcButtons">
+                <div id="calc-tr" class="calc-button-row">
+                    <input type="button" value="7" class="calc-button">
+                    <input type="button" value="8" class="calc-button">
+                    <input type="button" value="9" class="calc-button">
+                    <input type="button" value="x" class="calc-button">
+                </div>
+                <div id="calc-mr" class="calc-button-row">
+                    <input type="button" value="4" class="calc-button">
+                    <input type="button" value="5" class="calc-button">
+                    <input type="button" value="6" class="calc-button">
+                    <input type="button" value="-" class="calc-button">
+                </div>
+                <div id="calc-br" class="calc-button-row">
+                    <input type="button" value="1" class="calc-button">
+                    <input type="button" value="2" class="calc-button">
+                    <input type="button" value="3" class="calc-button">
+                    <input type="button" value="+" class="calc-button">
+                </div>
+                <div class="calc-button-row">
+                    <input type="button" value="X" class="calc-button">
+                    <input type="button" value="0" class="calc-button">
+                    <input type="button" value="." class="calc-button">
+                    <button value="/" class="calc-button"> &#247;</button>
+                    <input type="button" value="=" class="calc-button">
+                </div>
+            </div>
+
+            <button id="closeCalc">Close</button>
+        </dialog>
 
 {% endblock  %}
 
 {% block scripts %}
+
+<script>
+
+    var calcModal = document.getElementById("calculator-modal")
+    var showCalc = document.getElementById("showCalc")
+    var closeCalc = document.getElementById("closeCalc")
+
+    var calcInput = document.getElementById("calcResult")
+
+    var calcButtons = document.getElementsByClassName("calc-button")
+
+    var calcResult = 0;
+
+    var left;
+    var right;
+
+    var operand = undefined;
+    var operandChosen = false;
+
+    for(btn of calcButtons){
+        btn.addEventListener("click",()=>{
+            console.log(event.target.value)
+            let value = event.target.value;
+
+            //check for the operator buttons 
+            switch(value){
+                case"x":
+                    console.log("Multiply")
+                    operand = "x"
+                    break
+                case "-":
+                    console.log("Subtract")
+                    operand = "-"
+                    break
+                case"+":
+                    console.log("Addition")
+                    operand = "+"
+                    break
+                case"/":
+                    console.log("Division")
+                    operand = "/"
+                    break
+                case "=":
+                    console.log("Sum")
+                    //perform sum 
+                    if(left && right && operand){
+                        console.log(`left ${left} :: right ${right} :: op ${operand}`)
+                        let calculation = calculate(left,right,operand)
+                        console.log("CALCULATION = ",calculation)
+                    }
+                    break
+                case "X":
+                    calcInput.value = ""
+                    calcResult = 0
+                    left = undefined
+                    right = undefined
+                    operand = undefined
+                    break
+
+                default:
+                    //put the numerical value in the input 
+                    
+                    if(operand){
+                        calcResult = 0
+                        calcResult = Number(calcResult+value)
+                        right = Number(calcResult)
+                    }else{
+                        calcResult = Number(calcResult+value)
+                        left = Number(calcResult)
+                    }
+                    
+                    console.log("Calc result = ",calcResult)
+
+                    if(left && right && operand){
+                        calcInput.value = left+operand+right
+                    }else if(left){
+                        calcInput.value = left
+                    }else if(left && operand){
+                        calcInput.value = left + operand
+                    }
+
+                    break
+            
+            }
+        })
+    }
+
+    function calculate(left,right,operand){
+        let result = 0
+        switch(operand){
+            case"x":
+                result = Number(left)*Number(right)
+                return result
+                break
+                case "-":
+                result = Number(left)-Number(right)
+                return result
+                break
+            case"+":
+                result = Number(left)+Number(right)
+                console.log("RESULT = ",result)
+                return result
+                break
+            case "/":
+                result = Number(left)/Number(right)
+                return result
+                break
+        }
+    }
+
+    showCalc.addEventListener("click", ()=>{
+        calcModal.showModal()
+    })
+
+    closeCalc.addEventListener("click",()=>{
+        calcModal.close()
+    })
+
+
+
+
+</script>
     
 {% endblock scripts %}

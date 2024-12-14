@@ -42,7 +42,36 @@ footer{
     }
 }
 
+/* meal entry  */
+.macroInput{
+    max-width: 5rem;
+}
 
+/* macro calculator */
+#calcResult{
+    max-width: 50%;
+}
+
+#calcButtons{
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.calc-button-row{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.calc-button-row input[type=button]{
+    min-width: 20%;
+}
+
+.calc-button-row button{
+    min-height: 20%;
+}
 
 
 /* ADD workout */
