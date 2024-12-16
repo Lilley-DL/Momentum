@@ -34,17 +34,45 @@ footer{
     align-items: center;
 }
 
-@media screen and (max-width:500px) {
-    #top-nav{
-        /* display:none; */
-        margin: 2vh 1vw;
-        font-size: larger;
-    }
+/* meal entry  */
+/* meal name */
+#name-input-wrapper h3{
+    margin: 0 5px 0 0 ;
+}
+#name-input-wrapper input[type=text]{
+    font-size: larger;
+}
+#name-input-wrapper{
+    display: flex;
+    flex-direction: row;
 }
 
-/* meal entry  */
-.macroInput{
+/* calories input */
+#calories-input-wrapper{
+    display: flex;
+    flex-direction: row;
+    margin: 15px 0;
+}
+#calories-input-wrapper input[type=number]{
+    font-size: large;
+    max-width: 6rem;
+}
+#calories-input-wrapper h3{
+    margin: 0 5px 0 0;
+}
+
+/* macroinput */
+#macro-input-wrapper input[type=number]{
     max-width: 5rem;
+}
+#macro-input-wrapper{
+    display: flex;
+    flex-direction: column;
+    max-width: 180px;
+    min-width: 10vw;
+    align-items: flex-end;
+    gap: 10px;
+    font-size: large;
 }
 
 /* macro calculator */
@@ -103,3 +131,19 @@ footer{
 }
 
 /* ADD workout */
+
+
+
+
+
+@media screen and (max-width:500px) {
+    #top-nav{
+        /* display:none; */
+        margin: 2vh 1vw;
+        font-size: larger;
+    }
+
+    #macro-input-wrapper{
+        max-width: 45vw;
+    }
+}

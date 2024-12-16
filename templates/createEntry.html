@@ -12,27 +12,44 @@
         
         
     {% endif %}
-        <h1>Create entry</h1>
+        <h1>Meal information</h1>
 
-        <form action="/createEntry" method="post">
-            <label for="entryName">Name:</label>
-            <input type="text" name="entryName" id="entry-name" required min="4" max="50">
-            <br>
-            <span id="macroHeader">Macros:</span>
-            <br>
-            <label for="calories">Kcal:</label>
-            <input class="macroInput" type="number" id="caloriesInput" name="calories" min="0" step="0.01" >
-            <label for="protein">Protein:</label>
-            <input class="macroInput" type="number" id="proteinInput" name="protein" min="0" step="0.01">
-            <label for="fats">Fat:</label>
-            <input class="macroInput" type="number" id="fatsInput" name="fats" min="0" step="0.01">
-            <label for="carbs">Carbs:</label>
-            <input class="macroInput" type="number" id="carbsInput" name="carbs" min="0" step="0.01">
-            <label for="fibre">Fibre:</label>
-            <input class="macroInput" type="number" id="fibreInput" name="fibre" min="0" step="0.01">
+        <form action="/createEntry" method="post" id="meal-entry-form">
+            
+            <div id="name-input-wrapper">
+                <h3 for="entryName">Name:</h3>
+                <input type="text" name="entryName" id="entry-name" required min="4" max="50">
+            </div>
+
+            <div id="calories-input-wrapper">
+                <!-- <label for="calories">Calories:</label> -->
+                <h3 for="calories">Calories:</h3>
+                <input class="macroInput" type="number" id="calorieInput" name="calories" min="0" step="0.01" required placeholder="Kcal">
+            </div>
+            <h4 id="macroHeader">Macros:</h4>
+
+            <div id="macro-input-wrapper">
+                <div>
+                    <label for="protein">Protein:</label>
+                    <input class="macroInput" type="number" id="proteinInput" name="protein" min="0" step="0.01" >
+                </div>
+                <div>
+                    <label for="fats">Fat:</label>
+                    <input class="macroInput" type="number" id="fatsInput" name="fats" min="0" step="0.01" >
+                </div>
+                <div>
+                    <label for="carbs">Carbs:</label>
+                    <input class="macroInput" type="number" id="carbsInput" name="carbs" min="0" step="0.01" >
+                </div>
+                <div>
+                    <label for="fibre">Fibre:</label>
+                    <input class="macroInput" type="number" id="fibreInput" name="fibre" min="0" step="0.01" >
+                </div>
+            </div>
             <br>
             <input type="submit" value="Submit">
         </form>
+        <br>
         <button id="showCalc">Calculator</button>
         <dialog id="calculator-modal">
             
