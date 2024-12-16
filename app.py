@@ -246,11 +246,11 @@ def createEntry():
         #validate and ecape the name 
 
         macros = {
-            "calories":None,
-            "protein":None,
-            "fats":None,
-            "carbs":None,
-            "fibre":None
+            "calories":0,
+            "protein":0,
+            "fats":0,
+            "carbs":0,
+            "fibre":0
         }
                 #macro info
         calories = float(request.form.get('calories'))
