@@ -1,7 +1,7 @@
 from flask import Flask,render_template,url_for,request,jsonify,redirect,flash
 
 from flask_wtf import FlaskForm
-from wtforms import StringField,EmailField,SubmitField,PasswordField
+from wtforms import StringField,EmailField,SubmitField,PasswordField,HiddenField
 from wtforms.validators import DataRequired,Email
 import flask_login
 from dotenv import load_dotenv
@@ -55,6 +55,17 @@ class LoginForm(FlaskForm):
     email = EmailField('Email: ',validators=[DataRequired()])
     password = PasswordField('Password: ',validators=[DataRequired()])
     submit = SubmitField("Submit")
+
+class ForgottenPassForm(FlaskForm):
+    email = EmailField('Email: ',validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+class PasswordResetForm(FlaskForm):
+    access_token = HiddenField("access_token")
+    email = EmailField('Email: ',validators=[DataRequired()])
+    password = PasswordField('Password: ',validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
 
 supabase = create_client(os.environ.get('SUPA_PROJECT_URL'),os.environ.get('SUPA_API_KEY'))
 
@@ -401,6 +412,111 @@ def confirmEmail():
     else:
         flash("Something went wrong again")
         return render_template("confirm.html")
+
+@app.route("/forgottenPassword",methods=['GET','POST'])
+def forgottenPassword():
+
+    form = ForgottenPassForm()
+    #check the token type ? 
+
+    if request.method == "POST":
+        email = request.form.get('email')
+        #probably sanitize it ? 
+        try:
+            #set a temp session 
+         
+            response = supabase.auth.reset_password_for_email(email=email)
+            app.logger.info(f"RESET RESPONSE = {response}")
+            flash("Recovery email sent")
+            return redirect("/forgottenPassword")
+        except Exception as e:
+            flash(f"an error occurred. please try again {e}")
+            return redirect("/forgottenPassword")
+
+    #send the email link
+    else:
+        return render_template("forgottenPassword.html",form=form)
+    #redirect with flashed mesage saying email sent 
+
+# @app.route("/updatePassword",methods=['GET','POST'])
+# def updatePassword():
+
+#    # if request.method == 'GET':
+#     token = request.args.get('access_token')
+#     tokenType = request.args.get('type')
+        
+#     app.logger.info(f"User confirm token :: {token}")
+#     app.logger.info(f"Token type :: {tokenType}")
+       
+#     form = PasswordResetForm(access_token=token)
+
+#     if form.validate_on_submit():
+#         #get the email and pass
+#         email = form.email.data
+#         password = form.password.data # might need to hash it here
+#         access_token = form.access_token.data
+#         app.logger.info(f"FORM TOKEN :: {access_token}")
+
+#         rep = supabase.auth.set_session(access_token=access_token,refresh_token="")
+#         app.logger.info(f"temp session = {rep}")
+
+#         try:
+        
+#             response = supabase.auth.update_user({
+#                 "password":password
+#             })
+#             flash("Password succesfully changed ")
+#             return redirect("/login")
+        
+#         except Exception as e:
+#             flash(f" an error occurred {e}")
+#             return redirect("/forgottenPassword")
+
+#     return render_template("resetPassword.html",form=form,access_token=token)
+    
+# from GPT
+@app.route("/updatePassword", methods=['GET', 'POST'])
+def updatePassword():
+    token = request.args.get('access_token')
+    token_type = request.args.get('type')
+
+    # Debugging: Log the incoming token and type
+    app.logger.info(f"Access token: {token}")
+    app.logger.info(f"Token type: {token_type}")
+
+    # if not token or token_type != "recovery":
+    #     flash("Invalid token.", "danger")
+    #     return redirect("/forgottenPassword")
+
+    # Initialize the password reset form
+    form = PasswordResetForm(access_token=token)
+
+    if form.validate_on_submit():
+        new_password = form.password.data
+        access_token = form.access_token.data
+        app.logger.info(f"from form token :: {access_token}")
+        try:
+            # Set the session using the access token
+            temp = supabase.auth.set_session(access_token=access_token,refresh_token="")        
+            # Update the user's password
+            response = supabase.auth.update_user({"password": new_password})
+    
+            flash("Password successfully updated.", "success")
+            return redirect("/login")
+
+        except Exception as e:
+            # Debugging: Log any errors
+            app.logger.error(f"Error updating password: {e}")
+
+            if "jwt expired" in str(e).lower():
+                flash("The password reset link has expired. Please request a new one.", "danger")
+            else:
+                flash(f"An error occurred. Please try again. ERRO = {e}")
+
+            return redirect("/forgottenPassword")
+
+    return render_template("resetPassword.html", form=form)
+    
 
 @app.route("/logout")
 def logout():
