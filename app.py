@@ -426,38 +426,28 @@ def forgottenPassword():
 
     if request.method == "POST":
         email = request.form.get('email')
-        #probably sanitize it ? 
         try:
-            #set a temp session 
-         
             response = supabase.auth.reset_password_for_email(email=email)
-            app.logger.info(f"RESET RESPONSE = {response}")
             flash("Recovery email sent")
             return redirect("/forgottenPassword")
         except Exception as e:
             flash(f"an error occurred. please try again {e}")
             return redirect("/forgottenPassword")
-
-    #send the email link
     else:
         return render_template("forgottenPassword.html",form=form)
     #redirect with flashed mesage saying email sent 
 
 @app.route("/updatePassword", methods=['GET', 'POST'])
 def updatePassword():
+
     token = request.args.get('access_token')
     token_type = request.args.get('type')
     refresh_token = request.args.get('refresh_token')
+    app.logger.info(f"Access : {token}")
+    app.logger.info(f"type: {token_type}")
+    app.logger.info(f"Refresh: {refresh_token}")
 
-    # Debugging: Log the incoming token and type
-    app.logger.info(f"Access token: {token}")
-    app.logger.info(f"Token type: {token_type}")
-
-    # if not token or token_type != "recovery":
-    #     flash("Invalid token.", "danger")
-    #     return redirect("/forgottenPassword")
-
-    # Initialize the password reset form
+    
     form = PasswordResetForm(access_token=token,refresh_token=refresh_token)
 
     if form.validate_on_submit():
@@ -468,13 +458,11 @@ def updatePassword():
         app.logger.info(f"from form token :: {access_token}")
 
         try:
-            # Set the session using the access token
-            temp = supabase.auth.set_session(access_token=access_token,refresh_token=refresh_token)    
 
-            # Update the user's password
             response = supabase.auth.update_user({"password": new_password})
             #logout the user and have them relog in 
             flash("Password successfully updated.", "success")
+            #log them out 
             return redirect("/login")
 
         except Exception as e:
