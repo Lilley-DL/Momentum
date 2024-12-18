@@ -16,6 +16,7 @@
 <h1>Workout</h1>
 
     <form id="workout-form" action="/add-workout" method="post">
+        <input type="hidden" name="type" value="weights">
         <label for="date">Date:</label>
         <input type="datetime-local" name="date" id="date" required>
         <br>

@@ -28,10 +28,18 @@ class Workout:
         self.dateTime = data['date']
         # self.workout_data = json.loads(data['workout_json'])
         self.workout_data = data['workout_json']
-        
-        self.sets = self.workout_data['sets']
+        self.name = self.workout_data['name']
 
-        self.zippedSets = list(zip(self.workout_data['movements'],self.workout_data['sets']))
+        if 'type' in self.workout_data: #no type attribute means its legacy ?
+
+            if self.workout_data['type'] == 'other':
+                self.duration = self.workout_data['duration']
+            else:
+                self.sets = self.workout_data['sets']
+                self.zippedSets = list(zip(self.workout_data['movements'],self.workout_data['sets']))
+        else:
+                self.zippedSets = list(zip(self.workout_data['movements'],self.workout_data['sets']))
+
 
     def __str__(self):
         return json.dumps(self.workout_data)
@@ -206,24 +214,23 @@ def profile():
     
     #get the entries for this user 
     try:
-        macroResponse = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).execute()
-  
-        macroEntries = macroResponse.data if macroResponse.data else []
         
         workoutResponse = supabase.table("workout_for_user_by_date").select("*").execute()
         app.logger.info(f" WORKOUT RESPONSE :: {workoutResponse.data}")
 
         workoutObjects = []
         for w in workoutResponse.data:
-            # app.logger.info(f" WORKOUT OBJECT :: {w['workout_json']}")
-            wobject = Workout(w)
-            app.logger.info(f" WORKOUT OBJECT :: {wobject}")
-            workoutObjects.append(wobject)
+            try:
+                wobject = Workout(w)
+                app.logger.info(f" WORKOUT OBJECT :: {wobject}")
+                workoutObjects.append(wobject)
+            except Exception as e:
+                app.logger.info(f"Something wen wrong adding workouts {e}")
 
         #app.logger.info(f" WORKOUT OBJECTS :: {workoutObjects}")
 
         # Render profile page for authenticated users
-        return render_template("profile.html", user=current_user, entries=macroEntries, workoutObjects = workoutObjects)
+        return render_template("profile.html", user=current_user, workoutObjects = workoutObjects)
     except Exception as e:
         flash(e)
         return render_template("profile.html", user=current_user)
@@ -329,6 +336,8 @@ def addWorkout():
             workoutObject['category'] = request.form.get("category")
             workoutObject['effort'] = request.form.get("effort")
 
+            workoutObject['type'] = request.form.get("type")
+
             #split the string on the underscore to get the movement and the reps and weight ? 
             #check movements length 
             for m in movements:
@@ -379,6 +388,54 @@ def addWorkout():
 
     if request.method == 'GET':
         return render_template("addWorkout.html")
+
+
+@app.route("/add-workout-other",methods=['GET','POST'])
+@flask_login.login_required
+def addWorkoutOther():
+    if flask_login.current_user.is_authenticated: #probably dont need this 
+        workoutObject = {}
+        #movementsObject = {}
+
+        if request.method == 'POST':
+
+            workoutObject['name'] = clean(request.form.get("workout-name"))
+            workoutObject['date'] = request.form.get("date")
+            workoutObject['duration'] = request.form.get("duration")
+            workoutObject['calories-burned'] = request.form.get("cals-burned")
+            workoutObject['distance'] = request.form.get("distance")
+            workoutObject['type'] = request.form.get("type")
+
+            app.logger.info(f"OTHER WORKOUT OBJECT = {workoutObject}")
+
+            data = json.dumps(workoutObject)
+            app.logger.info(f" WORKOUT :: {data}")
+
+            supaData = {
+                "workout_json":workoutObject,
+                "user_id": flask_login.current_user.id
+            }
+
+            try:
+                response = supabase.table("workout").insert(supaData).execute()
+                app.logger.info(f"Workout added sucesfully :: ")
+                return redirect(url_for('addWorkoutOther'))
+            except Exception as e:
+                app.logger.info(f"SOMETHING WENT WRONG ADDING WORKOUT :: {e}")
+
+                flash(f"Something went wrong {e}")
+                return redirect(url_for('addWorkoutOther'))
+
+            return redirect("/add-workout-other")
+
+    return render_template("otherWorkout.html")
+
+
+
+
+
+
+
 
 ##EMAIL STUFF
 @app.route("/confirm",methods=['GET'])

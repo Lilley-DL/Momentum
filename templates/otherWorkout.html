@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}
+    Add Workout
+{% endblock title %}
+
+{% if errors %}
+    {{errors}}
+{% endif %}
+
+{% block content %}
+{% if current_user%}
+
+{% endif %}
+
+    <form action="/add-workout-other" method="post">
+        <input type="hidden" name="type" value="other">
+        <label for="date">Date:</label>
+        <input type="datetime-local" name="date" id="date" required>
+        <br>
+        <label for="name">Workout name:</label>
+        <input type="text" name="workout-name" id="workout-name" required minlength="4">
+        <br>
+        <label for="duration">Duration (minutes):</label>
+        <input type="number" name="duration" id="duration-input" required min="1">
+        <br>
+        <label for="cals-burned">Calories burned (if known):</label>
+        <input type="number" min="0" value="0">
+        <br>
+        <label for="distance">Distance Km (if known)</label>
+        <input type="number" value="0" min="0">
+        <br>
+        <input type="submit" value="Submit" >
+    </form>
+
+{% if workoutObjects %}
+    {% for workout in workoutObjects %}
+    <br>
+        {{workout.dateTime}}
+        
+        {{workout['name']}} 
+         <br>
+        {% for set in workout.zippedSets %}
+				<span id="movement-name">{{set[0]}}</span>
+				<br>
+				{% for reps in set[1] %}
+					{{reps[0]}}kg for {{reps[1]}} reps
+				{% endfor %}
+				<br>
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+
+{% endblock  %}
+
+{% block scripts %}
+    
+{% endblock scripts %}
