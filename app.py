@@ -253,11 +253,37 @@ def viewMeals():
         flash(e)
         return render_template("viewMeals.html")
 
+@app.route("/view/workouts")
+@flask_login.login_required
+def viewWorkouts():
+
+    try:
+        
+        workoutResponse = supabase.table("workout_for_user_by_date").select("*").execute()
+        app.logger.info(f" WORKOUT RESPONSE :: {workoutResponse.data}")
+
+        workoutObjects = []
+        for w in workoutResponse.data:
+            try:
+                wobject = Workout(w)
+                app.logger.info(f" WORKOUT OBJECT :: {wobject}")
+                workoutObjects.append(wobject)
+            except Exception as e:
+                app.logger.info(f"Something wen wrong adding workouts {e}")
+
+        #app.logger.info(f" WORKOUT OBJECTS :: {workoutObjects}")
+
+        # Render profile page for authenticated users
+        return render_template("viewWorkouts.html", workoutObjects = workoutObjects)
+    except Exception as e:
+        flash(e)
+        return redirect("/profile")
+
 
 @app.route("/createEntry",methods=['GET','POST'])
 @flask_login.login_required
 def createEntry():
-    app.logger.info(f"User is authenticated: {flask_login.current_user.is_authenticated}")
+    #app.logger.info(f"User is authenticated: {flask_login.current_user.is_authenticated}")
     if request.method == "POST":
 
         app.logger.info(f"REQUEST FORM DATA {request.form}")

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-    Profile
+    Workouts
 {% endblock title %}
 
 {% if errors %}
@@ -8,27 +8,8 @@
 {% endif %}
 
 {% block content %}
-{% if current_user%}
-    <h3>Welcome {{current_user.username}}</h3>
-    <nav id="user-nav">
-        <div class="profile-nav-category" id="workout-create">
-            <span>Add Workouts</span>
-            <a href="{{url_for('addWorkout')}}">Weights</a> 
-            <a href="{{url_for('addWorkoutOther')}}">Other (cardio / yoga)</a> 
-            <a href="{{url_for('viewWorkouts')}}">View workouts</a>
-        </div>
-        <div class="profile-nav-category" id="meal-nav">
-            <span>Meals</span>
-            <a href="{{url_for('createEntry')}}">Add meal</a> 
-            <a href="{{url_for('viewMeals')}}">View Meals</a> 
-        </div>
-    </nav>
-    <br>
-    <div>
-        <a href="/profile/settings">Manage profile settings</a>
-    </div>
-{% endif %}
 
+<h3>Your workouts</h3>
 {% if workoutObjects %}
     {% for workout in workoutObjects %}
     <br>
@@ -50,7 +31,6 @@
         {% if workout.duration %}
             {{workout.duration}} minutes
         {% endif %}
-
 
     {% endfor %}
 {% endif %}
