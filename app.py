@@ -25,10 +25,16 @@ db = None
 
 class Workout:
     def __init__(self,data):
-        self.dateTime = data['date']
+        self.workout_id = data['id']
+
         # self.workout_data = json.loads(data['workout_json'])
         self.workout_data = data['workout_json']
         self.name = self.workout_data['name']
+
+        if 'date' in data:
+            self.dateTime = data['date']
+        else:
+            self.dateTime = self.workout_data['date']
 
         if 'type' in self.workout_data: #no type attribute means its legacy ?
 
@@ -215,7 +221,7 @@ def profile():
     #get the entries for this user 
     try:
         
-        workoutResponse = supabase.table("workout_for_user_by_date").select("*").execute()
+        workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").execute()
         app.logger.info(f" WORKOUT RESPONSE :: {workoutResponse.data}")
 
         workoutObjects = []
@@ -258,8 +264,7 @@ def viewMeals():
 def viewWorkouts():
 
     try:
-        
-        workoutResponse = supabase.table("workout_for_user_by_date").select("*").execute()
+        workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").execute()
         app.logger.info(f" WORKOUT RESPONSE :: {workoutResponse.data}")
 
         workoutObjects = []
@@ -279,6 +284,40 @@ def viewWorkouts():
         flash(e)
         return redirect("/profile")
 
+@app.route("/view/workout/<workout_id>",methods=['GET']) #workout id from supa is an int 
+@flask_login.login_required
+def viewWorkout(workout_id):
+    #get the workout from supa
+    try:
+        response =  supabase.table("workout").select("*").eq('id',workout_id).maybe_single().execute()
+        #check the user id too 
+        if response:
+            app.logger.info(f"Single workout response :: {response}")
+            wjson = response.data['workout_json']
+            wjson['id'] = response.data['id']
+            app.logger.info(f" SINGLE OBJECT JSON = {wjson}")
+        else:
+            flash("No workout with that id exists")
+            return render_template("viewWorkout.html")
+        
+        #workoutObject = None
+        try:
+            # wjson = response.data['workout_json']
+            # wjson['id'] = response.data['id']
+            workoutObject = Workout(response.data)
+            app.logger.info(f" SINGLE OBJECT = {workoutObject}")
+            flash(f"WORKOUT {workoutObject}")
+            return render_template("viewWorkout.html",workout=workoutObject)
+        
+        except Exception as e:
+            app.logger.info(f"Something wnet wronmg with single object {e}")
+            flash(f"Something went wrong {e}")
+            return render_template("viewWorkout.html")
+
+        #show the page 
+    except Exception as e:
+        flash(f"Something went wrong {e}")
+        return redirect("/profile")
 
 @app.route("/createEntry",methods=['GET','POST'])
 @flask_login.login_required

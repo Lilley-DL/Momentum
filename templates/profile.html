@@ -12,25 +12,31 @@
     <h3>Welcome {{current_user.username}}</h3>
     <nav id="user-nav">
         <div class="profile-nav-category" id="workout-create">
-            <span>Add Workouts</span>
-            <a href="{{url_for('addWorkout')}}">Weights</a> 
-            <a href="{{url_for('addWorkoutOther')}}">Other (cardio / yoga)</a> 
+            <h4>Workouts</h4>
+            <div>
+                <h5 id="add-workouts-title">Add workout:</h5>
+                <div id="add-workouts-nav">
+                    <a href="{{url_for('addWorkout')}}">Weights</a> 
+                    <a href="{{url_for('addWorkoutOther')}}">Other</a> 
+                </div>
+            </div>
             <a href="{{url_for('viewWorkouts')}}">View workouts</a>
         </div>
         <div class="profile-nav-category" id="meal-nav">
-            <span>Meals</span>
-            <a href="{{url_for('createEntry')}}">Add meal</a> 
-            <a href="{{url_for('viewMeals')}}">View Meals</a> 
+            <h4>Meals</h4>
+            <div>
+                <a href="{{url_for('createEntry')}}">Add meal</a> 
+                <a href="{{url_for('viewMeals')}}">View Meals</a> 
+            </div>
         </div>
     </nav>
     <br>
-    <div>
-        <a href="/profile/settings">Manage profile settings</a>
-    </div>
+
 {% endif %}
 
 {% if workoutObjects %}
     {% for workout in workoutObjects %}
+    
     <br>
         {{workout.dateTime}}
         <br>
@@ -51,9 +57,15 @@
             {{workout.duration}} minutes
         {% endif %}
 
+        <a href="{{url_for('viewWorkout', workout_id=workout.workout_id) }}">View workout</a>
 
     {% endfor %}
 {% endif %}
+
+<div>
+    
+    <a href="/profile/settings">Manage profile settings</a>
+</div>
 
 {% endblock  %}
 

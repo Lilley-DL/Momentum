@@ -133,6 +133,27 @@ footer{
 /* ADD workout */
 
 
+/* PROFILE */
+#user-nav{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#user-nav h4{
+    margin: 0;
+}
+#user-nav h5{
+    margin: 0;
+}
+
+#add-workouts-nav{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
 
 
 
