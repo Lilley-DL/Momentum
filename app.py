@@ -212,6 +212,8 @@ def login():
 @flask_login.login_required
 def profile():
     current_user = flask_login.current_user  # Automatically set by Flask-Login
+    #dashboard variable array ?
+    dashboardInfo = {}
 
     # Safely handle the user object
     if not current_user.is_authenticated:
@@ -221,8 +223,30 @@ def profile():
     #get the entries for this user 
     try:
         
+        #get the last workout for dashboard 
+        lastWokrout = supabase.table("workout_for_user_by_date_2").select("*").order("date", desc=True).limit(1).execute()
+        app.logger.info(f"LAST WORKOUT:: {lastWokrout}")
+        app.logger.info(f"LAST WORKOUT DATA:: {lastWokrout.data}")
+
+        try:
+            dashWorkout = Workout(lastWokrout.data[0])
+            # app.logger.info(f"Last workout object = {dashWorkout}")
+            dashboardInfo['workouts'] = [dashWorkout,]
+        except Exception as e:
+            app.logger.error(f"Last workout error = {e}")
+
+
+        lastMeal = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).order("created", desc=True).limit(1).execute()
+        app.logger.info(f"LAST MEAL:: {lastMeal.data}")
+        try:
+            dashboardInfo['meals'] = [lastMeal.data,]
+        except Exception as e:
+            app.logger.error(f"Some went wrong adding meal to dashboard : {e}")
+
         workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").execute()
         app.logger.info(f" WORKOUT RESPONSE :: {workoutResponse.data}")
+
+        app.logger.info(f" DASHBOARD :: {dashboardInfo}")
 
         workoutObjects = []
         for w in workoutResponse.data:
@@ -236,7 +260,7 @@ def profile():
         #app.logger.info(f" WORKOUT OBJECTS :: {workoutObjects}")
 
         # Render profile page for authenticated users
-        return render_template("profile.html", user=current_user, workoutObjects = workoutObjects)
+        return render_template("profile.html", user=current_user, workoutObjects = workoutObjects,dashboard = dashboardInfo)
     except Exception as e:
         flash(e)
         return render_template("profile.html", user=current_user)

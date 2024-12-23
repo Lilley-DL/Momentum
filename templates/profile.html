@@ -10,6 +10,33 @@
 {% block content %}
 {% if current_user%}
     <h3>Welcome {{current_user.username}}</h3>
+    {% if dashboard %}
+        
+    <div id="dashboard-wrapper">
+        <h2>Your Progress</h2>
+
+        <div id="dash-category-wrapper">
+            
+            <div id="dash-workout">
+                <h3>Last workout</h3>
+                <div>
+                    {{dashboard.workouts[0].name}}
+                    <br>
+                    {{dashboard.workouts[0].dateTime}}
+                </div>
+            </div>
+
+            <div id="dash-meal">
+                <h3>last Meal Entry</h3>
+                {{dashboard.meals[0][0].entry_name}}
+                <br>
+                Kcal:{{dashboard.meals[0][0].entry_data.calories}}
+            </div>
+
+        </div>
+    </div>
+    {% endif %}
+
     <nav id="user-nav">
         <div class="profile-nav-category" id="workout-create">
             <h4>Workouts</h4>
