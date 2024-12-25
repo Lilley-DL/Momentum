@@ -140,6 +140,27 @@ footer{
     gap: 15px;
 }
 
+/* PROFILE : dashboard */
+#dashboard-wrapper{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 50px;
+}
+
+#dash-category-wrapper{
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    width: 75vw;
+}
+
+.dashboard-category{
+    font-size: x-large;
+}
+
+.dash-fulldate{
+    font-size: 1rem;
+}
 #user-nav h4{
     margin: 0;
 }

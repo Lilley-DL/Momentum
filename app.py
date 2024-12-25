@@ -6,6 +6,7 @@ from wtforms.validators import DataRequired,Email
 import flask_login
 from dotenv import load_dotenv
 import csv , json, os, hashlib, binascii
+from datetime import datetime
 
 from bleach import clean
 
@@ -32,9 +33,9 @@ class Workout:
         self.name = self.workout_data['name']
 
         if 'date' in data:
-            self.dateTime = data['date']
+            self.dateTime = datetime.fromisoformat(data['date'])
         else:
-            self.dateTime = self.workout_data['date']
+            self.dateTime = datetime.fromisoformat(self.workout_data['date'])
 
         if 'type' in self.workout_data: #no type attribute means its legacy ?
 
@@ -214,7 +215,7 @@ def profile():
     current_user = flask_login.current_user  # Automatically set by Flask-Login
     #dashboard variable array ?
     dashboardInfo = {}
-
+    lastmealObject = {}
     # Safely handle the user object
     if not current_user.is_authenticated:
         app.logger.info("User is not authenticated. Redirecting to login.")
@@ -239,12 +240,18 @@ def profile():
         lastMeal = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).order("created", desc=True).limit(1).execute()
         app.logger.info(f"LAST MEAL:: {lastMeal.data}")
         try:
-            dashboardInfo['meals'] = [lastMeal.data,]
+            lastmealObject['name'] = lastMeal.data[0]['entry_name']
+            lastmealObject['data'] = lastMeal.data[0]['entry_data']
+            #process the date for better formatting 
+            lastmealObject['date'] = datetime.fromisoformat(lastMeal.data[0]['created'])
+            # lastmealObject['date'] = lastMeal.data[0]['created']
+            app.logger.info(f" SECOND MEAL OBJECT ::: {lastmealObject}")
+            dashboardInfo['meals'] = [lastMeal.data,lastmealObject]
         except Exception as e:
             app.logger.error(f"Some went wrong adding meal to dashboard : {e}")
 
         workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").execute()
-        app.logger.info(f" WORKOUT RESPONSE :: {workoutResponse.data}")
+        #app.logger.info(f" WORKOUT RESPONSE :: {workoutResponse.data}")
 
         app.logger.info(f" DASHBOARD :: {dashboardInfo}")
 
@@ -252,7 +259,7 @@ def profile():
         for w in workoutResponse.data:
             try:
                 wobject = Workout(w)
-                app.logger.info(f" WORKOUT OBJECT :: {wobject}")
+                #app.logger.info(f" WORKOUT OBJECT :: {wobject}")
                 workoutObjects.append(wobject)
             except Exception as e:
                 app.logger.info(f"Something wen wrong adding workouts {e}")

@@ -17,20 +17,26 @@
 
         <div id="dash-category-wrapper">
             
-            <div id="dash-workout">
+            <div class="dashboard-category" id="dash-workout">
                 <h3>Last workout</h3>
                 <div>
                     {{dashboard.workouts[0].name}}
                     <br>
-                    {{dashboard.workouts[0].dateTime}}
+                    <span>{{dashboard.workouts[0].dateTime.strftime('%A')}}</span>
+                    <br>
+                    <span class="dash-fulldate">({{dashboard.workouts[0].dateTime.strftime('%d-%m-%y')}})</span>
                 </div>
             </div>
 
-            <div id="dash-meal">
+            <div class="dashboard-category" id="dash-meal">
                 <h3>last Meal Entry</h3>
-                {{dashboard.meals[0][0].entry_name}}
+                {{dashboard.meals[1].name}}
                 <br>
-                Kcal:{{dashboard.meals[0][0].entry_data.calories}}
+                Kcal:{{dashboard.meals[1].data.calories}}
+                <br>
+                <span id="dash-meal-day">{{dashboard.meals[1].date.strftime('%A')}}</span>
+                <br>
+                <span class="dash-fulldate" id="dash-meal-date">({{dashboard.meals[1].date.strftime('%d-%m-%y')}})</span>  
             </div>
 
         </div>
