@@ -350,7 +350,52 @@ def viewWorkout(workout_id):
         flash(f"Something went wrong {e}")
         return redirect("/profile")
 
-@app.route("/createEntry",methods=['GET','POST'])
+@app.route("/waterEntry",methods=['GET','POST'])
+@flask_login.login_required
+def waterEntry():
+    
+    current_user = flask_login.current_user
+    
+    if request.method == 'POST':
+        amount = request.form.get('amount')
+        date = request.form.get('date')
+
+        data = {
+            "amount":amount,
+            "date":date
+        }
+
+        waterObject = {
+            'entry_data':data,
+            "user_id": flask_login.current_user.id
+        }
+        app.logger.info(f"WATER INFO :: {data}")
+        try:
+            response = supabase.table("water").insert(waterObject).execute()
+            app.logger.info(f"Water insert response = {response}")
+            return redirect(url_for('waterEntry'))
+        
+        except Exception as e:
+            flash(f"Something went wrong {e}")
+            return redirect(url_for('waterEntry'))
+
+    else:
+        #get the water entries 
+        waterEntries = []
+        try:
+            response = supabase.table("water").select("*").eq("user_id", current_user.id).execute()
+            app.logger.info(f"Water tracking select all == {response}")
+
+            waterEntries = response.data if response.data else []
+
+        except Exception as e :
+            flash(f"Something went wrong {e}")
+            return redirect(url_for('waterEntry'))
+
+        return render_template("waterTracking.html",entries=waterEntries)
+
+
+@app.route("/createEntry",methods=['GET','POST'])       #MEAL ENTRY 
 @flask_login.login_required
 def createEntry():
     #app.logger.info(f"User is authenticated: {flask_login.current_user.is_authenticated}")

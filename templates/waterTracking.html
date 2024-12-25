@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}
+    Macro entries
+{% endblock title %}
+
+{% if errors %}
+    {{errors}}
+{% endif %}
+
+{% block content %}
+{% if current_user%}
+    <h3>Welcome {{current_user.username}}</h3>
+    <nav id="user-nav">
+        <a href="{{url_for('createEntry')}}">Create entry</a> 
+        <a href="{{url_for('addWorkout')}}">Add workout</a> 
+    </nav>
+{% endif %}
+
+<form action="/waterEntry" method="post">
+    <label for="amount">Amount (ml):</label>
+    <input type="number" name="amount" id="water-input" min="0">
+    <br>
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date">
+    <input type="submit" value="Submit">
+</form>
+
+<h3>Water entries</h3>
+{% if entries %}
+    {% for entry in entries %}
+    <h3>{{entry.entry_name}} </h3>
+    
+        {% for key in entry.entry_data %}
+            {{key}} ::
+            {{entry.entry_data[key]}}
+            <br>
+        {% endfor %}
+        <hr>
+    {% endfor %}
+{% endif %}
+
+{% if totalCals %}
+    {% for date in totalCals %}
+        <h4>{{date.entry_date}}</h4>
+        Kcal: {{date.total_value}}
+    {% endfor %}
+
+{% endif %}
+
+
+{% endblock  %}
+
+{% block scripts %}
+<script>
+    // Get today's date in the format 'YYYY-MM-DD'
+    const today = new Date().toISOString().split('T')[0];
+    // Set the default value of the date input
+    document.getElementById('date').value = today;
+</script>
+    
+{% endblock scripts %}
