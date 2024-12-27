@@ -39,6 +39,17 @@
                 <span class="dash-fulldate" id="dash-meal-date">({{dashboard.meals[1].date.strftime('%d-%m-%y')}})</span>  
             </div>
 
+            <div class="dashboard-category" id="dash-water">
+                <h3>Last water entry</h3>
+                <br>
+                Amount: {{dashboard.water.amount}}ml
+                <br>
+                <span id="dash-water-day">{{dashboard.water.date.strftime('%A')}}</span>
+                <br>
+                <span class="dash-fulldate" id="dash-water-date">({{dashboard.water.date.strftime('%d-%m-%y')}})</span>  
+
+            </div>
+
         </div>
     </div>
     {% endif %}

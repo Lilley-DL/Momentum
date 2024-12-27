@@ -208,7 +208,8 @@ def login():
         return render_template("login.html",form=form,errors=errors)
 
 
-#add login required decorator 
+                                                                    #PROFILE
+
 @app.route("/profile",methods=['GET','POST'])
 @flask_login.login_required
 def profile():
@@ -236,7 +237,7 @@ def profile():
         except Exception as e:
             app.logger.error(f"Last workout error = {e}")
 
-
+        #last meal for dashboard
         lastMeal = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).order("created", desc=True).limit(1).execute()
         app.logger.info(f"LAST MEAL:: {lastMeal.data}")
         try:
@@ -250,13 +251,25 @@ def profile():
         except Exception as e:
             app.logger.error(f"Some went wrong adding meal to dashboard : {e}")
 
-        workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").execute()
-        #app.logger.info(f" WORKOUT RESPONSE :: {workoutResponse.data}")
+        #get last water response 
+        waterObj = {}
+        try:
+            waterResponse = supabase.table("water").select("*").eq("user_id", current_user.id).order("created", desc=True).limit(1).execute()
+            app.logger.info(f"LAST WATER INTAKE :: {waterResponse}")
+            
+            waterObj['amount'] = waterResponse.data[0]['entry_data']['amount'] 
+            waterObj['date'] = datetime.fromisoformat(waterResponse.data[0]['entry_data']['date'])
+            app.logger.info(f"WATER OBJECT TEST  :: {waterObj}")
+            dashboardInfo['water'] = waterObj
+        except Exception as e:
+            app.logger.error(f" WATER RESPONSE ERROR :: {e}")
 
         app.logger.info(f" DASHBOARD :: {dashboardInfo}")
 
+        workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").execute() #remove
+
         workoutObjects = []
-        for w in workoutResponse.data:
+        for w in workoutResponse.data: #can remove now i think 
             try:
                 wobject = Workout(w)
                 #app.logger.info(f" WORKOUT OBJECT :: {wobject}")
