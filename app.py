@@ -308,7 +308,7 @@ def viewMeals():
 def viewWorkouts():
 
     try:
-        workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").execute()
+        workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").order("date", desc=True).execute()
         app.logger.info(f" WORKOUT RESPONSE :: {workoutResponse.data}")
 
         workoutObjects = []

@@ -177,7 +177,16 @@ footer{
     margin-bottom: 15px;
 }
 
+/* VIEW WORKOUTS */
+.workout-day{
+    font-size: larger;
+    font-weight: bold;
+}
 
+.workout-name{
+    font-size: larger;
+    font-weight: bold;
+}
 
 @media screen and (max-width:500px) {
     #top-nav{

@@ -9,13 +9,16 @@
 
 {% block content %}
 
-<h3>Your workouts</h3>
+<h2>Your workouts</h2>
 {% if workoutObjects %}
     {% for workout in workoutObjects %}
+    
     <br>
-        {{workout.dateTime}}
+        <span class="workout-day">{{workout.dateTime.strftime('%A')}}</span>
         <br>
-        <span id="workout-name">{{workout.name}} </span>
+        <span class="workout-date">{{workout.dateTime.strftime('%d/%m/%y')}}</span>
+        <br>
+        <span class="workout-name">{{workout.name|capitalize}} </span>
          <br>
         {% if workout.zippedSets %}
             {% for set in workout.zippedSets %}
@@ -32,6 +35,8 @@
             {{workout.duration}} minutes
         {% endif %}
 
+        <a href="{{url_for('viewWorkout', workout_id=workout.workout_id) }}">View workout</a>
+        <hr>
     {% endfor %}
 {% endif %}
 
