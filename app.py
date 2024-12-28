@@ -467,6 +467,7 @@ def addWorkout():
         movementsObject = {}
 
         if request.method == 'POST':
+            app.logger.info(f" WORKOUT ADD FORM == {request.form}")
             #get ther form values 
             #DONT FORGET the reps&sets and rthe movements will be lists 
             movements = request.form.getlist("movement")

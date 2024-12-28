@@ -240,13 +240,20 @@
         let repsInput = document.createElement("input")
     
         weightInput.name = movementName + "_weight"
-        weightInput.type = "number"
-        weightInput.placeholder = weightFormat.value
-        weightInput.required = true
         weightInput.className = "setinput"
+        //check weight format
         if(weightFormat.value == "bw"){
+            weightInput.type = "text"
             weightInput.value = "BW"
+            weightInput.readOnly = true
+        }else{
+            //weightInput.name = movementName + "_weight"
+            weightInput.type = "number"
+            weightInput.placeholder = weightFormat.value
+            weightInput.required = true
+            //weightInput.className = "setinput"
         }
+       
 
         repsInput.name = movementName +"_reps"
         repsInput.type = "number"
