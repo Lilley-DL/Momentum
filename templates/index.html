@@ -5,11 +5,11 @@
 
 
 {% block content %}
-<h1>Welcome to Momentum, the workout tracking app</h1>
+<!-- <h1>Welcome to Momentum, the workout tracking app</h1> -->
 
 {% if current_user.is_authenticated %}
     <div id="logging-nav" class="nav-card-wrapper">
-        <h3>Track</h3>
+        <h2>Track</h2>
         <div class="card-links">
             <div class="card-link">
                 <a href="{{url_for('addWorkout')}}"><img src="{{ url_for('static', filename='icons/dumbell_icon.svg') }}" alt="" width="60"></a> 

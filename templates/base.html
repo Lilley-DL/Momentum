@@ -14,7 +14,7 @@
 	<div id="top-nav">
 
 		<!-- <a href="{{url_for('index')}}">Home</a> -->
-		<a href="{{url_for('index')}}"><img id="main-logo" src="{{ url_for('static', filename='mntmLogov2.svg') }}"
+		<a href="{{url_for('index')}}"><img id="main-logo" src="{{ url_for('static', filename='icons/mntmLogov3.svg') }}"
 				alt="" srcset="" width=200></a>
 		<div id="top-nav-links">
 			{% if current_user.is_authenticated %}
@@ -28,24 +28,35 @@
 	</div>
 
 	{% with messages = get_flashed_messages() %}
-	{% if messages %}
-	<ul class=flashes>
-		{% for message in messages %}
-		<li>{{ message }}</li>
-		{% endfor %}
-	</ul>
-	{% endif %}
+		{% if messages %}
+		<ul class=flashes>
+			{% for message in messages %}
+			<li>{{ message }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
 	{% endwith %}
 	{% block content %}
 	{% endblock content %}
 	<footer>
-		<a href="#">Contact</a>
-		<a href="#">Support the developer</a>
-		<div id="social">
-			<a href="#">Facebook</a>
-			<a href="#">Twitter</a>
+		<div id="footer-links">
+			<a href="#">Contact</a>
+			<a href="#">About</a>
+			<div id="social-links">
+				<a href="#">F</a>
+				<a href="#">T</a>
+			</div>
 		</div>
-		<a href="#">Copyright</a>
+		<div>
+
+			{% if current_user.is_authenticated %}
+				<a href="{{url_for('profile')}}">Profile</a>
+				<a href="{{url_for('logout')}}">Logout</a>
+			{% else %}
+				<a href="{{url_for('login')}}">Login</a>
+				<a href="{{url_for('signup')}}">Signup</a>
+			{% endif %}
+		</div>
 	</footer>
 </body>
 {% block scripts %}
