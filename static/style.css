@@ -15,6 +15,11 @@
     font-size: xx-large;
 }
 
+#top-nav div{
+    display: flex;
+    gap: 50px;
+}
+
 #main-content{
     min-height: 60vh;
 }
@@ -193,6 +198,11 @@ footer{
         /* display:none; */
         margin: 2vh 1vw;
         font-size: larger;
+        flex-direction: column;
+    }
+    #top-nav div{
+        display: flex;
+        gap: 50px;
     }
 
     #macro-input-wrapper{

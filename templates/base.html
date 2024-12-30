@@ -1,50 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='momentum_favi2.ico') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
-    <title>{% block title %}{% endblock title %}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='momentum_favi2.ico') }}">
+	<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+	<title>{% block title %}{% endblock title %}</title>
 </head>
+
 <body>
-    
-<div id="top-nav">
 
-    <!-- <a href="{{url_for('index')}}">Home</a> -->
-    <a href="{{url_for('index')}}"><img src="{{ url_for('static', filename='mmtmlogov1.svg') }}" alt="" srcset="" width=150></a>
-    {% if current_user.is_authenticated %}
-        <a href="{{url_for('profile')}}">Profile</a>        
-        <!-- <a href="{{url_for('createEntry')}}">Create entry</a>         -->
-        <a href="{{url_for('logout')}}">Logout</a>
-        {% else %}
-        <a href="{{url_for('login')}}">Login</a>
-        <a href="{{url_for('signup')}}">Signup</a>
-    {% endif %}
-</div>
+	<div id="top-nav">
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-      {% block content %}  
-      {% endblock content %}
-    <footer>
-      <a href="#">Contact</a>
-      <a href="#">Support the developer</a>
-      <div id="social">
-        <a href="#">Facebook</a>
-        <a href="#">Twitter</a>
-      </div>
-      <a href="#">Copyright</a>
-    </footer>
-  </body>
+		<!-- <a href="{{url_for('index')}}">Home</a> -->
+		<a href="{{url_for('index')}}"><img id="main-logo" src="{{ url_for('static', filename='mntmLogov2.svg') }}"
+				alt="" srcset="" width=200></a>
+		<div id="top-nav-links">
+			{% if current_user.is_authenticated %}
+				<a href="{{url_for('profile')}}">Profile</a>
+				<a href="{{url_for('logout')}}">Logout</a>
+			{% else %}
+				<a href="{{url_for('login')}}">Login</a>
+				<a href="{{url_for('signup')}}">Signup</a>
+			{% endif %}
+		</div>
+	</div>
+
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+	<ul class=flashes>
+		{% for message in messages %}
+		<li>{{ message }}</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	{% endwith %}
+	{% block content %}
+	{% endblock content %}
+	<footer>
+		<a href="#">Contact</a>
+		<a href="#">Support the developer</a>
+		<div id="social">
+			<a href="#">Facebook</a>
+			<a href="#">Twitter</a>
+		</div>
+		<a href="#">Copyright</a>
+	</footer>
+</body>
 {% block scripts %}
-    <!-- add a script that will check for the presence of flashed messages then put a timeout on them -->
+<!-- add a script that will check for the presence of flashed messages then put a timeout on them -->
 {% endblock scripts %}
+
 </html>
