@@ -14,7 +14,10 @@
         
     <div id="dashboard-wrapper">
         <h2>Your Progress</h2>
-
+        <div id="progress-totals-wrapper">
+            <span>total workouts tracked {{dashboard.stats[0].total_workouts}} </span>
+            <span>total meals tracked {{dashboard.stats[0].total_meals}}</span>
+        </div>
         <div id="dash-category-wrapper">
             
             <div class="dashboard-category" id="dash-workout">

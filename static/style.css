@@ -213,4 +213,20 @@ footer div{
     #macro-input-wrapper{
         max-width: 45vw;
     }
+
+
+    #dashboard-wrapper{
+        align-items: center;
+    }
+    #dash-category-wrapper{
+        flex-direction: column;
+        /* align-items: center; */
+        gap: 0px;
+    }
+
+    .dashboard-category{
+        display: flex;
+        flex-direction: column;
+    }
+
 }

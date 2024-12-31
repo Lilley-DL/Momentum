@@ -192,7 +192,8 @@ def login():
         # Create the User object
                 current_user = User(user_id, username, email)
                 flask_login.login_user(current_user)
-                return redirect('/profile')
+                # return redirect('/profile')
+                return redirect('/')
             else:
                 flash("User login failed")
                 return render_template('login.html', error='Invalid credentials',form=form)
@@ -264,8 +265,20 @@ def profile():
         except Exception as e:
             app.logger.error(f" WATER RESPONSE ERROR :: {e}")
 
+        #GET THE WORKOUT AND MEAL TOTALS 
+        try:
+            #might need the user id portion too
+            response = supabase.table("user_activity_summary").select("*").execute()
+            app.logger.info(f"STATS RESPONSE == {response.data}")
+            dashboardInfo['stats'] = response.data
+        except Exception as e:
+            app.logger.error(f"Error when fetching stats {e}")
+
+
         app.logger.info(f" DASHBOARD :: {dashboardInfo}")
 
+
+        #DONT THINK I NEED THIS NOW 
         workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").execute() #remove
 
         workoutObjects = []
@@ -285,6 +298,8 @@ def profile():
         flash(e)
         return render_template("profile.html", user=current_user)
 
+
+
 @app.route("/view/meals")
 @flask_login.login_required
 def viewMeals():
@@ -302,6 +317,9 @@ def viewMeals():
     except Exception as e:
         flash(e)
         return render_template("viewMeals.html")
+
+
+
 
 @app.route("/view/workouts")
 @flask_login.login_required
@@ -327,6 +345,9 @@ def viewWorkouts():
     except Exception as e:
         flash(e)
         return redirect("/profile")
+
+
+
 
 @app.route("/view/workout/<workout_id>",methods=['GET']) #workout id from supa is an int 
 @flask_login.login_required
@@ -362,6 +383,9 @@ def viewWorkout(workout_id):
     except Exception as e:
         flash(f"Something went wrong {e}")
         return redirect("/profile")
+    
+
+
 
 @app.route("/waterEntry",methods=['GET','POST'])
 @flask_login.login_required
@@ -690,6 +714,9 @@ def updatePassword():
 
     return render_template("resetPassword.html", form=form)
     
+@app.route("/welcome")
+def welcome():
+    return render_template("welcome.html")
 
 @app.route("/logout")
 def logout():
@@ -702,7 +729,7 @@ def logout():
 def unauthorized_handler():
     #return "Unauthorized", 401
     flash("Please login")
-    return redirect(url_for('login'))
+    return redirect(url_for('welcome'))
 
 
 ##for render to run 
