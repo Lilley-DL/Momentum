@@ -15,9 +15,8 @@
     <div id="dashboard-wrapper">
         <h2>Your Progress</h2>
         <div id="progress-totals-wrapper">
+            {% if dashboard.stats[0] %}
             <span>total workouts tracked {{dashboard.stats[0].total_workouts}} </span>
-            {% if dashboard.stats[0].total_meals %}
-                
             <span>total meals tracked {{dashboard.stats[0].total_meals}}</span>
             {% endif %}
         </div>
@@ -26,16 +25,21 @@
             <div class="dashboard-category" id="dash-workout">
                 <h3>Last workout</h3>
                 <div>
+                    {% if dashboard.workouts[0] %}
+                        
                     {{dashboard.workouts[0].name}}
                     <br>
                     <span>{{dashboard.workouts[0].dateTime.strftime('%A')}}</span>
                     <br>
                     <span class="dash-fulldate">({{dashboard.workouts[0].dateTime.strftime('%d-%m-%y')}})</span>
+                    {% endif %}
                 </div>
             </div>
 
             <div class="dashboard-category" id="dash-meal">
                 <h3>last Meal Entry</h3>
+                {% if dashboard.meals %}
+                    
                 {{dashboard.meals[1].name}}
                 <br>
                 Kcal:{{dashboard.meals[1].data.calories}}
@@ -43,6 +47,7 @@
                 <span id="dash-meal-day">{{dashboard.meals[1].date.strftime('%A')}}</span>
                 <br>
                 <span class="dash-fulldate" id="dash-meal-date">({{dashboard.meals[1].date.strftime('%d-%m-%y')}})</span>  
+                {% endif %}
             </div>
 
             <div class="dashboard-category" id="dash-water">
@@ -91,33 +96,6 @@
 
 {% endif %}
 
-{% if workoutObjects %}
-    {% for workout in workoutObjects %}
-    
-    <br>
-        {{workout.dateTime}}
-        <br>
-        <span id="workout-name">{{workout.name}} </span>
-         <br>
-        {% if workout.zippedSets %}
-            {% for set in workout.zippedSets %}
-                <span id="movement-name">{{set[0]}}</span>
-                <br>
-                {% for reps in set[1] %}
-                    {{reps[0]}}kg for {{reps[1]}} reps
-                {% endfor %}
-                <br>
-            {% endfor %}
-        {% endif %}
-
-        {% if workout.duration %}
-            {{workout.duration}} minutes
-        {% endif %}
-
-        <a href="{{url_for('viewWorkout', workout_id=workout.workout_id) }}">View workout</a>
-
-    {% endfor %}
-{% endif %}
 
 <div>
     
