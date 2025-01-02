@@ -27,8 +27,6 @@ db = None
 class Workout:
     def __init__(self,data):
         self.workout_id = data['id']
-
-        # self.workout_data = json.loads(data['workout_json'])
         self.workout_data = data['workout_json']
         self.name = self.workout_data['name']
 
@@ -106,16 +104,11 @@ class User(flask_login.UserMixin):
 @login_manager.user_loader ##this is the one gemini created after i started using supabase auth instead of the og table for auth 
 def load_user(user_id):
     try:
-        ##this is whats causing the session issue. i need to start using jwt tokens
-        # response = supabase.auth.get_user()
-        #response = supabase.auth.admin.get_user_by_id(user_id)
-        # query = f"SELECT id,email FROM auth.users WHERE id = '{user_id}'"
         response = supabase.rpc("get_user_by_id_2",{"user_id":user_id}).execute()
         app.logger.info(f"USER LOADER SQL RESPONSE : {response}")
 
-        #user_data = response.user
         user_data = response.data[0]
-        #app.logger.info(f"USER INFO FOR LOAD _USER {user_data}")
+
         if user_data:
             user_id = user_data['id']
             username = user_data['email']
@@ -146,8 +139,6 @@ def signup():
     form = SignupForm()
     
     if request.method == 'GET':
-        #look for error messag in the url 
-        # form = SignupForm()
         errors = request.args.get('errors')
         return render_template("signup.html",username=username,email=email,password=password,form=form,errors=errors)
     
@@ -170,8 +161,6 @@ def signup():
             # return render_template('signup.html', errors="An error occurred. Please try again.")
             flash(e)
             return redirect("/signup")
-
-    #return render_template('signup.html')
 
 ##LOGIN
 
@@ -202,7 +191,6 @@ def login():
         # Create the User object
                 current_user = User(user_id, username, email)
                 flask_login.login_user(current_user)
-                # return redirect('/profile')
                 return redirect('/')
             else:
                 flash("User login failed")
@@ -235,10 +223,6 @@ def profile():
     
     #get the entries for this user 
     try:
-        # response = supabase.rpc("get_workouts_by_user_2", {"p_user_id": current_user.id}).order("date", desc=True).limit(1).execute()
-        # app.logger.info(f" NEW WORKOUTS FUNCTION :: {response}")
-        #get the last workout for dashboard 
-        # lastWokrout = supabase.table("workout_for_user_by_date_2").select("*").order("date", desc=True).limit(1).execute()
         lastWokrout = supabase.rpc("get_workouts_by_user_2", {"p_user_id": current_user.id}).order("date", desc=True).limit(1).execute()
         app.logger.info(f"LAST WORKOUT:: {lastWokrout}")
         app.logger.info(f"LAST WORKOUT DATA:: {lastWokrout.data}")
@@ -288,23 +272,8 @@ def profile():
 
         app.logger.info(f" DASHBOARD :: {dashboardInfo}")
 
-        
+        workoutObjects = [] #can removw this now, BUT remove from template too
 
-        #DONT THINK I NEED THIS NOW 
-        # workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").execute() #remove
-
-        workoutObjects = []
-        # for w in workoutResponse.data: #can remove now i think 
-        #     try:
-        #         wobject = Workout(w)
-        #         #app.logger.info(f" WORKOUT OBJECT :: {wobject}")
-        #         workoutObjects.append(wobject)
-        #     except Exception as e:
-        #         app.logger.info(f"Something wen wrong adding workouts {e}")
-
-        #app.logger.info(f" WORKOUT OBJECTS :: {workoutObjects}")
-
-        # Render profile page for authenticated users
         return render_template("profile.html", user=current_user, workoutObjects = workoutObjects,dashboard = dashboardInfo)
     
     except Exception as e:
@@ -339,7 +308,6 @@ def viewMeals():
 def viewWorkouts():
 
     try:
-        #workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").order("date", desc=True).execute()
         workoutResponse = supabase.rpc("get_workouts_by_user_2", {"p_user_id": flask_login.current_user.id}).order("date", desc=True).execute()
         app.logger.info(f" WORKOUT RESPONSE :: {workoutResponse.data}")
 
@@ -351,9 +319,6 @@ def viewWorkouts():
                 workoutObjects.append(wobject)
             except Exception as e:
                 app.logger.info(f"Something wen wrong adding workouts {e}")
-
-        #app.logger.info(f" WORKOUT OBJECTS :: {workoutObjects}")
-
         # Render profile page for authenticated users
         return render_template("viewWorkouts.html", workoutObjects = workoutObjects)
     except Exception as e:
@@ -378,11 +343,8 @@ def viewWorkout(workout_id):
         else:
             flash("No workout with that id exists")
             return render_template("viewWorkout.html")
-        
-        #workoutObject = None
+
         try:
-            # wjson = response.data['workout_json']
-            # wjson['id'] = response.data['id']
             workoutObject = Workout(response.data)
             app.logger.info(f" SINGLE OBJECT = {workoutObject}")
             flash(f"WORKOUT {workoutObject}")
@@ -449,7 +411,7 @@ def waterEntry():
 @app.route("/createEntry",methods=['GET','POST'])       #MEAL ENTRY 
 @flask_login.login_required
 def createEntry():
-    #app.logger.info(f"User is authenticated: {flask_login.current_user.is_authenticated}")
+
     if request.method == "POST":
 
         app.logger.info(f"REQUEST FORM DATA {request.form}")
@@ -663,6 +625,8 @@ def confirmEmail():
     else:
         flash("Something went wrong again")
         return render_template("confirm.html")
+
+
 
 @app.route("/profile/settings")
 def profileSettings():
