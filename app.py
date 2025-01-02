@@ -105,6 +105,7 @@ class User(flask_login.UserMixin):
 @login_manager.user_loader ##this is the one gemini created after i started using supabase auth instead of the og table for auth 
 def load_user(user_id):
     try:
+        ##this is whats causing the session issue. i need to start using jwt tokens
         response = supabase.auth.get_user()
         user_data = response.user
         #app.logger.info(f"USER INFO FOR LOAD _USER {user_data}")
@@ -183,7 +184,8 @@ def login():
         try:
             sign_in = supabase.auth.sign_in_with_password({"email": email, "password": password})
             user_data = sign_in.user
-            app.logger.info(f"USER INFO FOR LOGIN {user_data}")
+            
+            app.logger.info(f"USER INFO FOR LOGIN {sign_in.session}")
             if user_data:
                 user_id = user_data.id
                 username = user_data.email
@@ -277,7 +279,6 @@ def profile():
 
         app.logger.info(f" DASHBOARD :: {dashboardInfo}")
 
-
         #DONT THINK I NEED THIS NOW 
         workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").execute() #remove
 
@@ -294,6 +295,7 @@ def profile():
 
         # Render profile page for authenticated users
         return render_template("profile.html", user=current_user, workoutObjects = workoutObjects,dashboard = dashboardInfo)
+    
     except Exception as e:
         flash(e)
         return render_template("profile.html", user=current_user)
@@ -673,7 +675,9 @@ def forgottenPassword():
         return render_template("forgottenPassword.html",form=form)
     #redirect with flashed mesage saying email sent 
 
-@app.route("/updatePassword", methods=['GET', 'POST'])
+
+
+@app.route("/updatePassword", methods=['GET', 'POST'])      #FIX OR REMOVE THIS 
 def updatePassword():
 
     token = request.args.get('access_token')

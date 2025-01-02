@@ -16,7 +16,10 @@
         <h2>Your Progress</h2>
         <div id="progress-totals-wrapper">
             <span>total workouts tracked {{dashboard.stats[0].total_workouts}} </span>
+            {% if dashboard.stats[0].total_meals %}
+                
             <span>total meals tracked {{dashboard.stats[0].total_meals}}</span>
+            {% endif %}
         </div>
         <div id="dash-category-wrapper">
             
