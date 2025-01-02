@@ -1,4 +1,4 @@
-from flask import Flask,render_template,url_for,request,jsonify,redirect,flash
+from flask import Flask,render_template,url_for,request,jsonify,redirect,flash,session
 
 from flask_wtf import FlaskForm
 from wtforms import StringField,EmailField,SubmitField,PasswordField,HiddenField
@@ -102,17 +102,25 @@ class User(flask_login.UserMixin):
         self.username = username
         self.email = email
 
+
 @login_manager.user_loader ##this is the one gemini created after i started using supabase auth instead of the og table for auth 
 def load_user(user_id):
     try:
         ##this is whats causing the session issue. i need to start using jwt tokens
-        response = supabase.auth.get_user()
-        user_data = response.user
+        # response = supabase.auth.get_user()
+        #response = supabase.auth.admin.get_user_by_id(user_id)
+        # query = f"SELECT id,email FROM auth.users WHERE id = '{user_id}'"
+        response = supabase.rpc("get_user_by_id_2",{"user_id":user_id}).execute()
+        app.logger.info(f"USER LOADER SQL RESPONSE : {response}")
+
+        #user_data = response.user
+        user_data = response.data[0]
         #app.logger.info(f"USER INFO FOR LOAD _USER {user_data}")
         if user_data:
-            user_id = user_data.id
-            username = user_data.email
-            email = user_data.email
+            user_id = user_data['id']
+            username = user_data['email']
+            email = user_data['email']
+            #the above used to be user_data.id and .email
         
         # Create the User object
         current_user = User(user_id, username, email)
@@ -227,9 +235,11 @@ def profile():
     
     #get the entries for this user 
     try:
-        
+        # response = supabase.rpc("get_workouts_by_user_2", {"p_user_id": current_user.id}).order("date", desc=True).limit(1).execute()
+        # app.logger.info(f" NEW WORKOUTS FUNCTION :: {response}")
         #get the last workout for dashboard 
-        lastWokrout = supabase.table("workout_for_user_by_date_2").select("*").order("date", desc=True).limit(1).execute()
+        # lastWokrout = supabase.table("workout_for_user_by_date_2").select("*").order("date", desc=True).limit(1).execute()
+        lastWokrout = supabase.rpc("get_workouts_by_user_2", {"p_user_id": current_user.id}).order("date", desc=True).limit(1).execute()
         app.logger.info(f"LAST WORKOUT:: {lastWokrout}")
         app.logger.info(f"LAST WORKOUT DATA:: {lastWokrout.data}")
 
@@ -276,20 +286,21 @@ def profile():
         except Exception as e:
             app.logger.error(f"Error when fetching stats {e}")
 
-
         app.logger.info(f" DASHBOARD :: {dashboardInfo}")
 
+        
+
         #DONT THINK I NEED THIS NOW 
-        workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").execute() #remove
+        # workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").execute() #remove
 
         workoutObjects = []
-        for w in workoutResponse.data: #can remove now i think 
-            try:
-                wobject = Workout(w)
-                #app.logger.info(f" WORKOUT OBJECT :: {wobject}")
-                workoutObjects.append(wobject)
-            except Exception as e:
-                app.logger.info(f"Something wen wrong adding workouts {e}")
+        # for w in workoutResponse.data: #can remove now i think 
+        #     try:
+        #         wobject = Workout(w)
+        #         #app.logger.info(f" WORKOUT OBJECT :: {wobject}")
+        #         workoutObjects.append(wobject)
+        #     except Exception as e:
+        #         app.logger.info(f"Something wen wrong adding workouts {e}")
 
         #app.logger.info(f" WORKOUT OBJECTS :: {workoutObjects}")
 
@@ -328,7 +339,8 @@ def viewMeals():
 def viewWorkouts():
 
     try:
-        workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").order("date", desc=True).execute()
+        #workoutResponse = supabase.table("workout_for_user_by_date_2").select("*").order("date", desc=True).execute()
+        workoutResponse = supabase.rpc("get_workouts_by_user_2", {"p_user_id": flask_login.current_user.id}).order("date", desc=True).execute()
         app.logger.info(f" WORKOUT RESPONSE :: {workoutResponse.data}")
 
         workoutObjects = []
