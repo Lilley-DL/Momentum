@@ -198,6 +198,66 @@ footer div{
     font-weight: bold;
 }
 
+/* ADD WORKOUT  */
+
+#workout-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    font-size: larger;
+}
+
+#weight-format{
+    max-width: 100px;
+}
+
+
+.form-section{
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+}
+.form-section h3{
+    margin: 0 0 5px 0;
+    text-decoration: underline;
+}
+
+
+
+.form-section input{
+    font-size: larger;
+}
+
+.form-section select{
+ font-size: larger;
+} 
+
+/* reps and sets  */
+.movement-wrapper{
+    display: flex;
+    flex-direction: column;
+}
+#sets-wrapper{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+#set-wrapper{
+    display: flex;
+    flex-direction: column;
+    background-color: #CAE2F9;
+}
+
+.movement-controls{
+    display: flex;
+    flex-direction: row;
+}
+.movement-controls input{
+    max-width: 50%;
+}
+
+
 @media screen and (max-width:500px) {
     #top-nav{
         /* display:none; */
@@ -228,5 +288,33 @@ footer div{
         display: flex;
         flex-direction: column;
     }
+
+    /* WORKOUT INPUT FORM  */
+    #workout-form{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* margin-left: 10%; */
+    }
+    .form-section{
+        min-width: 80%;
+    }
+    .form-section input[type=datetime-local]{
+        /* max-width: 50%; */
+    }
+    
+    #workout-form input{
+        /* max-width: 50%; */
+    }
+    
+    #workout-form select{
+        /* max-width: 50%; */
+    }
+
+    #workout-form button{
+        /* max-width: 50%; */
+    }
+    
+
 
 }

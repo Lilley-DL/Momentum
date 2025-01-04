@@ -12,58 +12,69 @@
     <h3>Welcome {{current_user.username}}</h3>
 {% endif %}
 
-<h4>Current workout</h4>
-<h1>Workout</h1>
+<h1>Track Workout</h1>
 
     <form id="workout-form" action="/add-workout" method="post">
         <input type="hidden" name="type" value="weights">
-        <label for="date">Date:</label>
-        <input type="datetime-local" name="date" id="date" required>
-        <br>
-        <label for="name">Workout name:</label>
-        <input type="text" name="workout-name" id="workout-name" required>
-        <br>
-        <label for="category">Category</label>
-        <select name="category" id="workout-category">
-            <option value="chest">Chest</option>
-            <option value="back">Back</option>
-            <option value="shoulders">Shoulders</option>
-            <option value="legs">Legs</option>
-            <option value="core">Core</option>
-            <option value="arms">Arms</option>
-        </select>
-        <br>
-        <br>
-        <label for="movements">Movements:</label>
-        <br>
+
+        <div id="info-section" class="form-section">
+            <label for="date">Date:</label>
+            <input type="datetime-local" name="date" id="date" required>
         
-        <select name="weight-format" id="weight-format" class="movement-input" >
-            <option value="kg">kg</option>
-            <option value="lb">lb</option>
-            <option value="bw">BW</option>
-        </select>
-        <label for="movement">Movement: </label>
-        <input type="text" class="movement-input" id="movement" maxlength="20" minlength="3" size="12">
-        <button id="add_movementbutton">Add Movement</button>
-        <span id="warning"></span>
-        <br>
-        <!-- the wrapper for the movments. filled mainly by javascript -->
-        <div class="" id="movements-wrapper">
-            <div class="" id="repsSets-wrapper">
+            <label for="name">Workout name:</label>
+            <input type="text" name="workout-name" id="workout-name" required>
+        
+            <label for="category">Category</label>
+            <select name="category" id="workout-category">
+                <option value="chest">Chest</option>
+                <option value="back">Back</option>
+                <option value="shoulders">Shoulders</option>
+                <option value="core">Core</option>
+                <option value="arms">Arms</option>
+                <option value="push">Push</option>
+                <option value="pull">Pull</option>
+                <option value="legs">Legs</option>
+                <option value="mixed">Mixed</option>
+            </select>
+        </div>
+
+        <div id="movements-section" class="form-section">
+            <h3 class="section-title">Exercises:</h3>
+            
+            <label for="movement">Exercise Name: </label>
+            <input type="text" class="movement-input" id="movement" maxlength="20" minlength="3" size="12">
+            <label for="weight-format"></label>
+            
+            <select name="weight-format" id="weight-format" class="movement-input" >
+                <option value="kg">kg</option>
+                <option value="lb">lb</option>
+                <option value="bw">BW</option>
+            </select>
+
+            <button id="add_movementbutton">Add</button>
+            <span id="warning"></span>
+            <br>
+            <!-- the wrapper for the movments. filled mainly by javascript -->
+            <div class="" id="movements-wrapper">
+
             </div>
         </div>
-        <label for="effort">Effort: </label>
-        <select name="effort" id="workout-effort" class="movement-input">
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-            <option value="too_hard">Too hard</option>
-        </select>
-        <br>
-        <input type="submit" value="Submit">
-        <br>
-    </form>
 
+        <div class="form-section">
+
+            <label for="effort">Effort: </label>
+            <select name="effort" id="workout-effort" class="movement-input">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+                <option value="too_hard">Too hard</option>
+            </select>
+            <br>
+            <input type="submit" value="Submit">
+        </div>
+    
+    </form>
+    <hr>
     <button id="timer-show" type="button">Rest timer</button>
     <dialog id="timer-dialog">
         <label for="interval">Interval (minutes):</label>
@@ -101,7 +112,7 @@
 
     let movementNameInput = document.getElementById("movement")
 
-    let repssetsWrapper = document.getElementById("repsSets-wrapper")
+    //let repssetsWrapper = document.getElementById("repsSets-wrapper")
     
     let addMovementButton = document.getElementById("add_movementbutton")
 
@@ -131,10 +142,8 @@
                 movementsList.push(movementName)
                 addMovement(movementName)
             }else{
-                
                 displayWarning("Name already taken")
-                
-                re(()=>{
+                setTimeout(()=>{
                     displayWarning("")
                 },2000)
                 return
@@ -157,6 +166,10 @@
     function addMovement(name){
 
         movements = movements +1
+
+        //div to hold the top elements 
+        let controlsDiv = document.createElement("div")
+        controlsDiv.classList.add("movement-controls")
 
         //create the new form element 
         //add it to the workout form as a child 
@@ -189,14 +202,20 @@
         movementWrapper.id = name
         movementWrapper.className = "movement-wrapper"
 
-       movementWrapper.append(nameLabel)
-       //movementWrapper.append(movementNameInput)
-       movementWrapper.append(addSetsbutton)
-       movementWrapper.append(removeMovementButton)
-       movementWrapper.append(document.createElement("br"))
-       movementWrapper.append(setsWrapper)
 
-       movementsWrapper.append(movementWrapper)
+        controlsDiv.appendChild(nameLabel)
+        controlsDiv.appendChild(addSetsbutton)
+        controlsDiv.appendChild(removeMovementButton)
+
+        movementWrapper.append(controlsDiv)
+
+        //movementWrapper.append(nameLabel)
+        //movementWrapper.append(addSetsbutton)
+        //movementWrapper.append(removeMovementButton)
+        movementWrapper.append(document.createElement("br"))
+        movementWrapper.append(setsWrapper)
+
+        movementsWrapper.append(movementWrapper)
 
         //make sure the input isnt blank so i can pass the movement name onto the sets id
         addSetsbutton.addEventListener("click",function(e){
@@ -205,10 +224,10 @@
         })
 
         removeMovementButton.addEventListener("click",function(e){
-            console.log(event.target.parentElement.id)
-            event.target.parentElement.remove()
+            console.log("Remove set button = ",event.target.parentElement.parentElement)
+            event.target.parentElement.parentElement.remove()
             //remove from the namesList 
-            console.log(movementsList)
+            // cant remember why i added this. probably going to create UI from state ? 
             let index = movementsList.indexOf(event.target.parentElement.id)
             console.log(index)
             if(index > -1){
@@ -263,11 +282,12 @@
 
         //remove button 
         let removeSetButton = document.createElement("button")
-        removeSetButton.innerHTML = "X"
+        removeSetButton.innerHTML = "Delete set"
 
         // a div for it all to go into 
         let setWrapper = document.createElement("div")
         setWrapper.id = "set-wrapper"
+        //think this should be a class identifier not an id 
 
         setWrapper.appendChild(weightLabel)
         setWrapper.appendChild(weightInput)

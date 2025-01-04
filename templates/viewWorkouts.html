@@ -25,7 +25,11 @@
                 <span id="movement-name">{{set[0]}}</span>
                 <br>
                 {% for reps in set[1] %}
+                    {% if reps[0] == "BW" %}
+                        {{reps[0]}} for {{reps[1]}} reps
+                    {% else %}
                     {{reps[0]}}kg for {{reps[1]}} reps
+                    {% endif %}
                 {% endfor %}
                 <br>
             {% endfor %}
