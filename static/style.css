@@ -206,29 +206,42 @@ footer div{
     align-items: center;
     gap: 20px;
     font-size: larger;
+    /* background-color: #90d5f5; */
 }
 
 #weight-format{
     max-width: 100px;
+   
 }
 
 
 .form-section{
     display: flex;
     flex-direction: column;
-    width: 60%;
+    width: 80%;
+    /* padding-left: 10%; */
+    /* background-color: #90d5f5; */
+    gap: 5px;
+    font-size: large;
 }
 .form-section h3{
     margin: 0 0 5px 0;
     text-decoration: underline;
 }
-
-
-
-.form-section input{
-    font-size: larger;
+.form-section button{
+    font-size: large;
 }
 
+.form-section input[type=datetime-local]{
+    max-width: 15rem;
+    font-size: larger;
+}
+.form-section input[type=text]{
+    font-size: larger;
+}
+.form-section input[type=number]{
+    font-size: larger;
+}
 .form-section select{
  font-size: larger;
 } 
@@ -241,12 +254,15 @@ footer div{
 #sets-wrapper{
     display: flex;
     flex-direction: column;
-    margin-left: 20px;
+    /* margin-left: 20px; */
+    background-color: #CAE2F9;
+    padding-top: 20px;
 }
 #set-wrapper{
     display: flex;
     flex-direction: column;
-    background-color: #CAE2F9;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .movement-controls{

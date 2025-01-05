@@ -8,9 +8,6 @@
 {% endif %}
 
 {% block content %}
-{% if current_user%}
-    <h3>Welcome {{current_user.username}}</h3>
-{% endif %}
 
 <h1>Track Workout</h1>
 
@@ -43,8 +40,7 @@
             
             <label for="movement">Exercise Name: </label>
             <input type="text" class="movement-input" id="movement" maxlength="20" minlength="3" size="12">
-            <label for="weight-format"></label>
-            
+            <label for="weight-format">Weight format:</label>
             <select name="weight-format" id="weight-format" class="movement-input" >
                 <option value="kg">kg</option>
                 <option value="lb">lb</option>
@@ -279,6 +275,7 @@
         repsInput.placeholder = "Reps"
         repsInput.required = true 
         repsInput.className = "setinput"
+        repsInput.enterKeyHint = "Next set"
 
         //remove button 
         let removeSetButton = document.createElement("button")
@@ -308,7 +305,7 @@
 
         repsInput.addEventListener('keydown',function(e){
             
-            console.log(e.key)
+            //console.log(e.key)
             if(e.keyCode == 9){
                 event.preventDefault()
 
