@@ -40,7 +40,7 @@
             <div class="" id="movements-wrapper">
 
             </div>
-            
+
             <h3 class="section-title">Exercises:</h3>
             
             <label for="movement">Exercise Name: </label>
@@ -95,6 +95,14 @@
         <button id="rest-close">Close</button>
     </dialog>
 
+    <div id="rest-timer-wrapper">
+        <span id="">Rest timer</span>
+        <span id="timer-display"></span>
+        <button id="rest-timer-start">Start</button>
+        <button id="rest-timer-stop">Stop</button>
+        <button id="rest-timer-reset">Reset</button>
+    </div>
+
 {% endblock  %}
 
 {% block scripts %}
@@ -126,6 +134,12 @@
 
     var timerSelect = document.getElementById("rest-duration-select")
     var timerDisplay = document.getElementById("rest-timer-display")
+
+    //new timer 
+    var restDisplay = document.getElementById("timer-display")
+    var timerStart = document.getElementById("rest-timer-start")
+    var timerStop = document.getElementById("rest-timer-stop")
+    var timerReset = document.getElementById("rest-timer-reset")
 
     addMovementButton.addEventListener("click",function(e){
         event.preventDefault()

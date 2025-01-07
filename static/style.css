@@ -344,6 +344,23 @@ footer div{
         /* max-width: 50%; */
     }
     
+    #rest-timer-wrapper{
+        width: 80px;
+        height: 150px;
+        background-color: rgb(114, 218, 250);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        gap: 5px;
+
+        padding: 2px;
+
+        position: fixed;
+        /* margin-left: auto; */
+        right: 10px;
+        z-index: 1000;
+        top: 150px;
+    }
 
 
 }
