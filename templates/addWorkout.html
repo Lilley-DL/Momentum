@@ -36,6 +36,11 @@
         </div>
 
         <div id="movements-section" class="form-section">
+            <!-- the wrapper for the movments. filled mainly by javascript -->
+            <div class="" id="movements-wrapper">
+
+            </div>
+            
             <h3 class="section-title">Exercises:</h3>
             
             <label for="movement">Exercise Name: </label>
@@ -50,10 +55,7 @@
             <button id="add_movementbutton">Add</button>
             <span id="warning"></span>
             <br>
-            <!-- the wrapper for the movments. filled mainly by javascript -->
-            <div class="" id="movements-wrapper">
 
-            </div>
         </div>
 
         <div class="form-section">
@@ -175,12 +177,16 @@
         nameLabel.value = name
         nameLabel.className = "movement-input"
         nameLabel.classList.add("movement-name-label")
+        nameLabel.classList.add("readonly-input")
         nameLabel.readOnly = true
         nameLabel.size = 10
 
         // a div for it all to go into 
         let setsWrapper = document.createElement("div")
         setsWrapper.id = "sets-wrapper"
+
+        //add exercise name to top oif sets 
+        ensureSetHeader(setsWrapper,name+"-sets-wrapper",name)
 
         //add reps button
         let addSetsbutton = document.createElement("button")
@@ -205,12 +211,10 @@
 
         movementWrapper.append(controlsDiv)
 
-        //movementWrapper.append(nameLabel)
-        //movementWrapper.append(addSetsbutton)
-        //movementWrapper.append(removeMovementButton)
         movementWrapper.append(document.createElement("br"))
-        movementWrapper.append(setsWrapper)
+        movementWrapper.prepend(setsWrapper)
 
+        ensureHeader(movementsWrapper)
         movementsWrapper.append(movementWrapper)
 
         //make sure the input isnt blank so i can pass the movement name onto the sets id
@@ -241,6 +245,8 @@
         console.log(movementName)
         weightCount = weightCount + 1
 
+        let exerciseName = document.createElement("span")
+        exerciseName.innerText = movementName
         //create the new form element 
         //add it to the workout form as a child 
         let weightLabel = document.createElement("label")
@@ -260,6 +266,7 @@
         if(weightFormat.value == "bw"){
             weightInput.type = "text"
             weightInput.value = "BW"
+            weightInput.classList.add("readonly-input")
             weightInput.readOnly = true
         }else{
             //weightInput.name = movementName + "_weight"
@@ -280,12 +287,13 @@
         //remove button 
         let removeSetButton = document.createElement("button")
         removeSetButton.innerHTML = "Delete set"
+        removeSetButton.id = "delete-set-button"
 
         // a div for it all to go into 
         let setWrapper = document.createElement("div")
         setWrapper.id = "set-wrapper"
         //think this should be a class identifier not an id 
-
+        
         setWrapper.appendChild(weightLabel)
         setWrapper.appendChild(weightInput)
         setWrapper.appendChild(repsLabel)
@@ -329,6 +337,25 @@
             event.target.parentElement.remove()
         })
 
+    }
+
+    function ensureHeader(container) {
+        if (!document.getElementById('sets-header')) {
+            const header = document.createElement('h4');
+            header.id = 'sets-header';
+            header.textContent = 'Sets :';
+            container.prepend(header);
+        }
+    }
+
+    function ensureSetHeader(container,header_id,exerciseName) {
+        if (!document.getElementById(header_id)) {
+            const header = document.createElement('span');
+            header.classList.add("exercise-sets-title")
+            header.id = header_id;
+            header.textContent = exerciseName;
+            container.prepend(header);
+        }
     }
 
     function displayWarning(message){

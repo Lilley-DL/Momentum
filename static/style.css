@@ -218,7 +218,7 @@ footer div{
 .form-section{
     display: flex;
     flex-direction: column;
-    width: 80%;
+    width: 70%;
     /* padding-left: 10%; */
     /* background-color: #90d5f5; */
     gap: 5px;
@@ -246,6 +246,12 @@ footer div{
  font-size: larger;
 } 
 
+.readonly-input{
+    font-weight: bold;
+    font-size: large;
+    border: none;
+}
+
 /* reps and sets  */
 .movement-wrapper{
     display: flex;
@@ -256,7 +262,7 @@ footer div{
     flex-direction: column;
     /* margin-left: 20px; */
     background-color: #CAE2F9;
-    padding-top: 20px;
+    /* padding-top: 20px; */
 }
 #set-wrapper{
     display: flex;
@@ -268,9 +274,17 @@ footer div{
 .movement-controls{
     display: flex;
     flex-direction: row;
+    border-bottom: 1px solid black;
 }
 .movement-controls input{
     max-width: 50%;
+}
+.exercise-sets-title{
+    font-weight: bold;
+}
+
+#delete-set-button{
+    margin-top: 10px;
 }
 
 
@@ -290,7 +304,6 @@ footer div{
         max-width: 45vw;
     }
 
-
     #dashboard-wrapper{
         align-items: center;
     }
@@ -309,11 +322,11 @@ footer div{
     #workout-form{
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         /* margin-left: 10%; */
     }
     .form-section{
-        min-width: 80%;
+        min-width: 70%;
     }
     .form-section input[type=datetime-local]{
         /* max-width: 50%; */
