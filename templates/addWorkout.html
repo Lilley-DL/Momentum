@@ -99,7 +99,7 @@
         <span id="">Rest timer</span>
         <span id="timer-display"></span>
         <button id="rest-timer-start">Start</button>
-        <button id="rest-timer-stop">Stop</button>
+        
         <button id="rest-timer-reset">Reset</button>
     </div>
 
@@ -138,7 +138,6 @@
     //new timer 
     var restDisplay = document.getElementById("timer-display")
     var timerStart = document.getElementById("rest-timer-start")
-    var timerStop = document.getElementById("rest-timer-stop")
     var timerReset = document.getElementById("rest-timer-reset")
 
     addMovementButton.addEventListener("click",function(e){
@@ -377,7 +376,69 @@
         warningText.innerText = message
     }
 
+
+    //new timer
+    let timerInterval2;
+    let isPaused2 = false;
+    var timeRested = 0
+    timerStart.addEventListener("click",function(e){
+        //let restTime = timerSelect.value * 60
+        let timeLimit = 300
+        function countDown(){
+            if(timeRested < timeLimit ){
+                //restTime -= 1
+                timeRested += 1
+                console.log("Timer time = ",timeRested)
+                restDisplay.innerText = timeRested
+            }else{
+                clearInterval(timerInterval2)
+                timerInterval2 = undefined
+                timeRested = 0
+                console.log("Timer finished")
+                changeButtonDisplay(e.target,"Start")
+            }
+        }
+
+        function startCountdown(){
+            timerInterval2 = setInterval(countDown,1000)
+        }
+
+        //if its defined then its already started 
+        if(timerInterval2){
+            if(isPaused2){
+                //chenge the 
+                timerInterval2 = setInterval(countDown,1000)
+                isPaused2 = false;
+                changeButtonDisplay(e.target,"Pause")
+            }else{
+                //pause the timer
+                clearInterval(timerInterval2)
+                isPaused2 = true
+                changeButtonDisplay(e.target,"Start")
+            }
+            
+        }else{
+            startCountdown()
+            changeButtonDisplay(e.target,"Pause")
+        }
+    })
+
+    timerReset.addEventListener("click",function(e){
+        if(timerInterval2){
+            clearInterval(timerInterval2)
+            //clear the time display 
+            restDisplay.innerText = ""
+            timeRested = 0
+            isPaused2 = false
+            changeButtonDisplay(timerStart,"Start")
+            timerInterval2 = undefined
+        }
+    })
+
+
     //rest timer 
+
+
 
     timerShowButton.addEventListener("click", function(e){
         timerDialog.showModal()
@@ -389,7 +450,7 @@
 
     let timerInterval;
     let isPaused = false;
-    var timeRested = 0
+    //var timeRested = 0
 
     startTimer.addEventListener("click",function(e){
 
