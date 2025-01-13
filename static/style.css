@@ -346,7 +346,7 @@ footer div{
     
     #rest-timer-wrapper{
         width: 80px;
-        height: 150px;
+        /* height: 150px; */
         background-color: rgb(114, 218, 250);
         display: flex;
         flex-direction: column;
@@ -354,12 +354,25 @@ footer div{
         gap: 5px;
 
         padding: 2px;
+        border-radius: 10px;
 
         position: fixed;
         /* margin-left: auto; */
         right: 10px;
         z-index: 1000;
         bottom: 80px;
+    }
+
+    #rest-timer-wrapper img{
+        align-self: center;
+    }
+
+    #rest-timer-wrapper span{
+        align-self: center;
+    }
+
+    #timer-display{
+        font-size: xx-large
     }
 
 

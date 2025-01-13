@@ -97,10 +97,12 @@
 
     <div id="rest-timer-wrapper">
         <span id="">Rest timer</span>
-        <span id="timer-display"></span>
-        <button id="rest-timer-start">Start</button>
+        <span id="timer-display">0</span>
+        <!-- <button >Start</button> -->
+        <img id="rest-timer-start" src="{{ url_for('static', filename='icons/startTimer.svg') }}" width="70px" alt="" srcset="">
+        <img id="rest-timer-reset" src="{{ url_for('static', filename='icons/resetTimer.svg') }}" width="70px" alt="" srcset="">
         
-        <button id="rest-timer-reset">Reset</button>
+        <!-- <button >Reset</button> -->
     </div>
 
 {% endblock  %}
@@ -378,6 +380,10 @@
 
 
     //new timer
+
+    var startTimerIcon = "{{ url_for('static', filename='icons/startTimer.svg') }}"
+    var pauseTimerIcon = "{{ url_for('static', filename='icons/pauseTimer.svg') }}"
+   
     let timerInterval2;
     let isPaused2 = false;
     var timeRested = 0
@@ -396,6 +402,7 @@
                 timeRested = 0
                 console.log("Timer finished")
                 changeButtonDisplay(e.target,"Start")
+                e.target.src = startTimerIcon
             }
         }
 
@@ -410,16 +417,19 @@
                 timerInterval2 = setInterval(countDown,1000)
                 isPaused2 = false;
                 changeButtonDisplay(e.target,"Pause")
+                e.target.src = pauseTimerIcon
             }else{
                 //pause the timer
                 clearInterval(timerInterval2)
                 isPaused2 = true
                 changeButtonDisplay(e.target,"Start")
+                e.target.src = startTimerIcon
             }
             
         }else{
             startCountdown()
             changeButtonDisplay(e.target,"Pause")
+            e.target.src = pauseTimerIcon
         }
     })
 
@@ -427,11 +437,12 @@
         if(timerInterval2){
             clearInterval(timerInterval2)
             //clear the time display 
-            restDisplay.innerText = ""
+            restDisplay.innerText = "0"
             timeRested = 0
             isPaused2 = false
             changeButtonDisplay(timerStart,"Start")
             timerInterval2 = undefined
+            timerStart.src = startTimerIcon
         }
     })
 
