@@ -47,7 +47,7 @@ class Workout:
 
 
     def __str__(self):
-        return json.dumps(self.workout_data)
+        return json.dumps(self.workout_data) ##could change this to the __dict__ maybe ?
 
 #database thingssssss
 #should allow for development using a dev database

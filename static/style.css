@@ -266,9 +266,10 @@ footer div{
 }
 #set-wrapper{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     margin-left: 20px;
-    margin-right: 20px;
+    /* margin-right: 20px; */
+    height: 30px;
 }
 
 .movement-controls{
@@ -284,7 +285,7 @@ footer div{
 }
 
 #delete-set-button{
-    margin-top: 10px;
+    /* margin-top: 10px; */
 }
 
 
@@ -327,13 +328,14 @@ footer div{
     }
     .form-section{
         min-width: 70%;
+        width: 85%;
     }
     .form-section input[type=datetime-local]{
         /* max-width: 50%; */
     }
     
     #workout-form input{
-        /* max-width: 50%; */
+        /* max-width: 3rem; */
     }
     
     #workout-form select{
@@ -345,25 +347,26 @@ footer div{
     }
     
     #rest-timer-wrapper{
-        width: 80px;
+        width: 50px;
         /* height: 150px; */
-        background-color: rgb(114, 218, 250);
+        background-color: #9B5DE5;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         gap: 5px;
 
-        padding: 2px;
-        border-radius: 10px;
+        padding: 5px;
+        border-radius: 10px 0 0 10px;
 
         position: fixed;
         /* margin-left: auto; */
-        right: 10px;
+        right: 0px;
         z-index: 1000;
         bottom: 80px;
     }
 
     #rest-timer-wrapper img{
+
         align-self: center;
     }
 
@@ -373,6 +376,20 @@ footer div{
 
     #timer-display{
         font-size: xx-large
+    }
+
+    #sets-wrapper{
+        gap: 5px;
+    }
+
+    #set-wrapper{
+        margin-left: 0px;
+        height: 30px;
+        /* gap: 5px; */
+        justify-content: space-between;
+    }
+    .setinput{
+        max-width: 3rem;
     }
 
 
