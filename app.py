@@ -302,8 +302,6 @@ def viewMeals():
         return render_template("viewMeals.html")
 
 
-
-
 @app.route("/view/workouts")
 @flask_login.login_required
 def viewWorkouts():
@@ -419,7 +417,25 @@ def deleteWaterEntry(entry_id):
         flash(f"Something went wrong {e}")
         return redirect(url_for('waterEntry'))
     
-    return redirect(url_for('waterEntry'))
+    return redirect(url_for('viewWorkouts'))
+
+#delete workout 
+@app.route("/deleteWorkoutEntry/<entry_id>",methods=["GET"])
+@flask_login.login_required
+def deleteWorkoutEntry(entry_id):
+    #GET ENTRY BY ID 
+    #check the entry_id exists ?
+    try:
+        response = supabase.table("workout").delete().eq("id",entry_id).eq("user_id",flask_login.current_user.id).execute()
+        app.logger.info(f"WORKOUT DELETE RESPONSE {response}")
+    except Exception as e:
+        flash(f"Something went wrong {e}")
+        return redirect(url_for('viewWorkouts'))
+    
+    return redirect(url_for('viewWorkouts'))
+
+
+#delete meal entry 
 
 
 

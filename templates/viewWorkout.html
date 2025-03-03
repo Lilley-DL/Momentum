@@ -11,6 +11,7 @@
 
 {% if workout %}
     <br>
+        
         {{workout.dateTime}}
         <br>
         <span id="workout-name">{{workout.name}} </span>
@@ -29,6 +30,8 @@
         {% if workout.duration %}
             {{workout.duration}} minutes
         {% endif %}
+
+        <a href="{{url_for('deleteWorkoutEntry', entry_id=workout.workout_id)}}">Delete workout</a>
 {% endif %}
 
 {% endblock  %}
