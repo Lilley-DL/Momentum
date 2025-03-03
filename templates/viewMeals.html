@@ -33,6 +33,7 @@
             {{entry.entry_data[key]}}
             <br>
         {% endfor %}
+        <a href="{{url_for('deleteMealEntry',entry_id=entry.entry_id)}}">Delete meal</a>
         <hr>
     {% endfor %}
 {% endif %}

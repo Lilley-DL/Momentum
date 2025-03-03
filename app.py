@@ -436,6 +436,19 @@ def deleteWorkoutEntry(entry_id):
 
 
 #delete meal entry 
+@app.route("/deleteMealEntry/<entry_id>",methods=["GET"])
+@flask_login.login_required
+def deleteMealEntry(entry_id):
+    #GET ENTRY BY ID 
+    #check the entry_id exists ?
+    try:
+        response = supabase.table("macro_entry").delete().eq("entry_id",entry_id).eq("user_id",flask_login.current_user.id).execute()
+        app.logger.info(f"MEAL DELETE RESPONSE {response}")
+    except Exception as e:
+        flash(f"Something went wrong {e}")
+        return redirect(url_for('viewMeals'))
+    
+    return redirect(url_for('viewMeals'))
 
 
 
