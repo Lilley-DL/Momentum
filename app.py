@@ -362,8 +362,6 @@ def viewWorkout(workout_id):
         return redirect("/profile")
     
 
-
-
 @app.route("/waterEntry",methods=['GET','POST'])
 @flask_login.login_required
 def waterEntry():
@@ -408,6 +406,21 @@ def waterEntry():
             return redirect(url_for('waterEntry'))
 
         return render_template("waterTracking.html",entries=waterEntries)
+
+@app.route("/deleteWaterEntry/<entry_id>",methods=["GET"])
+@flask_login.login_required
+def deleteWaterEntry(entry_id):
+    #GET ENTRY BY ID 
+    #check the entry_id exists ?
+    try:
+        response = supabase.table("water").delete().eq("entry_id",entry_id).eq("user_id",flask_login.current_user.id).execute()
+        app.logger.info(f"WATER DELETE RESPONSE {response}")
+    except Exception as e:
+        flash(f"Something went wrong {e}")
+        return redirect(url_for('waterEntry'))
+    
+    return redirect(url_for('waterEntry'))
+
 
 
 @app.route("/createEntry",methods=['GET','POST'])       #MEAL ENTRY 

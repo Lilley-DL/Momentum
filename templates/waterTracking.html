@@ -29,12 +29,12 @@
 {% if entries %}
     {% for entry in entries %}
     <h3>{{entry.entry_name}} </h3>
-    
         {% for key in entry.entry_data %}
             {{key}} ::
             {{entry.entry_data[key]}}
             <br>
-        {% endfor %}
+            {% endfor %}
+            <a href="{{url_for('deleteWaterEntry', entry_id=entry.entry_id)}}">Delete</a>
         <hr>
     {% endfor %}
 {% endif %}
@@ -56,6 +56,8 @@
     const today = new Date().toISOString().split('T')[0];
     // Set the default value of the date input
     document.getElementById('date').value = today;
+    //what about dates in the future ?
+    //do i allow that ?
 </script>
     
 {% endblock scripts %}
