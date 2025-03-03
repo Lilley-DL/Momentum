@@ -96,11 +96,19 @@
     </dialog> -->
 
     <div id="rest-timer-wrapper">
-        <span id="">Rest timer</span>
-        <span id="timer-display">0</span>
-        <!-- <button >Start</button> -->
-        <img id="rest-timer-start" src="{{ url_for('static', filename='icons/startTimer.svg') }}" width="70px" alt="" srcset="">
-        <img id="rest-timer-reset" src="{{ url_for('static', filename='icons/resetTimer.svg') }}" width="70px" alt="" srcset="">
+        <button id="timer-show" style="border: none; background: none; cursor: pointer;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path id="arrow-path" d="M18 15l-6-6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        <div id="rest-timer">
+
+            <span id="">Rest timer</span>
+            <span id="timer-display">0</span>
+            <!-- <button >Start</button> -->
+            <img id="rest-timer-start" src="{{ url_for('static', filename='icons/startTimer.svg') }}" width="70px" alt="" srcset="">
+            <img id="rest-timer-reset" src="{{ url_for('static', filename='icons/resetTimer.svg') }}" width="70px" alt="" srcset="">
+        </div>
         
         <!-- <button >Reset</button> -->
     </div>
@@ -448,11 +456,23 @@
 
 
     //rest timer 
-
-
+    timerDisplayed = false
+    let restTimer = document.getElementById("rest-timer")
+    let restArrow = document.getElementById("arrow-path")
 
     timerShowButton.addEventListener("click", function(e){
-        timerDialog.showModal()
+        console.log("event ",e.target)
+        //show the timer 
+        if(timerDisplayed){
+            restTimer.style.display = "None"
+            timerDisplayed = false
+            //set the svg 
+            restArrow.setAttribute("d","M18 15l-6-6-6 6")
+        }else{
+            restTimer.style.display = "contents"
+            timerDisplayed = true
+            restArrow.setAttribute("d", "M6 9l6 6 6-6")
+        }
     })
 
     closeTimer.addEventListener("click", function(e){

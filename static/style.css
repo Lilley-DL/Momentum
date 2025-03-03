@@ -365,6 +365,10 @@ footer div{
         bottom: 80px;
     }
 
+    #rest-timer{
+        display: none;
+    }
+
     #rest-timer-wrapper img{
 
         align-self: center;

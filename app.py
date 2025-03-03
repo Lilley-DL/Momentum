@@ -264,7 +264,8 @@ def profile():
         #GET THE WORKOUT AND MEAL TOTALS 
         try:
             #might need the user id portion too
-            response = supabase.table("user_activity_summary").select("*").execute()
+            response = supabase.table("user_activity_summary").select("*").eq("user_id",current_user.id).execute()
+            app.logger.info(f"STATS RESPONSE == {response}")
             app.logger.info(f"STATS RESPONSE == {response.data}")
             dashboardInfo['stats'] = response.data
         except Exception as e:
@@ -396,8 +397,9 @@ def waterEntry():
         #get the water entries 
         waterEntries = []
         try:
-            response = supabase.table("water").select("*").eq("user_id", current_user.id).execute()
-            app.logger.info(f"Water tracking select all == {response}")
+            # response = supabase.table("water").select("*").eq("user_id", current_user.id).execute()
+            response = supabase.table("water").select("*").eq("user_id", current_user.id).order("created", desc=True).execute()
+            # app.logger.info(f"Water tracking select all == {response}")
 
             waterEntries = response.data if response.data else []
 
@@ -710,6 +712,11 @@ def unauthorized_handler():
     #return "Unauthorized", 401
     flash("Please login")
     return redirect(url_for('welcome'))
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
 
 
 ##for render to run 
