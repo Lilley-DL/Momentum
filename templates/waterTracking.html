@@ -28,14 +28,16 @@
 <h3>Water entries</h3>
 {% if entries %}
     {% for entry in entries %}
-    <h3>{{entry.entry_name}} </h3>
-        {% for key in entry.entry_data %}
-            {{key}} ::
-            {{entry.entry_data[key]}}
+        <form action="" method="post">
+            <label for="water-date">Date: </label>
+            <span id="water-date" >{{entry.entry_data['date']}}</span>
             <br>
-            {% endfor %}
+            <label for="water-amount">Amount(ml): </label>
+            <span id="water-amount">{{entry.entry_data['amount']}}</span>
+            <br>
             <a href="{{url_for('deleteWaterEntry', entry_id=entry.entry_id)}}">Delete</a>
-        <hr>
+            <hr>
+        </form>
     {% endfor %}
 {% endif %}
 
@@ -58,6 +60,10 @@
     document.getElementById('date').value = today;
     //what about dates in the future ?
     //do i allow that ?
+
+    //get the date and amount span 
+
+
 </script>
     
 {% endblock scripts %}

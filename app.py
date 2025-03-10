@@ -346,7 +346,7 @@ def viewWorkout(workout_id):
         try:
             workoutObject = Workout(response.data)
             app.logger.info(f" SINGLE OBJECT = {workoutObject}")
-            flash(f"WORKOUT {workoutObject}")
+            #flash(f"WORKOUT {workoutObject}")
             return render_template("viewWorkout.html",workout=workoutObject)
         
         except Exception as e:

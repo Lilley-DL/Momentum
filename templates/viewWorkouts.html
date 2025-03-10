@@ -8,32 +8,44 @@
 {% endif %}
 
 {% block content %}
-
+<a href="{{url_for('addWorkout')}}">Add workout</a> 
 <h2>Your workouts</h2>
 {% if workoutObjects %}
     {% for workout in workoutObjects %}
-    
-    <br>
-        <span class="workout-day">{{workout.dateTime.strftime('%A')}}</span>
-        <br>
-        <span class="workout-date">{{workout.dateTime.strftime('%d/%m/%y')}}</span>
-        <br>
+    <div class="workout">
+        
+        <span class="workout-day">{{workout.dateTime.strftime('%A')}}
+            <span class="workout-date">({{workout.dateTime.strftime('%d/%m/%y')}})</span>
+        </span>
+
         <span class="workout-name">{{workout.name|capitalize}} </span>
-         <br>
+         
         {% if workout.zippedSets %}
-            {% for set in workout.zippedSets %}
-                <span id="movement-name">{{set[0]}}</span>
-                <br>
-                {% for reps in set[1] %}
-                    {% if reps[0] == "BW" %}
-                        {{reps[0]}} for {{reps[1]}} reps
-                    {% else %}
-                    {{reps[0]}}kg for {{reps[1]}} reps
-                    {% endif %}
-                    |
+            <div class="sets-wrapper">
+
+                {% for set in workout.zippedSets %}
+                <div class="set">
+                    <span class="movement-name">{{set[0]}}</span>
+                    <br>
+                    {% for reps in set[1] %}
+                    <span class="reps">
+                        {% if reps[0] == "BW" %}
+                            {{reps[0]}} for {{reps[1]}} reps
+                        {% else %}
+                            {{reps[0]}}kg for {{reps[1]}} reps
+                        {% endif %}
+                        {#this puts the "|" delimeter apart from the last iteration#}
+                        {% if loop.last %}   
+                        {% else %}
+                        |
+                        {% endif %}    
+
+                    </span>
+                    {% endfor %}
+                    <br>
+                </div>
                 {% endfor %}
-                <br>
-            {% endfor %}
+            </div>
         {% endif %}
 
         {% if workout.duration %}
@@ -42,6 +54,7 @@
 
         <a href="{{url_for('viewWorkout', workout_id=workout.workout_id) }}">View workout</a>
         <hr>
+    </div>
     {% endfor %}
 {% endif %}
 
