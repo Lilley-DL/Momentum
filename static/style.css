@@ -20,6 +20,12 @@
     gap: 50px;
 }
 
+/* tracking subjects in top nav  */
+.subject-nav{
+    font-size:large;
+}
+
+
 #main-content{
     min-height: 60vh;
 }

@@ -18,10 +18,10 @@
 				alt="" srcset="" width=200></a>
 		<div id="top-nav-links">
 			{% if current_user.is_authenticated %}
-				<a href="{{url_for('viewWorkouts')}}">Workouts</a>
-            	<a href="{{url_for('viewMeals')}}">Meals</a> 
-            	<a href="{{url_for('waterEntry')}}">Water</a> 
 				<a href="{{url_for('profile')}}">Profile</a>
+				<a class="subject-nav" href="{{url_for('viewWorkouts')}}">Workouts</a>
+            	<a class="subject-nav" href="{{url_for('viewMeals')}}">Meals</a> 
+            	<a class="subject-nav" href="{{url_for('waterEntry')}}">Water</a> 
 				<a href="{{url_for('logout')}}">Logout</a>
 			{% else %}
 				<a href="{{url_for('login')}}">Login</a>
