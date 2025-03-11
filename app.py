@@ -759,12 +759,21 @@ def unauthorized_handler():
 def contact():
     return render_template("contact.html")
 
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
 #handle 404
 @app.errorhandler(404)
 def page_not_found(error):
     if app.debug:
         return error
     return render_template("404.html"),404
+
+##handle all other errors
+@app.errorhandler(Exception)
+def handle_exception(error):
+    return render_template("generic_error.html"),500
 
 ##for render to run 
 if __name__ == "__main__":

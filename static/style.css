@@ -343,7 +343,8 @@ footer div{
     }
     #top-nav div{
         display: flex;
-        gap: 50px;
+
+        gap: 15px;
     }
 
     #macro-input-wrapper{
