@@ -12,18 +12,18 @@
         <h2>Track</h2>
         <div class="card-links">
             <div class="card-link">
-                <a href="{{url_for('addWorkout')}}"><img src="{{ url_for('static', filename='icons/dumbell_icon.svg') }}" alt="" width="60"></a> 
-                <a href="{{url_for('addWorkout')}}">Workout</a> 
+                <a href="{{url_for('addWorkout')}}"><img src="{{ url_for('static', filename='icons/dumbell_icon.svg') }}" alt="" width="100"></a> 
+                <a class="card-subject-link" href="{{url_for('addWorkout')}}">Workout</a> 
             </div>
             
             <div class="card-link">
-                <a href="{{url_for('createEntry')}}"><img src="{{ url_for('static', filename='icons/food_icon1.svg') }}" alt="" width="60"></a> 
-                <a href="{{url_for('createEntry')}}">Meal</a> 
+                <a href="{{url_for('createEntry')}}"><img src="{{ url_for('static', filename='icons/food_icon1.svg') }}" alt="" width="100"></a> 
+                <a class="card-subject-link" href="{{url_for('createEntry')}}">Meal</a> 
             </div>
 
             <div class="card-link">
-                <a href="{{url_for('waterEntry')}}"><img src="{{ url_for('static', filename='icons/waterLogo.svg') }}" alt="" width="60"></a> 
-                <a href="{{url_for('waterEntry')}}">Water</a> 
+                <a href="{{url_for('waterEntry')}}"><img src="{{ url_for('static', filename='icons/waterLogo.svg') }}" alt="" width="100"></a> 
+                <a class="card-subject-link" href="{{url_for('waterEntry')}}">Water</a> 
             </div>
         </div>
     </div>
