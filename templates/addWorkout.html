@@ -251,8 +251,8 @@
             event.target.parentElement.parentElement.remove()
             //remove from the namesList 
             // cant remember why i added this. probably going to create UI from state ? 
-            let index = movementsList.indexOf(event.target.parentElement.id)
-            console.log(index)
+            let index = movementsList.indexOf(event.target.parentElement.parentElement.id)
+
             if(index > -1){
                 movementsList.splice(index,1)
             }
@@ -489,9 +489,8 @@
         
         function countDown(){
             if(timeRested < restTime ){
-                //restTime -= 1
                 timeRested += 1
-                console.log("Timer time = ",restTime - timeRested)
+                //console.log("Timer time = ",restTime - timeRested)
                 timerDisplay.innerText = restTime -timeRested
             }else{
                 clearInterval(timerInterval)
