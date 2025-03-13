@@ -296,6 +296,10 @@
             weightInput.type = "number"
             weightInput.placeholder = weightFormat.value
             weightInput.required = true
+            //set step ? 
+            weightInput.step = "0.1"
+            weightInput.min = 0
+
             //weightInput.className = "setinput"
         }
        
@@ -306,6 +310,7 @@
         repsInput.required = true 
         repsInput.className = "setinput"
         repsInput.enterKeyHint = "Next set"
+        repsInput.min = 1
 
         //remove button 
         let removeSetButton = document.createElement("button")
