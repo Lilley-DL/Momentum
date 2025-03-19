@@ -76,21 +76,80 @@
 
     <div id="rest-timer-wrapper">
         <button id="timer-show" style="border: none; background: none; cursor: pointer;">
+            Rest timer
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path id="arrow-path" d="M18 15l-6-6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
         <div id="rest-timer">
 
-            <span id="">Rest timer</span>
+            <!-- <span id="">Rest timer</span> -->
             <span id="timer-display">0</span>
             <!-- <button >Start</button> -->
             <img id="rest-timer-start" src="{{ url_for('static', filename='icons/startTimer.svg') }}" width="70px" alt="" srcset="">
             <img id="rest-timer-reset" src="{{ url_for('static', filename='icons/resetTimer.svg') }}" width="70px" alt="" srcset="">
         </div>
-        
-        <!-- <button >Reset</button> -->
     </div>
+
+    <div id="pastworkouts-wrapper">
+        Past workouts
+        <button id="pw-show">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path id="pw-arrow-path" d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+        </button>
+
+        <div id="pastworkouts">
+            {% for workout in pastWorkouts %}
+            <div class="workout">
+        
+                <span class="workout-day">{{workout.dateTime.strftime('%A')}}
+                    <span class="workout-date">({{workout.dateTime.strftime('%d/%m/%y')}})</span>
+                </span>
+        
+                <span class="workout-name">{{workout.name|capitalize}} </span>
+                 
+                {% if workout.zippedSets %}
+                    <div class="sets-wrapper">
+        
+                        {% for set in workout.zippedSets %}
+                        <div class="set">
+                            <span class="movement-name">{{set[0]}}</span>
+                            <br>
+                            {% for reps in set[1] %}
+                            <span class="reps">
+                                {% if reps[0] == "BW" %}
+                                    {{reps[0]}} for {{reps[1]}} reps
+                                {% else %}
+                                    {{reps[0]}}kg for {{reps[1]}} reps
+                                {% endif %}
+                                {#this puts the "|" delimeter apart from the last iteration#}
+                                {% if loop.last %}   
+                                {% else %}
+                                |
+                                {% endif %}    
+        
+                            </span>
+                            {% endfor %}
+                            <br>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+        
+                {% if workout.duration %}
+                    {{workout.duration}} minutes
+                {% endif %}
+                <hr>
+            </div>
+                
+            {% endfor %}
+        </div>
+    </div>
+
+
+        <!-- <button >Reset</button> -->
+
 
 {% endblock  %}
 
@@ -444,6 +503,10 @@
     timerDisplayed = false
     let restTimer = document.getElementById("rest-timer")
     let restArrow = document.getElementById("arrow-path")
+    //past workouts
+    let pastWorkoutShowButton = document.getElementById("pw-show")
+    let pastWorkouts = document.getElementById("pastworkouts")
+    let pastWorkoutArrow = document.getElementById("pw-arrow-path")
 
     timerShowButton.addEventListener("click", function(e){
         console.log("event ",e.target)
@@ -458,6 +521,22 @@
             timerDisplayed = true
             restArrow.setAttribute("d", "M6 9l6 6 6-6")
         }
+    })
+
+    let pastworkoutsDisplayed = false
+    pastWorkoutShowButton.addEventListener("click",function(e){
+
+        if(pastworkoutsDisplayed){
+            //close it 
+            pastWorkouts.style.display = "None"
+            pastworkoutsDisplayed = false
+            pastWorkoutArrow.setAttribute("d", "M6 9l6 6 6-6")
+        }else{
+            pastWorkouts.style.display = "contents"
+            pastworkoutsDisplayed = true
+            pastWorkoutArrow.setAttribute("d","M18 15l-6-6-6 6")
+        }
+
     })
 
     closeTimer.addEventListener("click", function(e){

@@ -594,10 +594,35 @@ def addWorkout():
                 return redirect(url_for('addWorkout'))
 
         else:
-            return render_template("addWorkout.html")
+            pastWorkouts = []
+            try:
+                lastWokrouts = supabase.rpc("get_workouts_by_user_2", {"p_user_id": flask_login.current_user.id}).order("date", desc=True).limit(7).execute()
+                app.logger.info(f"LAST 7 WORKOUTS :: {lastWokrouts}")  
 
-    if request.method == 'GET':
-        return render_template("addWorkout.html")
+                #workoutObjects = []
+                for w in lastWokrouts.data:
+                    try:
+                        wobject = Workout(w)
+                        app.logger.info(f" WORKOUT OBJECT :: {wobject}")
+                        pastWorkouts.append(wobject)
+                    except Exception as e:
+                        app.logger.info(f"Something wen wrong adding workouts {e}")
+            except Exception as e:
+                app.logger.info(f"SOMETHING WENT WRONG retreving WORKOUTs :: {e}")
+
+            return render_template("addWorkout.html", pastWorkouts=pastWorkouts)
+
+    # if request.method == 'GET':
+    #     pastWorkouts = None
+    #     try:
+    #         lastWokrouts = supabase.rpc("get_workouts_by_user_2", {"p_user_id": flask_login.current_user.id}).order("date", desc=True).limit(7).execute()
+    #         app.logger.info(f"LAST 7 WORKOUTS :: {lastWokrouts}")
+    
+    #         pastWorkouts = lastWokrouts
+    #     except Exception as e:
+    #         app.logger.info(f"SOMETHING WENT WRONG retreving WORKOUTs :: {e}")
+
+    #     return render_template("addWorkout.html", pastWorkouts=pastWorkouts)
 
 ##alternate workout route 
 @app.route("/add-workout-other",methods=['GET','POST'])

@@ -364,6 +364,26 @@ footer div{
     flex-direction: column;
 }
 
+#login-form{
+    max-width: 25vw;
+    padding: 0 10vw 0 10vw ;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5vh;
+}
+
+#login-form input{
+    font-size: large;
+}
+#login-form > #submit{
+    padding: 0.3rem;
+    border-radius: 5px;
+    width: 50%;
+    align-self: center;
+}
+
+
+
 
 @media screen and (max-width:900px) {
     .set{
@@ -372,6 +392,15 @@ footer div{
 }
 
 @media screen and (max-width:500px) {
+
+    #login-form{
+        max-width: 100%;
+        padding: 0 10vw 0 10vw ;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 5vh;
+    }
+
     #top-nav{
         /* display:none; */
         margin: 2vh 1vw;
@@ -414,6 +443,14 @@ footer div{
         width: 85%;
     }
 
+    /* Past workouts */
+    #pastworkouts-wrapper{
+        
+    }
+    #pastworkouts{
+        display: none;
+    }
+    /* rest timer */
     #rest-timer-wrapper{
         width: 50px;
         /* height: 150px; */
