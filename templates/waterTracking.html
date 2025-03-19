@@ -11,7 +11,7 @@
 {% if current_user%}
     <h3>Welcome {{current_user.username}}</h3>
     <nav id="user-nav">
-        <a href="{{url_for('createEntry')}}">Create entry</a> 
+        <a href="{{url_for('createMealEntry')}}">Create entry</a> 
         <a href="{{url_for('addWorkout')}}">Add workout</a> 
     </nav>
 {% endif %}

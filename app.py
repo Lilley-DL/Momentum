@@ -15,6 +15,16 @@ from Database import get_db_connection,Database
 from supabase import create_client
 
 
+def format_date(date_string):
+    """Formats a date string to a more readable format."""
+    try:
+        dt_object = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%S.%f')
+        return dt_object.strftime('%B %d, %Y %I:%M %p')
+    except ValueError:
+        # Handle cases where the date string is invalid
+        return "Invalid Date"
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('CSRF_SECRET_KEY')
 
@@ -281,8 +291,6 @@ def profile():
         flash(e)
         return render_template("profile.html", user=current_user)
 
-
-
 @app.route("/view/meals")
 @flask_login.login_required
 def viewMeals():
@@ -294,8 +302,11 @@ def viewMeals():
         return redirect('/login')  # Redirect unauthenticated users
     
     try:
-        macroResponse = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).execute()
+        macroResponse = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).order("created", desc=True).execute()
         macroEntries = macroResponse.data if macroResponse.data else []
+        #format the created dates
+        for entry in macroEntries:
+            entry['created'] = format_date(entry['created'])
         return render_template("viewMeals.html",entries=macroEntries)
     except Exception as e:
         flash(e)
@@ -452,9 +463,9 @@ def deleteMealEntry(entry_id):
 
 
 
-@app.route("/createEntry",methods=['GET','POST'])       #MEAL ENTRY 
+@app.route("/createMealEntry",methods=['GET','POST'])       #MEAL ENTRY 
 @flask_login.login_required
-def createEntry():
+def createMealEntry():
 
     if request.method == "POST":
 
@@ -496,11 +507,11 @@ def createEntry():
         except Exception as e:
             app.logger.info(f"RESPONSE FROM SUPA error = {e}")
             flash(f"something went wrong :: {e}")
-            return redirect(url_for("createEntry"))
+            return redirect(url_for("createMealEntry"))
 
-        return redirect(url_for("createEntry"))
+        return redirect(url_for("createMealEntry"))
 
-    return render_template("createEntry.html")
+    return render_template("createMealEntry.html")
 
 @app.route("/add-workout",methods=['GET','POST'])
 @flask_login.login_required

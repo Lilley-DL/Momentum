@@ -11,7 +11,7 @@
 {% if current_user%}
     <h3>Welcome {{current_user.username}}</h3>
     <nav id="user-nav">
-        <a class="nav-button" href="{{url_for('createEntry')}}">Add meal</a> 
+        <a class="nav-button" href="{{url_for('createMealEntry')}}">Add meal</a> 
     </nav>
 {% endif %}
 
@@ -26,7 +26,8 @@
 {% if entries %}
     {% for entry in entries %}
     <h3>{{entry.entry_name}} </h3>
-    
+    {% set entry_date = entry.created %}
+    <h5>{{entry_date}}</h5>
         {% for key in entry.entry_data %}
             {{key}} ::
             {{entry.entry_data[key]}}
