@@ -588,7 +588,7 @@ def addWorkout():
     if request.method == 'GET':
         return render_template("addWorkout.html")
 
-
+##alternate workout route 
 @app.route("/add-workout-other",methods=['GET','POST'])
 @flask_login.login_required
 def addWorkoutOther():

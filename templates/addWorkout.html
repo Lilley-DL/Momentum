@@ -287,8 +287,9 @@
         repsInput.type = "number"
         repsInput.placeholder = "Reps"
         repsInput.required = true 
-        repsInput.className = "setinput"
-        repsInput.enterKeyHint = "Next set"
+        repsInput.className = "setinput" //this might be an issue with the next word
+        repsInput.enterKeyHint = "Next"
+        //repsInput.setAttribute("enterkeyhint","AAH")
         repsInput.min = 1
 
         //remove button 
@@ -306,7 +307,7 @@
         setWrapper.appendChild(repsLabel)
         setWrapper.appendChild(repsInput)
         setWrapper.appendChild(removeSetButton)
-        setWrapper.appendChild(document.createElement("br"))
+        //setWrapper.appendChild(document.createElement("br"))
 
         wrapper.append(setWrapper)
 

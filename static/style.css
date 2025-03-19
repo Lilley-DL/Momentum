@@ -39,9 +39,6 @@ html,body{
 }
 
 /* tracking subjects in top nav  */
-.subject-nav{
-    /* font-size:large; */
-}
 
 #logout-nav{
     font-size: large;
@@ -336,9 +333,6 @@ footer div{
     font-weight: bold;
 }
 
-#delete-set-button{
-    /* margin-top: 10px; */
-}
 
 /* view workouts  */
 
@@ -457,10 +451,13 @@ footer div{
     }
 
     #sets-wrapper{
+        padding: 5px;
+        border-radius: 5px;
         gap: 5px;
     }
 
     #set-wrapper{
+        display: flex;
         margin-left: 0px;
         height: 30px;
         /* gap: 5px; */
@@ -477,7 +474,7 @@ footer div{
 
     #main-content{
         margin-left: 5px;
-        
+        margin-right: 4vw;
     }
 
 }
