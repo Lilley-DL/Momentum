@@ -212,10 +212,23 @@ footer div{
     flex-direction: row;
     gap: 50px;
     width: 75vw;
+    /* height: 35vh; */
+    justify-content: space-evenly;
 }
 
 .dashboard-category{
+    display: flex;
+    flex-direction: column;
     font-size: x-large;
+    justify-content: space-evenly;
+}
+
+.dashboard-category .nav-button{
+    white-space: normal;
+    max-width: 7rem;
+    /* min-width: 60%; */
+    /* align-self: center; */
+    margin-top: 30px;
 }
 
 .dash-fulldate{

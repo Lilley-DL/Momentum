@@ -34,73 +34,47 @@
                     <span class="dash-fulldate">({{dashboard.workouts[0].dateTime.strftime('%d-%m-%y')}})</span>
                     {% endif %}
                 </div>
+                <a class="nav-button" href="{{url_for('addWorkout')}}">Add workout</a> 
             </div>
 
             <div class="dashboard-category" id="dash-meal">
                 <h3>last Meal Entry</h3>
-                {% if dashboard.meals %}
-                    
-                {{dashboard.meals[1].name}}
-                <br>
-                Kcal:{{dashboard.meals[1].data.calories}}
-                <br>
-                <span id="dash-meal-day">{{dashboard.meals[1].date.strftime('%A')}}</span>
-                <br>
-                <span class="dash-fulldate" id="dash-meal-date">({{dashboard.meals[1].date.strftime('%d-%m-%y')}})</span>  
-                {% endif %}
-            </div>
+                <div>
 
+                    {% if dashboard.meals %}
+                    
+                    {{dashboard.meals[1].name}}
+                    <br>
+                    Kcal:{{dashboard.meals[1].data.calories}}
+                    <br>
+                    <span id="dash-meal-day">{{dashboard.meals[1].date.strftime('%A')}}</span>
+                    <br>
+                    <span class="dash-fulldate" id="dash-meal-date">({{dashboard.meals[1].date.strftime('%d-%m-%y')}})</span>  
+                    {% endif %}
+                </div>
+                <a class="nav-button" href="{{url_for('createMealEntry')}}">Add meal</a> 
+            </div>
+            
             <div class="dashboard-category" id="dash-water">
                 <h3>Last water entry</h3>
-                <br>
-                Amount: {{dashboard.water.amount}}ml
-                <br>
-                <span id="dash-water-day">{{dashboard.water.date.strftime('%A')}}</span>
-                <br>
-                <span class="dash-fulldate" id="dash-water-date">({{dashboard.water.date.strftime('%d-%m-%y')}})</span>  
-
+                <div>
+                    
+                    <br>
+                    Amount: {{dashboard.water.amount}}ml
+                    <br>
+                    <span id="dash-water-day">{{dashboard.water.date.strftime('%A')}}</span>
+                    <br>
+                    <span class="dash-fulldate" id="dash-water-date">({{dashboard.water.date.strftime('%d-%m-%y')}})</span>  
+                </div>
+                <a class="nav-button" href="{{url_for('waterEntry')}}">Add Water</a> 
             </div>
 
         </div>
     </div>
     {% endif %}
 
-    <nav id="user-nav">
-        <div class="profile-nav-category" id="workout-create">
-            <h4>Workouts</h4>
-            <div>
-                <h5 id="add-workouts-title">Add workout:</h5>
-                <div id="add-workouts-nav">
-                    <a href="{{url_for('addWorkout')}}">Weights</a> 
-                    <a href="{{url_for('addWorkoutOther')}}">Other</a> 
-                </div>
-            </div>
-            <a href="{{url_for('viewWorkouts')}}">View workouts</a>
-        </div>
-        <div class="profile-nav-category" id="meal-nav">
-            <h4>Meals</h4>
-            <div>
-                <a href="{{url_for('createMealEntry')}}">Add meal</a> 
-                <a href="{{url_for('viewMeals')}}">View Meals</a> 
-            </div>
-        </div>
-        <div class="profile-nav-category" id="meal-nav">
-            <h4>Water</h4>
-            <div>
-                <a href="{{url_for('waterEntry')}}">Track Water</a> 
-
-            </div>
-        </div>
-    </nav>
-    <br>
-
 {% endif %}
 
-
-<div>
-    
-    <a href="/profile/settings">Manage profile settings</a>
-</div>
 
 {% endblock  %}
 
