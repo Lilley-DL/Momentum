@@ -53,9 +53,10 @@ html,body{
     text-decoration: none;
     padding: 0.5rem;
     border-radius: 5px;
-    max-width: 5rem;
+    max-width: 7rem;
+    border: 0px;
+    text-align: center;
 }
-
 
 #main-content{
     min-height: 60vh;
@@ -423,6 +424,14 @@ footer div{
     display: none;
 }
 
+/* water entry form */
+#water-entry-form{
+    max-width: 25vw;
+    padding: 0 10vw 0 10vw ;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5vh;
+}
 
 @media screen and (max-width:900px) {
     .set{
@@ -431,6 +440,20 @@ footer div{
 }
 
 @media screen and (max-width:500px) {
+
+    .nav-card-wrapper{
+        height: 60vh;
+    }
+
+    .card-links{
+        flex-direction: column;
+        /* height: 100%; */
+        gap: 20px;
+    }
+    /* setting icon size on mobile */
+    .card-link img{
+        width: 100px;
+    }
 
     #login-form{
         max-width: 100%;
@@ -551,10 +574,6 @@ footer div{
         max-width: 3rem;
     }
 
-    /* setting icon size on mobile */
-    .card-link img{
-        width: 60px;
-    }
 
     #main-content{
         margin-left: 5px;

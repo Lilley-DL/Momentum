@@ -428,7 +428,7 @@ def deleteWaterEntry(entry_id):
         flash(f"Something went wrong {e}")
         return redirect(url_for('waterEntry'))
     
-    return redirect(url_for('viewWorkouts'))
+    return redirect(url_for('waterEntry'))
 
 #delete workout 
 @app.route("/deleteWorkoutEntry/<entry_id>",methods=["GET"])

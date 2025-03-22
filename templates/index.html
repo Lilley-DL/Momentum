@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-    Home page
+    Home
 {% endblock title %}
 
 
@@ -28,6 +28,33 @@
         </div>
     </div>
 
+{%else%}
+<div id="about-info-wrapper">
+    <h1>Welcome to <span>Momentum</span></h1>
+    <h2>Your Fitness, Nutrition, and Hydration—All in One Place</h2>
+    <p>Welcome to <strong>Momentum</strong>, your all-in-one solution for tracking workouts, meals, macros, and water intake. Whether you're a beginner building healthy habits or an experienced athlete optimizing performance, our app is designed to help you stay on track and achieve your goals.</p>
+    
+    <h3>Why Choose Momentum?</h3>
+    <ul>
+        <li>📊 <strong>Workout Tracking</strong> – Log exercises, reps, and sets to monitor progress.</li>
+        <li>🍽️ <strong>Nutrition Tracking</strong> – Log meals, and macros to track nutrition.</li>
+        <li>💧 <strong>Water Intake Monitoring</strong> – Set daily hydration goals and track intake.</li>
+        <li>🔗 <strong>Seamless Experience</strong> – An intuitive interface that makes tracking effortless.</li>
+    </ul>
+    
+    <h3>Our Mission</h3>
+    <p>We believe tracking your fitness and nutrition shouldn’t feel like a chore. Our goal is to make it simple, effective, and rewarding for everyone. Whether you're aiming to build muscle, lose weight, or maintain a healthy lifestyle, <strong>Momentum</strong> is here to support you every step of the way.</p>
+    
+    <h3>Monetization & Support</h3>
+    <p>To keep the app free and accessible, we include carefully selected <strong>affiliate links</strong> to fitness-related products and services. If you choose to purchase through these links, you’ll be supporting the app at no extra cost to you. We also use <strong>non-intrusive ads</strong> to sustain development and improve the app over time.</p>
+    {% if current_user.is_authenticated %}
+        <h3>Get Started Today!</h3>
+        <p>View your Momentum <a href="{{url_for('profile')}}">profile</a></p>
+    {%else%}
+        <h3>Get Started Today!</h3>
+        <p>Ready to take control of your health? <a href="{{url_for('signup')}}" class="cta">Sign up now</a> and start tracking your journey to a healthier you.</p>
+    {% endif %}
+</div>
 {% endif %}
         
 
