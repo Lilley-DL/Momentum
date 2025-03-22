@@ -26,9 +26,13 @@
         
         <h3>Monetization & Support</h3>
         <p>To keep the app free and accessible, we include carefully selected <strong>affiliate links</strong> to fitness-related products and services. If you choose to purchase through these links, you’ll be supporting the app at no extra cost to you. We also use <strong>non-intrusive ads</strong> to sustain development and improve the app over time.</p>
-
-        <h3>Get Started Today!</h3>
-        <p>Ready to take control of your health? <a href="{{url_for('signup')}}" class="cta">Sign up now</a> and start tracking your journey to a healthier you.</p>
+        {% if current_user.is_authenticated %}
+            <h3>Get Started Today!</h3>
+            <p>View your Momentum <a href="{{url_for('profile')}}">profile</a></p>
+        {%else%}
+            <h3>Get Started Today!</h3>
+            <p>Ready to take control of your health? <a href="{{url_for('signup')}}" class="cta">Sign up now</a> and start tracking your journey to a healthier you.</p>
+        {% endif %}
     </div>
 {% endblock  %}
 

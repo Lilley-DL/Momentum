@@ -382,7 +382,12 @@ footer div{
     align-self: center;
 }
 
-
+#pastworkouts{
+    display: none;
+}
+#rest-timer{
+    display: none;
+}
 
 
 @media screen and (max-width:900px) {

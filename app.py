@@ -10,7 +10,7 @@ from datetime import datetime
 
 from bleach import clean
 
-from Database import get_db_connection,Database
+#from Database import get_db_connection,Database
 
 from supabase import create_client
 
@@ -64,7 +64,7 @@ class Workout:
 if app.debug:
     DATABASE_URL = os.environ.get('DEV_DATABASE_URL')
     #database object instance 
-    db = Database(DATABASE_URL)
+    #db = Database(DATABASE_URL)
 else:
     #use supabase here ?
     DATABASE_URL = os.environ.get('DATABASE_URL')
