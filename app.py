@@ -169,7 +169,7 @@ def signup():
         except AuthApiError as e:
         # Extract the error message and return it as JSON
             message = jsonify({"error": str(e)})
-            print(f"Auth signup error : {message}")
+            print(f"Auth signup error : {message['error']}")
             app.logger.error(f"Auth Signup error {message}")
             flash(f"An error occured {message}")
             return redirect("/signup")
