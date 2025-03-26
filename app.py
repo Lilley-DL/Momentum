@@ -61,13 +61,14 @@ class Workout:
 
 #database thingssssss
 #should allow for development using a dev database
-if app.debug:
-    DATABASE_URL = os.environ.get('DEV_DATABASE_URL')
+#if app.debug:
+    #
+    # DATABASE_URL = os.environ.get('DEV_DATABASE_URL')
     #database object instance 
     #db = Database(DATABASE_URL)
-else:
+#else:
     #use supabase here ?
-    DATABASE_URL = os.environ.get('DATABASE_URL')
+    #DATABASE_URL = os.environ.get('DATABASE_URL')
 
 class SignupForm(FlaskForm):
     email = EmailField('Email: ',validators=[DataRequired()])
