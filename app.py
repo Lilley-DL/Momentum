@@ -171,7 +171,7 @@ def signup():
             message = jsonify({"error": str(e)})
             print(f"Auth signup error : {message}")
             app.logger.error(f"Auth Signup error {message}")
-            flash("An error occured")
+            flash(f"An error occured {message}")
             return redirect("/signup")
         except Exception as e:
             # Handle potential errors during Supabase interaction
