@@ -12,7 +12,7 @@ from bleach import clean
 
 #from Database import get_db_connection,Database
 
-from supabase import create_client
+from supabase import create_client, AuthApiError
 
 
 def format_date(date_string):
@@ -166,6 +166,12 @@ def signup():
             #app.logger.info("Am i here ?")
             response = supabase.auth.sign_up({"email":email,"password":password})
             return redirect('/login')
+        except AuthApiError as e:
+        # Extract the error message and return it as JSON
+            message = jsonify({"error": str(e)})
+            app.logger.error(f"Auth Signup error {message}")
+            flash("An error occured")
+            return redirect("/signup")
         except Exception as e:
             # Handle potential errors during Supabase interaction
             app.logger.error(f"Signup error {e}")
