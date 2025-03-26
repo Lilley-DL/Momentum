@@ -247,9 +247,10 @@ def profile():
         app.logger.info(f"LAST WORKOUT DATA:: {lastWokrout.data}")
 
         try:
-            dashWorkout = Workout(lastWokrout.data[0])
-            # app.logger.info(f"Last workout object = {dashWorkout}")
-            dashboardInfo['workouts'] = [dashWorkout,]
+            if lastWokrout.data and len(lastWokrout.data) > 0:
+                dashWorkout = Workout(lastWokrout.data[0])
+                # app.logger.info(f"Last workout object = {dashWorkout}")
+                dashboardInfo['workouts'] = [dashWorkout,]
         except Exception as e:
             app.logger.error(f"Last workout error = {e}")
 
@@ -257,13 +258,14 @@ def profile():
         lastMeal = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).order("created", desc=True).limit(1).execute()
         app.logger.info(f"LAST MEAL:: {lastMeal.data}")
         try:
-            lastmealObject['name'] = lastMeal.data[0]['entry_name']
-            lastmealObject['data'] = lastMeal.data[0]['entry_data']
-            #process the date for better formatting 
-            lastmealObject['date'] = datetime.fromisoformat(lastMeal.data[0]['created'])
-            # lastmealObject['date'] = lastMeal.data[0]['created']
-            app.logger.info(f" SECOND MEAL OBJECT ::: {lastmealObject}")
-            dashboardInfo['meals'] = [lastMeal.data,lastmealObject]
+            if lastMeal.data and len(lastMeal.data) >0:
+                lastmealObject['name'] = lastMeal.data[0]['entry_name']
+                lastmealObject['data'] = lastMeal.data[0]['entry_data']
+                #process the date for better formatting 
+                lastmealObject['date'] = datetime.fromisoformat(lastMeal.data[0]['created'])
+                # lastmealObject['date'] = lastMeal.data[0]['created']
+                app.logger.info(f" SECOND MEAL OBJECT ::: {lastmealObject}")
+                dashboardInfo['meals'] = [lastMeal.data,lastmealObject]
         except Exception as e:
             app.logger.error(f"Some went wrong adding meal to dashboard : {e}")
 
@@ -272,11 +274,11 @@ def profile():
         try:
             waterResponse = supabase.table("water").select("*").eq("user_id", current_user.id).order("created", desc=True).limit(1).execute()
             app.logger.info(f"LAST WATER INTAKE :: {waterResponse}")
-            
-            waterObj['amount'] = waterResponse.data[0]['entry_data']['amount'] 
-            waterObj['date'] = datetime.fromisoformat(waterResponse.data[0]['entry_data']['date'])
-            app.logger.info(f"WATER OBJECT TEST  :: {waterObj}")
-            dashboardInfo['water'] = waterObj
+            if waterResponse.data and len(waterResponse.data) > 0:
+                waterObj['amount'] = waterResponse.data[0]['entry_data']['amount'] 
+                waterObj['date'] = datetime.fromisoformat(waterResponse.data[0]['entry_data']['date'])
+                app.logger.info(f"WATER OBJECT TEST  :: {waterObj}")
+                dashboardInfo['water'] = waterObj
         except Exception as e:
             app.logger.error(f" WATER RESPONSE ERROR :: {e}")
 
