@@ -163,11 +163,12 @@ def signup():
         form.password.data = ''
 
         try:
-            app.logger.info("Am i here ?")
+            #app.logger.info("Am i here ?")
             response = supabase.auth.sign_up({"email":email,"password":password})
             return redirect('/login')
         except Exception as e:
             # Handle potential errors during Supabase interaction
+            app.logger.error(f"Signup error {e}")
             print(f"Error during signup: {e}")
             # return render_template('signup.html', errors="An error occurred. Please try again.")
             flash(e)
