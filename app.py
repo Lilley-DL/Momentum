@@ -148,11 +148,7 @@ def signup():
     email = None
     password = None
     form = SignupForm()
-    
-    if request.method == 'GET':
-        errors = request.args.get('errors')
-        return render_template("signup.html",username=username,email=email,password=password,form=form,errors=errors)
-    
+
     if form.validate_on_submit():
         app.logger.info(f" AFTER VALID SUBMIT :: {form}")
 
@@ -180,7 +176,11 @@ def signup():
             # return render_template('signup.html', errors="An error occurred. Please try again.")
             flash(e)
             return redirect("/signup")
-
+    
+    if request.method == 'GET':
+        errors = request.args.get('errors')
+        return render_template("signup.html",username=username,email=email,password=password,form=form,errors=errors)
+    
 ##LOGIN
 
 @app.route('/login',methods=['GET','POST'])
