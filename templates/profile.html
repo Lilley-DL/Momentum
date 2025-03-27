@@ -15,17 +15,19 @@
     <div id="dashboard-wrapper">
         <h2>Your Progress</h2>
         <div id="progress-totals-wrapper">
+            
             {% if dashboard.stats[0] %}
             <span>total workouts tracked {{dashboard.stats[0].total_workouts}} </span>
             <span>total meals tracked {{dashboard.stats[0].total_meals}}</span>
             {% endif %}
+            
         </div>
         <div id="dash-category-wrapper">
             
             <div class="dashboard-category" id="dash-workout">
                 <h3>Last workout</h3>
                 <div>
-                    {% if dashboard.workouts[0] %}
+                    {% if dashboard.workouts %}
                         
                     {{dashboard.workouts[0].name}}
                     <br>
