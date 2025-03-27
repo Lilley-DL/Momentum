@@ -57,8 +57,9 @@
             
             <div class="dashboard-category" id="dash-water">
                 <h3>Last water entry</h3>
+                {% if dashboard.water %}
                 <div>
-                    
+                        
                     <br>
                     Amount: {{dashboard.water.amount}}ml
                     <br>
@@ -66,7 +67,10 @@
                     <br>
                     <span class="dash-fulldate" id="dash-water-date">({{dashboard.water.date.strftime('%d-%m-%y')}})</span>  
                 </div>
+                
+                {% endif %}
                 <a class="nav-button" href="{{url_for('waterEntry')}}">Add Water</a> 
+                
             </div>
 
         </div>
