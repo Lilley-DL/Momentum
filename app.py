@@ -294,9 +294,7 @@ def profile():
 
         app.logger.info(f" DASHBOARD :: {dashboardInfo}")
 
-        workoutObjects = [] #can removw this now, BUT remove from template too
-
-        return render_template("profile.html", user=current_user, workoutObjects = workoutObjects,dashboard = dashboardInfo)
+        return render_template("profile.html", user=current_user,dashboard = dashboardInfo)
     
     except Exception as e:
         flash(e)
