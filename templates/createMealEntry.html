@@ -1,92 +1,96 @@
 {% extends 'base.html' %}
 {% block title %}
-    Create entry
+Create entry
 {% endblock title %}
 
 {% if errors %}
-    {{errors}}
+{{errors}}
 {% endif %}
 
 {% block content %}
-    {% if current_user.is_authenticated %}
-        
-        
-    {% endif %}
-        <h1>Meal information</h1>
+{% if current_user.is_authenticated %}
 
-        <form action="/createMealEntry" method="post" id="meal-entry-form">
-            
-            <div id="name-input-wrapper">
-                <h3 for="entryName">Name:</h3>
-                <input type="text" name="entryName" id="entry-name" required min="4" max="50">
-            </div>
 
-            <div id="calories-input-wrapper">
-                <!-- <label for="calories">Calories:</label> -->
-                <h3 for="calories">Calories:</h3>
-                <input class="macroInput" type="number" id="calorieInput" name="calories" min="0" step="0.01" required placeholder="Kcal" >
-            </div>
-            <h4 id="macroHeader">Macros:</h4>
+{% endif %}
+<h1>Meal information</h1>
+<div id="meal-main-wrapper">
 
-            <div id="macro-input-wrapper">
-                <div>
-                    <label for="protein">Protein:</label>
-                    <input class="macroInput" type="number" id="proteinInput" name="protein" min="0" step="0.01" value="0">
-                </div>
-                <div>
-                    <label for="fats">Fat:</label>
-                    <input class="macroInput" type="number" id="fatsInput" name="fats" min="0" step="0.01"  value="0">
-                </div>
-                <div>
-                    <label for="carbs">Carbs:</label>
-                    <input class="macroInput" type="number" id="carbsInput" name="carbs" min="0" step="0.01" value="0" >
-                </div>
-                <div>
-                    <label for="fibre">Fibre:</label>
-                    <input class="macroInput" type="number" id="fibreInput" name="fibre" min="0" step="0.01"  value="0">
-                </div>
+
+    <form action="/createMealEntry" method="post" id="meal-entry-form">
+
+        <div class="meal-input" id="name-input-wrapper">
+            <h3 for="entryName">Name:</h3>
+            <input type="text" name="entryName" id="entry-name" required min="4" max="50">
+        </div>
+
+        <div class="meal-input" id="calories-input-wrapper">
+            <!-- <label for="calories">Calories:</label> -->
+            <h3 for="calories">Calories:</h3>
+            <input class="macroInput" type="number" id="calorieInput" name="calories" min="0" step="0.01" required
+                placeholder="Kcal">
+        </div>
+        <h4 id="macroHeader">Macros:</h4>
+
+        <div id="macro-input-wrapper">
+            <div>
+                <label for="protein">Protein:</label>
+                <input class="macroInput" type="number" id="proteinInput" name="protein" min="0" step="0.01" value="0">
             </div>
-            <br>
-            <input class="nav-button" type="submit" value="Submit">
-        </form>
+            <div>
+                <label for="fats">Fat:</label>
+                <input class="macroInput" type="number" id="fatsInput" name="fats" min="0" step="0.01" value="0">
+            </div>
+            <div>
+                <label for="carbs">Carbs:</label>
+                <input class="macroInput" type="number" id="carbsInput" name="carbs" min="0" step="0.01" value="0">
+            </div>
+            <div>
+                <label for="fibre">Fibre:</label>
+                <input class="macroInput" type="number" id="fibreInput" name="fibre" min="0" step="0.01" value="0">
+            </div>
+        </div>
         <br>
-        <button class="nav-button" id="showCalc">Calculator</button>
-        <dialog id="calculator-modal">
-            
-            <input type="text" name="calcResult" id="calcResult">
+        <input class="nav-button" type="submit" value="Submit">
+    </form>
+    <br>
+    <!-- <button class="nav-button" id="showCalc">Calculator</button> -->
+    <div id="calculator-modal">
 
-            <div id="calcButtons">
-                <div id="calc-tr" class="calc-button-row">
-                    <input type="button" value="7" class="calc-button">
-                    <input type="button" value="8" class="calc-button">
-                    <input type="button" value="9" class="calc-button">
-                    <input type="button" value="x" class="calc-button">
-                </div>
-                <div id="calc-mr" class="calc-button-row">
-                    <input type="button" value="4" class="calc-button">
-                    <input type="button" value="5" class="calc-button">
-                    <input type="button" value="6" class="calc-button">
-                    <input type="button" value="-" class="calc-button">
-                </div>
-                <div id="calc-br" class="calc-button-row">
-                    <input type="button" value="1" class="calc-button">
-                    <input type="button" value="2" class="calc-button">
-                    <input type="button" value="3" class="calc-button">
-                    <input type="button" value="+" class="calc-button">
-                </div>
-                <div class="calc-button-row">
-                    <input type="button" value="X" class="calc-button">
-                    <input type="button" value="0" class="calc-button">
-                    <input type="button" value="." class="calc-button">
-                    <button value="/" class="calc-button"> &#247;</button>
-                    <input type="button" value="=" class="calc-button">
-                </div>
+        <input type="text" name="calcResult" id="calcResult">
+
+        <div id="calcButtons">
+            <div id="calc-tr" class="calc-button-row">
+                <input type="button" value="7" class="calc-button">
+                <input type="button" value="8" class="calc-button">
+                <input type="button" value="9" class="calc-button">
+                <input type="button" value="x" class="calc-button">
             </div>
+            <div id="calc-mr" class="calc-button-row">
+                <input type="button" value="4" class="calc-button">
+                <input type="button" value="5" class="calc-button">
+                <input type="button" value="6" class="calc-button">
+                <input type="button" value="-" class="calc-button">
+            </div>
+            <div id="calc-br" class="calc-button-row">
+                <input type="button" value="1" class="calc-button">
+                <input type="button" value="2" class="calc-button">
+                <input type="button" value="3" class="calc-button">
+                <input type="button" value="+" class="calc-button">
+            </div>
+            <div class="calc-button-row">
+                <input type="button" value="X" class="calc-button">
+                <input type="button" value="0" class="calc-button">
+                <input type="button" value="." class="calc-button">
+                <button value="/" class="calc-button"> &#247;</button>
+            </div>
+            <input id="sum-button" type="button" value="=" class="calc-button">
+        </div>
 
-            <button id="closeCalc">Close</button>
-        </dialog>
+        <!-- <button id="closeCalc">Close</button> -->
+    </div>
+</div>
 
-{% endblock  %}
+{% endblock %}
 
 {% block scripts %}
 
@@ -108,38 +112,50 @@
     var operand = undefined;
     var operandChosen = false;
 
-    for(btn of calcButtons){
-        btn.addEventListener("click",()=>{
+    for (btn of calcButtons) {
+        btn.addEventListener("click", () => {
             console.log(event.target.value)
             let value = event.target.value;
 
             //check for the operator buttons 
-            switch(value){
-                case"x":
+            switch (value) {
+                case "x":
                     console.log("Multiply")
                     operand = "x"
+                    if (left && operand) {
+                        calcInput.value = left + operand
+                    }
                     break
                 case "-":
                     console.log("Subtract")
                     operand = "-"
+                    if (left && operand) {
+                        calcInput.value = left + operand
+                    }
                     break
-                case"+":
+                case "+":
                     console.log("Addition")
                     operand = "+"
+                    if (left && operand) {
+                        calcInput.value = left + operand
+                    }
                     break
-                case"/":
+                case "/":
                     console.log("Division")
                     operand = "/"
+                    if (left && operand) {
+                        calcInput.value = left + operand
+                    }
                     break
                 case "=":
                     console.log("Sum")
                     //perform sum 
-                    if(left && right && operand){
+                    if (left && right && operand) {
                         console.log(`left ${left} :: right ${right} :: op ${operand}`)
-                        let calculation = calculate(left,right,operand)
-                        console.log("CALCULATION = ",calculation)
+                        let calculation = calculate(left, right, operand)
+                        console.log("CALCULATION = ", calculation)
                         //put the value in the last focused number input 
-                        handleCalculationResult(calculation)    
+                        handleCalculationResult(calculation)
                         //clear calculator (maybe close the modal too)
                         clearCalc()
                     }
@@ -150,37 +166,37 @@
 
                 default:
                     //put the numerical value in the input 
-                    if(right){
-                        calcDisplay = Number(calcDisplay+value)
+                    if (right) {
+                        calcDisplay = Number(calcDisplay + value)
                         right = Number(calcDisplay)
-                    }else if(operand){
-                        
+                    } else if (operand) {
+
                         calcDisplay = 0
-                        calcDisplay = Number(calcDisplay+value)
+                        calcDisplay = Number(calcDisplay + value)
                         right = Number(calcDisplay)
-                        
-                    }else{
-                        calcDisplay = Number(calcDisplay+value)
+
+                    } else {
+                        calcDisplay = Number(calcDisplay + value)
                         left = Number(calcDisplay)
                     }
-                    
-                    console.log("Calc result = ",calcDisplay)
 
-                    if(left && right && operand){
-                        calcInput.value = left+operand+right
-                    }else if(left){
+                    console.log("Calc result = ", calcDisplay)
+
+                    if (left && right && operand) {
+                        calcInput.value = left + operand + right
+                    } else if (left) {
                         calcInput.value = left
-                    }else if(left && operand){
+                    } else if (left && operand) {
                         calcInput.value = left + operand
                     }
 
                     break
-            
+
             }
         })
     }
 
-    function clearCalc(){
+    function clearCalc() {
         calcInput.value = ""
         calcDisplay = 0
         left = undefined
@@ -188,54 +204,55 @@
         operand = undefined
     }
 
-    function calculate(left,right,operand){
+    function calculate(left, right, operand) {
         let result = 0
-        switch(operand){
-            case"x":
-                result = Number(left)*Number(right)
+        switch (operand) {
+            case "x":
+                result = Number(left) * Number(right)
                 return result
                 break
-                case "-":
-                result = Number(left)-Number(right)
+            case "-":
+                result = Number(left) - Number(right)
                 return result
                 break
-            case"+":
-                result = Number(left)+Number(right)
-                console.log("RESULT = ",result)
+            case "+":
+                result = Number(left) + Number(right)
+                console.log("RESULT = ", result)
                 return result
                 break
             case "/":
-                result = Number(left)/Number(right)
+                result = Number(left) / Number(right)
                 return result
                 break
         }
     }
-
-    showCalc.addEventListener("click", ()=>{
+/*
+    showCalc.addEventListener("click", () => {
         calcModal.showModal()
     })
 
-    closeCalc.addEventListener("click",()=>{
+    closeCalc.addEventListener("click", () => {
         calcModal.close()
     })
-
+*/
     //THIS IS FROM GEMINI
     let lastFocusedInput;
 
     // Store the last focused input when an input field receives focus
     document.querySelectorAll('input[type="number"]').forEach(input => {
         input.addEventListener('focus', () => {
-        lastFocusedInput = input;
+            event.preventDefault()
+            lastFocusedInput = input;
         });
     });
 
     // When the calculation is complete in your calculator modal:
     function handleCalculationResult(result) {
         if (lastFocusedInput) {
-        lastFocusedInput.value = result; 
+            lastFocusedInput.value = result;
         }
     }
 
 </script>
-    
+
 {% endblock scripts %}
