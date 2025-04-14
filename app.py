@@ -352,7 +352,7 @@ def viewWorkouts():
 def viewWorkout(workout_id):
     #get the workout from supa
     try:
-        response =  supabase.table("workout").select("*").eq('id',workout_id).maybe_single().execute()
+        response =  supabase.table("workout").select("*").eq('id',workout_id).eq("user_id",flask_login.current_user.id).maybe_single().execute()
         #check the user id too 
         if response:
             app.logger.info(f"Single workout response :: {response}")

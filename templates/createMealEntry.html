@@ -28,25 +28,30 @@ Create entry
             <h3 for="calories">Calories:</h3>
             <input class="macroInput" type="number" id="calorieInput" name="calories" min="0" step="0.01" required
                 placeholder="Kcal">
+                <input class="clearMacroButton" type="button" value="x">
         </div>
         <h4 id="macroHeader">Macros:</h4>
 
         <div id="macro-input-wrapper">
             <div>
                 <label for="protein">Protein:</label>
-                <input class="macroInput" type="number" id="proteinInput" name="protein" min="0" step="0.01" value="0">
+                <input max="999" class="macroInput" type="number" id="proteinInput" name="protein" min="0" step="0.01" value="0" readonly>
+                <input class="clearMacroButton" type="button" value="x">
             </div>
             <div>
                 <label for="fats">Fat:</label>
-                <input class="macroInput" type="number" id="fatsInput" name="fats" min="0" step="0.01" value="0">
+                <input  class="macroInput" type="number" id="fatsInput" name="fats" min="0" max="999" step="0.01" value="0">
+                <input class="clearMacroButton" type="button" value="x">
             </div>
             <div>
                 <label for="carbs">Carbs:</label>
                 <input class="macroInput" type="number" id="carbsInput" name="carbs" min="0" step="0.01" value="0">
+                <input class="clearMacroButton" type="button" value="x">
             </div>
             <div>
                 <label for="fibre">Fibre:</label>
                 <input class="macroInput" type="number" id="fibreInput" name="fibre" min="0" step="0.01" value="0">
+                <input class="clearMacroButton" type="button" value="x">
             </div>
         </div>
         <br>
@@ -63,25 +68,25 @@ Create entry
                 <input type="button" value="7" class="calc-button">
                 <input type="button" value="8" class="calc-button">
                 <input type="button" value="9" class="calc-button">
-                <input type="button" value="x" class="calc-button">
+                <input type="button" value="x" class="calc-button operand-button">
             </div>
             <div id="calc-mr" class="calc-button-row">
                 <input type="button" value="4" class="calc-button">
                 <input type="button" value="5" class="calc-button">
                 <input type="button" value="6" class="calc-button">
-                <input type="button" value="-" class="calc-button">
+                <input type="button" value="-" class="calc-button operand-button">
             </div>
             <div id="calc-br" class="calc-button-row">
                 <input type="button" value="1" class="calc-button">
                 <input type="button" value="2" class="calc-button">
                 <input type="button" value="3" class="calc-button">
-                <input type="button" value="+" class="calc-button">
+                <input type="button" value="+" class="calc-button operand-button">
             </div>
             <div class="calc-button-row">
                 <input type="button" value="X" class="calc-button">
                 <input type="button" value="0" class="calc-button">
                 <input type="button" value="." class="calc-button">
-                <button value="/" class="calc-button"> &#247;</button>
+                <button value="/" class="calc-button operand-button"> &#247;</button>
             </div>
             <input id="sum-button" type="button" value="=" class="calc-button">
         </div>
@@ -104,6 +109,8 @@ Create entry
 
     var calcButtons = document.getElementsByClassName("calc-button")
 
+    var clearButtons = document.getElementsByClassName("clearMacroButton")
+
     var calcDisplay = 0;
 
     var left;
@@ -111,9 +118,13 @@ Create entry
 
     var operand = undefined;
     var operandChosen = false;
+    var calcButtonClick = false
 
-    for (btn of calcButtons) {
+    Array.from(calcButtons).forEach(btn =>{
         btn.addEventListener("click", () => {
+            
+            calcButtonClick = true
+
             console.log(event.target.value)
             let value = event.target.value;
 
@@ -194,7 +205,102 @@ Create entry
 
             }
         })
-    }
+
+        btn.addEventListener("blur", function(){
+            calcButtonClick = false
+        })
+    })
+    /*
+    for (btn of calcButtons) {
+        btn.addEventListener("click", () => {
+            
+            calcButtonClick = true
+
+            console.log(event.target.value)
+            let value = event.target.value;
+
+            //check for the operator buttons 
+            switch (value) {
+                case "x":
+                    console.log("Multiply")
+                    operand = "x"
+                    if (left && operand) {
+                        calcInput.value = left + operand
+                    }
+                    break
+                case "-":
+                    console.log("Subtract")
+                    operand = "-"
+                    if (left && operand) {
+                        calcInput.value = left + operand
+                    }
+                    break
+                case "+":
+                    console.log("Addition")
+                    operand = "+"
+                    if (left && operand) {
+                        calcInput.value = left + operand
+                    }
+                    break
+                case "/":
+                    console.log("Division")
+                    operand = "/"
+                    if (left && operand) {
+                        calcInput.value = left + operand
+                    }
+                    break
+                case "=":
+                    console.log("Sum")
+                    //perform sum 
+                    if (left && right && operand) {
+                        console.log(`left ${left} :: right ${right} :: op ${operand}`)
+                        let calculation = calculate(left, right, operand)
+                        console.log("CALCULATION = ", calculation)
+                        //put the value in the last focused number input 
+                        handleCalculationResult(calculation)
+                        //clear calculator (maybe close the modal too)
+                        clearCalc()
+                    }
+                    break
+                case "X":
+                    clearCalc()
+                    break
+
+                default:
+                    //put the numerical value in the input 
+                    if (right) {
+                        calcDisplay = Number(calcDisplay + value)
+                        right = Number(calcDisplay)
+                    } else if (operand) {
+
+                        calcDisplay = 0
+                        calcDisplay = Number(calcDisplay + value)
+                        right = Number(calcDisplay)
+
+                    } else {
+                        calcDisplay = Number(calcDisplay + value)
+                        left = Number(calcDisplay)
+                    }
+
+                    console.log("Calc result = ", calcDisplay)
+
+                    if (left && right && operand) {
+                        calcInput.value = left + operand + right
+                    } else if (left) {
+                        calcInput.value = left
+                    } else if (left && operand) {
+                        calcInput.value = left + operand
+                    }
+
+                    break
+
+            }
+        })
+
+        btn.addEventListener("blur", function(){
+            calcButtonClick = false
+        })
+    }*/
 
     function clearCalc() {
         calcInput.value = ""
@@ -226,29 +332,52 @@ Create entry
                 break
         }
     }
-/*
-    showCalc.addEventListener("click", () => {
-        calcModal.showModal()
+
+    Array.from(clearButtons).forEach(btn => {
+        btn.addEventListener("click", ()=>{
+            console.log("clear event ",btn.previousElementSibling)
+            btn.previousElementSibling.value = 0
+
+        })
     })
 
-    closeCalc.addEventListener("click", () => {
-        calcModal.close()
-    })
-*/
     //THIS IS FROM GEMINI
     let lastFocusedInput;
 
     // Store the last focused input when an input field receives focus
     document.querySelectorAll('input[type="number"]').forEach(input => {
-        input.addEventListener('focus', () => {
-            event.preventDefault()
+        input.addEventListener('focus', function(){
+            console.log("Calc button click ",calcButtonClick)
+    
             lastFocusedInput = input;
+
+            //the below doesnt work because its numeric input only ??
+            //calcInput = lastFocusedInput
+            lastFocusedInput.style.backgroundColor = 'lightblue'
         });
+
+        input.addEventListener('blur',function(){
+            //console.log("Calc button click ",calcButtonClick)
+            if(!calcButtonClick){
+                
+                console.log("Calc button click WHITE ",calcButtonClick)
+                lastFocusedInput.style.backgroundColor = 'white'
+               
+            }else{
+                console.log("Calc button click OTHER ",calcButtonClick)
+
+            }
+            //calcButtonClick = false
+        })
+
     });
+
+
 
     // When the calculation is complete in your calculator modal:
     function handleCalculationResult(result) {
         if (lastFocusedInput) {
+            
             lastFocusedInput.value = result;
         }
     }

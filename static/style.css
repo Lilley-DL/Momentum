@@ -125,7 +125,7 @@ footer div{
 #macro-input-wrapper{
     display: flex;
     flex-direction: column;
-    max-width: 180px;
+    max-width: 200px;
     min-width: 10vw;
     align-items: flex-end;
     gap: 10px;
@@ -179,6 +179,12 @@ footer div{
     color: #9B5DE5;
     border: none;
     padding: 0.3rem;
+}
+
+.operand-button{
+    margin-left: 5px;
+    font-size: 1.6rem;
+    padding: 0px;
 }
 
 .nav-card-wrapper >:is(h2,h3) {
