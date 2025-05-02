@@ -311,12 +311,21 @@ def viewMeals():
         return redirect('/login')  # Redirect unauthenticated users
     
     try:
+        #new function for aggregating the meals 
+        meals = supabase.rpc("get_user_entry_aggregates", {"p_user_id": current_user.id}).execute()
+        # app.logger.info(f"AGGREGATE MEALS = {meals.data}")
+        aggregatedMeals = meals.data if meals.data else []
+        #format the dates for the aggregated data 
+        for entry in aggregatedMeals:
+            app.logger.info(f"aggregate meal :: {entry}")
+      
+
         macroResponse = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).order("created", desc=True).execute()
         macroEntries = macroResponse.data if macroResponse.data else []
         #format the created dates
         for entry in macroEntries:
             entry['created'] = format_date(entry['created'])
-        return render_template("viewMeals.html",entries=macroEntries)
+        return render_template("viewMeals.html",entries=macroEntries,aggregates=meals.data)
     except Exception as e:
         flash(e)
         return render_template("viewMeals.html")

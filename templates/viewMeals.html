@@ -22,6 +22,20 @@
     </form>
 </div>
 
+{% if aggregates %}
+    {% for entry in aggregates %}
+    <div class="dropdown-wrapper">
+        <h5>{{entry.entry_date}}</h5>
+        <button class="dropdown-button">View</button>
+        <div class="dropdown-content">
+            {{entry.aggregated_data}}
+            
+        </div>
+    </div>
+    <br>
+    {% endfor %}
+{% endif %}
+
 <h3>Meal entries</h3>
 {% if entries %}
     {% for entry in entries %}
@@ -50,5 +64,8 @@
 {% endblock  %}
 
 {% block scripts %}
+<script>
+
+</script>
     
 {% endblock scripts %}
