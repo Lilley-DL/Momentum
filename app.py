@@ -645,9 +645,9 @@ def addWorkout():
     #     return render_template("addWorkout.html", pastWorkouts=pastWorkouts)
 
 ##alternate workout route 
-@app.route("/add-workout-other",methods=['GET','POST'])
+@app.route("/add_alt_workout",methods=['GET','POST'])
 @flask_login.login_required
-def addWorkoutOther():
+def addAltWorkout():
     if flask_login.current_user.is_authenticated: #probably dont need this 
         workoutObject = {}
         #movementsObject = {}
