@@ -28,7 +28,17 @@
         <h5>{{entry.entry_date}}</h5>
         <button class="dropdown-button">View</button>
         <div class="dropdown-content">
-            {{entry.aggregated_data}}
+            
+            {% for entry in entry.aggregated_data %}
+            <div class="entry-wrapper">
+                <span class="antry-data" id="entry-name">{{entry.name}}</span>
+                {% for key in entry.entry_data %}
+                    <span class="macro-key entry-data">{{key}}: {{entry.entry_data[key]}}</span>
+
+                {% endfor %}
+                
+            </div>
+            {% endfor %}
             
         </div>
     </div>
@@ -65,6 +75,21 @@
 
 {% block scripts %}
 <script>
+
+    var dropdownButtons = document.querySelectorAll(".dropdown-button")
+    console.log(dropdownButtons)
+    dropdownButtons.forEach(function(element){
+        element.addEventListener("click",function(event){
+            //get the parent wrapper div 
+            var parent = event.target.parentElement;
+            //get the child content div 
+            var content = parent.querySelectorAll(".dropdown-content")[0]
+            
+            content.classList.toggle("show")
+        })
+    })
+
+
 
 </script>
     

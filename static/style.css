@@ -87,7 +87,18 @@ footer div{
 
 /* viewing meals  */
 /* for the aggregated meals dropdown */
+.dropdown-content{
+    display: none;
+}
 
+.show{
+    display: block;
+}
+
+.entry-wrapper{
+    display: flex;
+    flex-direction: column;
+}
 /* meal entry  */
 /* meal name */
 
