@@ -315,6 +315,8 @@ def viewMeals():
         meals = supabase.rpc("get_user_entry_aggregates", {"p_user_id": current_user.id}).execute()
         # app.logger.info(f"AGGREGATE MEALS = {meals.data}")
         aggregatedMeals = meals.data if meals.data else []
+        #reverse the list so they are date descending 
+        aggregatedMeals.reverse()
         #format the dates for the aggregated data 
         for entry in aggregatedMeals:
             app.logger.info(f"aggregate meal :: {entry}")
