@@ -89,6 +89,7 @@ Create entry
                 <button value="/" class="calc-button operand-button"> &#247;</button>
             </div>
             <input id="sum-button" type="button" value="=" class="calc-button">
+            <input id="use-button" type="button" value="use result" class="calc-button button-disabled" disabled>
         </div>
 
         <!-- <button id="closeCalc">Close</button> -->
@@ -111,6 +112,8 @@ Create entry
 
     var clearButtons = document.getElementsByClassName("clearMacroButton")
 
+    var useReultButton = document.getElementById("use-button");
+
     var calcDisplay = 0;
 
     var left;
@@ -119,6 +122,8 @@ Create entry
     var operand = undefined;
     var operandChosen = false;
     var calcButtonClick = false
+
+    var globalResult = 0;
 
     Array.from(calcButtons).forEach(btn =>{
         btn.addEventListener("click", () => {
@@ -165,10 +170,23 @@ Create entry
                         console.log(`left ${left} :: right ${right} :: op ${operand}`)
                         let calculation = calculate(left, right, operand)
                         console.log("CALCULATION = ", calculation)
-                        //put the value in the last focused number input 
-                        handleCalculationResult(calculation)
+                        //clear old calculation 
+                        left = undefined
+                        right = undefined
+                        operand = undefined
+
+                        //clear the ui input
+                        calcInput.value = ""
+                        //put the value in the calculation 
+                        //as the new left operand ? 
+                        left = calculation;
+                        calcInput.value = left
                         //clear calculator (maybe close the modal too)
-                        clearCalc()
+                        //clearCalc()
+
+                        //set global result 
+                        globalResult = calculation
+
                     }
                     break
                 case "X":
@@ -210,97 +228,7 @@ Create entry
             calcButtonClick = false
         })
     })
-    /*
-    for (btn of calcButtons) {
-        btn.addEventListener("click", () => {
-            
-            calcButtonClick = true
 
-            console.log(event.target.value)
-            let value = event.target.value;
-
-            //check for the operator buttons 
-            switch (value) {
-                case "x":
-                    console.log("Multiply")
-                    operand = "x"
-                    if (left && operand) {
-                        calcInput.value = left + operand
-                    }
-                    break
-                case "-":
-                    console.log("Subtract")
-                    operand = "-"
-                    if (left && operand) {
-                        calcInput.value = left + operand
-                    }
-                    break
-                case "+":
-                    console.log("Addition")
-                    operand = "+"
-                    if (left && operand) {
-                        calcInput.value = left + operand
-                    }
-                    break
-                case "/":
-                    console.log("Division")
-                    operand = "/"
-                    if (left && operand) {
-                        calcInput.value = left + operand
-                    }
-                    break
-                case "=":
-                    console.log("Sum")
-                    //perform sum 
-                    if (left && right && operand) {
-                        console.log(`left ${left} :: right ${right} :: op ${operand}`)
-                        let calculation = calculate(left, right, operand)
-                        console.log("CALCULATION = ", calculation)
-                        //put the value in the last focused number input 
-                        handleCalculationResult(calculation)
-                        //clear calculator (maybe close the modal too)
-                        clearCalc()
-                    }
-                    break
-                case "X":
-                    clearCalc()
-                    break
-
-                default:
-                    //put the numerical value in the input 
-                    if (right) {
-                        calcDisplay = Number(calcDisplay + value)
-                        right = Number(calcDisplay)
-                    } else if (operand) {
-
-                        calcDisplay = 0
-                        calcDisplay = Number(calcDisplay + value)
-                        right = Number(calcDisplay)
-
-                    } else {
-                        calcDisplay = Number(calcDisplay + value)
-                        left = Number(calcDisplay)
-                    }
-
-                    console.log("Calc result = ", calcDisplay)
-
-                    if (left && right && operand) {
-                        calcInput.value = left + operand + right
-                    } else if (left) {
-                        calcInput.value = left
-                    } else if (left && operand) {
-                        calcInput.value = left + operand
-                    }
-
-                    break
-
-            }
-        })
-
-        btn.addEventListener("blur", function(){
-            calcButtonClick = false
-        })
-    }*/
 
     function clearCalc() {
         calcInput.value = ""
@@ -354,10 +282,15 @@ Create entry
             //the below doesnt work because its numeric input only ??
             //calcInput = lastFocusedInput
             lastFocusedInput.style.backgroundColor = 'lightblue'
+            
+            useReultButton.classList.remove("button-disabled")
+            useReultButton.disabled = false
         });
-
+        
         input.addEventListener('blur',function(){
             //console.log("Calc button click ",calcButtonClick)
+            useReultButton.classList.add("button-disabled")
+            
             if(!calcButtonClick){
                 
                 console.log("Calc button click WHITE ",calcButtonClick)
@@ -381,6 +314,34 @@ Create entry
             lastFocusedInput.value = result;
         }
     }
+
+    //assigns the last calculation result to the last selected input 
+    function assignCalculationResult(result){
+        if (lastFocusedInput) {
+            lastFocusedInput.value = result;
+        }
+    }
+
+    
+    //enable the button if there is a last focused input 
+    if(!lastFocusedInput){
+        //useReultButton.classList.toggle("button-disabled")
+    }
+
+   useReultButton.addEventListener("click",function(){
+        //check for the presence of a result
+        if(globalResult > 0){
+            //use the result in the last selected input 
+            console.log("Assigning result:",globalResult, " to ",lastFocusedInput)
+            lastFocusedInput.value = globalResult
+            //clear global result 
+            globalResult = 0
+        }
+        
+        //toggle the button after the result is used 
+        useReultButton.disabled = true
+
+    })
 
 </script>
 

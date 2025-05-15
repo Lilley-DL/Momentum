@@ -176,6 +176,10 @@ footer div{
     min-height: 20%;
 }
 
+#use-button{
+
+}
+
 /* nav cards  */
 .nav-card-wrapper{
     margin: 2vh 5vw;
@@ -555,6 +559,13 @@ footer div{
         min-width: 50%;
         /* align-self: flex-end; */
         align-self: center;
+    }
+    #use-button{
+        min-width: 50%;
+        align-self: center;
+    }
+    .button-disabled{
+        background-color: #aac2cd;
     }
 
     #dashboard-wrapper{
