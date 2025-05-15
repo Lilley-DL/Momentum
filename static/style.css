@@ -148,8 +148,9 @@ footer div{
 
 /* macro calculator */
 #calcResult{
-    max-width: 70%;
+    max-width: 50%;
     font-size: medium;
+    align-self: center;
 }
 
 #calcButtons{

@@ -27,7 +27,7 @@ Create entry
             <!-- <label for="calories">Calories:</label> -->
             <h3 for="calories">Calories:</h3>
             <input class="macroInput" type="number" id="calorieInput" name="calories" min="0" step="0.01" required
-                placeholder="Kcal">
+                placeholder="Kcal" readonly>
                 <input class="clearMacroButton" type="button" value="x">
         </div>
         <h4 id="macroHeader">Macros:</h4>
@@ -40,17 +40,17 @@ Create entry
             </div>
             <div>
                 <label for="fats">Fat:</label>
-                <input  class="macroInput" type="number" id="fatsInput" name="fats" min="0" max="999" step="0.01" value="0">
+                <input  class="macroInput" type="number" id="fatsInput" name="fats" min="0" max="999" step="0.01" value="0" readonly> 
                 <input class="clearMacroButton" type="button" value="x">
             </div>
             <div>
                 <label for="carbs">Carbs:</label>
-                <input class="macroInput" type="number" id="carbsInput" name="carbs" min="0" step="0.01" value="0">
+                <input class="macroInput" type="number" id="carbsInput" name="carbs" min="0" step="0.01" value="0" readonly>
                 <input class="clearMacroButton" type="button" value="x">
             </div>
             <div>
                 <label for="fibre">Fibre:</label>
-                <input class="macroInput" type="number" id="fibreInput" name="fibre" min="0" step="0.01" value="0">
+                <input class="macroInput" type="number" id="fibreInput" name="fibre" min="0" step="0.01" value="0" readonly>
                 <input class="clearMacroButton" type="button" value="x">
             </div>
         </div>
@@ -61,7 +61,7 @@ Create entry
     <!-- <button class="nav-button" id="showCalc">Calculator</button> -->
     <div id="calculator-modal">
 
-        <input type="text" name="calcResult" id="calcResult">
+        <input type="text" name="calcResult" id="calcResult" readonly>
 
         <div id="calcButtons">
             <div id="calc-tr" class="calc-button-row">
@@ -275,7 +275,8 @@ Create entry
     // Store the last focused input when an input field receives focus
     document.querySelectorAll('input[type="number"]').forEach(input => {
         input.addEventListener('focus', function(){
-            console.log("Calc button click ",calcButtonClick)
+            //prevent deefault to stop the iunput coming up 
+
     
             lastFocusedInput = input;
 
@@ -336,8 +337,20 @@ Create entry
             lastFocusedInput.value = globalResult
             //clear global result 
             globalResult = 0
+        }else if(calcInput.value != "" || calcInput.value != "0"){
+            //use the calinput value instead 
+            let tempValue = calcInput.value
+            //check for the presence of an operand and remove it  
+            if(!/^\d*$/.test(tempValue)){
+                tempValue = tempValue.replace(/\D/g, '');
+            }
+
+            //use the temp value 
+            lastFocusedInput.value = tempValue
         }
         
+        //clear the calc results
+        clearCalc()
         //toggle the button after the result is used 
         useReultButton.disabled = true
 
