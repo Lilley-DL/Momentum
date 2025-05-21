@@ -96,6 +96,11 @@ Create entry
     </div>
 </div>
 
+<button id="addComponentButton">Add Meal Component</button>
+<div id="meal-components-wrapper">
+
+</div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -124,6 +129,8 @@ Create entry
     var calcButtonClick = false
 
     var globalResult = 0;
+
+    var mealComponents = []
 
     Array.from(calcButtons).forEach(btn =>{
         btn.addEventListener("click", () => {
@@ -344,6 +351,7 @@ Create entry
             if(!/^\d*$/.test(tempValue)){
                 tempValue = tempValue.replace(/\D/g, '');
             }
+            //TODO: sort out the negative values 
 
             //use the temp value 
             lastFocusedInput.value = tempValue
@@ -355,6 +363,82 @@ Create entry
         useReultButton.disabled = true
 
     })
+
+    var addComponentButton = document.getElementById("addComponentButton")
+    var macroInputs = document.getElementsByClassName("macroInput")
+
+    var componentsWrapper = document.getElementById("meal-components-wrapper")
+
+    addComponentButton.addEventListener("click", function(event){
+        //create new component object 
+        var component = {}
+
+        //get the component name 
+        var componentName = document.getElementById("entry-name")
+        //check the name content, duplicates in the list, empty, etc
+        component.name = componentName.value
+
+        //loop over macro inputs and get the values into a JSON OBJECT
+        Array.from(macroInputs).forEach(element =>{
+            console.log("Nmae: " ,element.name, "Value:",element.value)
+            component[element.name] = element.value
+        })
+        //?HOW will i get the name, loop over each element and grab the name attribute ??
+        console.log("Component : ", component)
+        
+        //add to the list of components 
+        mealComponents.push(component)
+        console.log("Component LIST : ", mealComponents)
+
+        //clear the old UI list 
+        componentsWrapper.innerHTML = ""
+        mealComponents.forEach(component =>{
+            addComponentUI(component)
+        })
+
+    })
+
+    
+
+    //add UI element for the list 
+    function addComponentUI(component){
+
+        //take in the JSON and create an element for it 
+        var componentDiv = document.createElement("div")
+        componentDiv.classList.add("component")
+        componentDiv.id = component.name // this can be used to remove the UI element i think 
+
+        var removeComponentButton = document.createElement("button")
+        removeComponentButton.innerText = "X"
+        removeComponentButton.addEventListener("click", function(event){
+            console.log(this.parentElement)
+            //remove the UI element
+            // this.parentElement.remove()
+            
+            // OR would it be better to clear the whole thing and just build from the list state ??
+            //get the id 
+            let elementid = this.parentElement.id //this may get fucky with spaces in the name ? 
+            mealComponents.forEach(component =>{
+                
+                if(component.name == elementid){
+                    console.log("Removing : " , component.name)
+                    let index = mealComponents.indexOf(component)
+                    mealComponents.splice(index,1)
+                    this.parentElement.remove()
+                }
+
+            })
+        })
+
+        componentDiv.innerHTML = "<span>" + component.name+"</span>"
+        componentDiv.appendChild(removeComponentButton)
+
+        //add it to the UI wrapper 
+        componentsWrapper.appendChild(componentDiv)
+    }
+
+    //clear inputs method 
+
 
 </script>
 
