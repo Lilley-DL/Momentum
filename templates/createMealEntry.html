@@ -366,6 +366,7 @@ Create entry
 
     var addComponentButton = document.getElementById("addComponentButton")
     var macroInputs = document.getElementsByClassName("macroInput")
+    var componentName = document.getElementById("entry-name")
 
     var componentsWrapper = document.getElementById("meal-components-wrapper")
 
@@ -374,7 +375,6 @@ Create entry
         var component = {}
 
         //get the component name 
-        var componentName = document.getElementById("entry-name")
         //check the name content, duplicates in the list, empty, etc
         component.name = componentName.value
 
@@ -435,9 +435,18 @@ Create entry
 
         //add it to the UI wrapper 
         componentsWrapper.appendChild(componentDiv)
+        clearInputs()
     }
 
-    //clear inputs method 
+    //clear inputs after adding a meal coponent
+    function clearInputs(){
+        
+        componentName.value = ""
+        Array.from(macroInputs).forEach(input =>{
+            //could check for the kcal input so it goed back to the "kcal" placeholder 
+            input.value = "0"
+        })
+    }
 
 
 </script>
