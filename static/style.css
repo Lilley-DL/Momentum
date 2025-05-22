@@ -544,6 +544,11 @@ footer div{
     }
 
     /* MEAL CALCULATOR  */
+    #useCalcButton{
+        max-width: 50%;
+        align-self: center;
+        font-size: large;
+    }
 
     #meal-main-wrapper{
         display: flex;

@@ -60,6 +60,7 @@ Create entry
     <br>
     <!-- <button class="nav-button" id="showCalc">Calculator</button> -->
     <div id="calculator-modal">
+        <button class="nav-button" id="useCalcButton">calculator</button>
 
         <input type="text" name="calcResult" id="calcResult" readonly>
 
@@ -114,10 +115,18 @@ Create entry
     var calcInput = document.getElementById("calcResult")
 
     var calcButtons = document.getElementsByClassName("calc-button")
+    var calcButtonsWrapper = document.getElementById("calcButtons")
 
     var clearButtons = document.getElementsByClassName("clearMacroButton")
 
     var useReultButton = document.getElementById("use-button");
+
+    var addComponentButton = document.getElementById("addComponentButton")
+    var macroInputs = document.getElementsByClassName("macroInput")
+    var componentName = document.getElementById("entry-name")
+
+    var componentsWrapper = document.getElementById("meal-components-wrapper")
+
 
     var calcDisplay = 0;
 
@@ -127,6 +136,30 @@ Create entry
     var operand = undefined;
     var operandChosen = false;
     var calcButtonClick = false
+
+    var usingCalculator = false;
+    var useCalcButton = document.getElementById("useCalcButton")
+
+    useCalcButton.addEventListener("click", function(event){
+        //flip the status 
+        usingCalculator = !usingCalculator
+        //show the calculator 
+        if(usingCalculator){
+            calcInput.style.display = "none"
+            calcButtonsWrapper.style.display = "none"
+            Array.from(macroInputs).forEach(input => {
+                input.readOnly = false;
+            })
+            
+        }else{
+            calcInput.style.display = "flex"
+            calcButtonsWrapper.style.display = "flex"
+            Array.from(macroInputs).forEach(input => {
+                input.readOnly = true;
+            })
+        }
+    })
+
 
     var globalResult = 0;
 
@@ -282,9 +315,9 @@ Create entry
     // Store the last focused input when an input field receives focus
     document.querySelectorAll('input[type="number"]').forEach(input => {
         input.addEventListener('focus', function(){
+            //remove the 0 placeholder
+            input.value = ""
             //prevent deefault to stop the iunput coming up 
-
-    
             lastFocusedInput = input;
 
             //the below doesnt work because its numeric input only ??
@@ -364,11 +397,6 @@ Create entry
 
     })
 
-    var addComponentButton = document.getElementById("addComponentButton")
-    var macroInputs = document.getElementsByClassName("macroInput")
-    var componentName = document.getElementById("entry-name")
-
-    var componentsWrapper = document.getElementById("meal-components-wrapper")
 
     addComponentButton.addEventListener("click", function(event){
         //create new component object 
@@ -380,7 +408,6 @@ Create entry
 
         //loop over macro inputs and get the values into a JSON OBJECT
         Array.from(macroInputs).forEach(element =>{
-            console.log("Nmae: " ,element.name, "Value:",element.value)
             component[element.name] = element.value
         })
         //?HOW will i get the name, loop over each element and grab the name attribute ??
