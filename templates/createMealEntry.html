@@ -13,6 +13,7 @@ Create entry
 
 {% endif %}
 <h1>Meal information</h1>
+<span id="warning"></span>
 <div id="meal-main-wrapper">
 
 
@@ -55,7 +56,7 @@ Create entry
             </div>
         </div>
         <br>
-        <input class="nav-button" type="submit" value="Submit">
+        <!-- <input class="nav-button" type="submit" value="Submit"> -->
     </form>
     <br>
     <!-- <button class="nav-button" id="showCalc">Calculator</button> -->
@@ -98,9 +99,11 @@ Create entry
 </div>
 
 <button id="addComponentButton">Add Meal Component</button>
-<div id="meal-components-wrapper">
 
+<div id="meal-components-wrapper">
+    
 </div>
+<input class="nav-button" type="submit" value="Submit" form="meal-entry-form">
 
 {% endblock %}
 
@@ -330,6 +333,7 @@ Create entry
         
         input.addEventListener('blur',function(){
             //console.log("Calc button click ",calcButtonClick)
+            //maybe check there is a result first ? 
             useReultButton.classList.add("button-disabled")
             
             if(!calcButtonClick){
@@ -399,32 +403,61 @@ Create entry
 
 
     addComponentButton.addEventListener("click", function(event){
-        //create new component object 
-        var component = {}
-
-        //get the component name 
-        //check the name content, duplicates in the list, empty, etc
-        component.name = componentName.value
-
-        //loop over macro inputs and get the values into a JSON OBJECT
-        Array.from(macroInputs).forEach(element =>{
-            component[element.name] = element.value
-        })
-        //?HOW will i get the name, loop over each element and grab the name attribute ??
-        console.log("Component : ", component)
         
-        //add to the list of components 
-        mealComponents.push(component)
-        console.log("Component LIST : ", mealComponents)
+        //check the value of the inputs 
+        if(componentValueCheck()){
 
-        //clear the old UI list 
-        componentsWrapper.innerHTML = ""
-        mealComponents.forEach(component =>{
-            addComponentUI(component)
-        })
+            //create new component object 
+            var component = {}
+            //get the component name 
+            //check the name content, duplicates in the list, empty, etc
+            component.name = componentName.value
+            
+            //loop over macro inputs and get the values into a JSON OBJECT
+            Array.from(macroInputs).forEach(element =>{
+                component[element.name] = element.value
+            })
+            //?HOW will i get the name, loop over each element and grab the name attribute ??
+            console.log("Component : ", component)
+            
+            //add to the list of components 
+            mealComponents.push(component)
+            console.log("Component LIST : ", mealComponents)
+            
+            //clear the old UI list 
+            componentsWrapper.innerHTML = ""
+            mealComponents.forEach(component =>{
+                addComponentUI(component)
+            })
+        }
 
     })
 
+    function componentValueCheck(){
+        //check the name input 
+        if(componentName.value == ""){
+            //flash a warning 
+                displayWarning("Component must have a name")
+                setTimeout(()=>{
+                    displayWarning("")
+                },2000)
+                return false;
+        } 
+        //check the macro input values
+        //for  this to work better i need to ensure there is a "0" in the input 
+        Array.from(macroInputs).forEach(input =>{
+            if(input.value == ""){
+                displayWarning(input.name + " must have a value")
+                setTimeout(()=>{
+                    displayWarning("")
+                },2000)
+                return false;
+            }
+        })
+
+        return true;
+        
+    }
     
 
     //add UI element for the list 
@@ -457,7 +490,7 @@ Create entry
             })
         })
 
-        componentDiv.innerHTML = "<span>" + component.name+"</span>"
+        componentDiv.innerHTML = "<span class='component'>" + component.name+ "<br>"+"Kcal:" +component.calories+"</span>"
         componentDiv.appendChild(removeComponentButton)
 
         //add it to the UI wrapper 
@@ -475,6 +508,10 @@ Create entry
         })
     }
 
+    function displayWarning(message){
+        let warningText = document.getElementById("warning")
+        warningText.innerText = message
+    }
 
 </script>
 

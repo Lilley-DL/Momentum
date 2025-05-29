@@ -574,6 +574,12 @@ footer div{
         background-color: #aac2cd;
     }
 
+    /* meal coponents  */
+    .component{
+        margin-top: 5px;
+        display: flex;
+    }
+
     #dashboard-wrapper{
         align-items: center;
     }
