@@ -18,9 +18,13 @@ Create entry
 
 
     <form action="/createMealEntry" method="post" id="meal-entry-form">
+        <div class="meal-input" id="name-input-wrapper">
+            <h2 for="entryName">Meal Name:</h2>
+            <input type="text" name="entryName" id="meal-name-input" required min="4" max="50">
+        </div>
 
         <div class="meal-input" id="name-input-wrapper">
-            <h3 for="entryName">Name:</h3>
+            <h3 for="entryName">Component Name:</h3>
             <input type="text" name="entryName" id="entry-name" required min="4" max="50">
         </div>
 
@@ -116,6 +120,7 @@ Create entry
 <script>
 
     var testSubmit = document.getElementById("testSubmit")
+    var mealNameInput = document.getElementById("meal-name-input")
 
     var calcModal = document.getElementById("calculator-modal")
     var showCalc = document.getElementById("showCalc")

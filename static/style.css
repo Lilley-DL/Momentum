@@ -107,9 +107,12 @@ footer div{
     justify-content: space-evenly;
     max-width: 50vw;
 }
-#name-input-wrapper h3{
+#name-input-wrapper h3,
+#name-input-wrapper h2
+{
     margin: 0 5px 0 0 ;
 }
+
 #name-input-wrapper input[type=text]{
     font-size: larger;
 }
