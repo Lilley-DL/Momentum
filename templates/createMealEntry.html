@@ -25,10 +25,9 @@ Create entry
         </div>
 
         <div class="meal-input" id="calories-input-wrapper">
-            <!-- <label for="calories">Calories:</label> -->
             <h3 for="calories">Calories:</h3>
             <input class="macroInput" type="number" id="calorieInput" name="calories" min="0" step="0.01" required
-                placeholder="Kcal" readonly>
+                placeholder="Kcal" >
                 <input class="clearMacroButton" type="button" value="x">
         </div>
         <h4 id="macroHeader">Macros:</h4>
@@ -36,30 +35,30 @@ Create entry
         <div id="macro-input-wrapper">
             <div>
                 <label for="protein">Protein:</label>
-                <input max="999" class="macroInput" type="number" id="proteinInput" name="protein" min="0" step="0.01" value="0" readonly>
+                <input max="999" class="macroInput" type="number" id="proteinInput" name="protein" min="0" step="0.01" value="0" >
                 <input class="clearMacroButton" type="button" value="x">
             </div>
             <div>
                 <label for="fats">Fat:</label>
-                <input  class="macroInput" type="number" id="fatsInput" name="fats" min="0" max="999" step="0.01" value="0" readonly> 
+                <input  class="macroInput" type="number" id="fatsInput" name="fats" min="0" max="999" step="0.01" value="0" > 
                 <input class="clearMacroButton" type="button" value="x">
             </div>
             <div>
                 <label for="carbs">Carbs:</label>
-                <input class="macroInput" type="number" id="carbsInput" name="carbs" min="0" step="0.01" value="0" readonly>
+                <input class="macroInput" type="number" id="carbsInput" name="carbs" min="0" step="0.01" value="0" >
                 <input class="clearMacroButton" type="button" value="x">
             </div>
             <div>
                 <label for="fibre">Fibre:</label>
-                <input class="macroInput" type="number" id="fibreInput" name="fibre" min="0" step="0.01" value="0" readonly>
+                <input class="macroInput" type="number" id="fibreInput" name="fibre" min="0" step="0.01" value="0" >
                 <input class="clearMacroButton" type="button" value="x">
             </div>
         </div>
         <br>
-        <!-- <input class="nav-button" type="submit" value="Submit"> -->
+       
     </form>
     <br>
-    <!-- <button class="nav-button" id="showCalc">Calculator</button> -->
+ 
     <div id="calculator-modal">
         <button class="nav-button" id="useCalcButton">Calculator<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path id="pw-arrow-path" d="M18 15l-6-6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,19 +98,24 @@ Create entry
         <!-- <button id="closeCalc">Close</button> -->
     </div>
 </div>
-
-<button id="addComponentButton">Add Meal Component</button>
+<div id="component-list-controls">
+    <button id="addComponentButton">Add Meal Component</button>
+    <button id="clearComponentList">Clear all</button>
+</div>
 
 <div id="meal-components-wrapper">
     
 </div>
 <input class="nav-button" type="submit" value="Submit" form="meal-entry-form">
+<button id="testSubmit">Submit all</button>
 
 {% endblock %}
 
 {% block scripts %}
 
 <script>
+
+    var testSubmit = document.getElementById("testSubmit")
 
     var calcModal = document.getElementById("calculator-modal")
     var showCalc = document.getElementById("showCalc")
@@ -455,18 +459,23 @@ Create entry
         } 
         //check the macro input values
         //for  this to work better i need to ensure there is a "0" in the input 
+        //this serves as a indicator of an  issue for the bottom if block, like a flag ?
+        let macroIssueMessage = ""
         Array.from(macroInputs).forEach(input =>{
             if(input.value == ""){
-                displayWarning(input.name + " must have a value")
+                macroIssueMessage = input.name + " must have a value"
+                displayWarning(macroIssueMessage)
                 setTimeout(()=>{
                     displayWarning("")
                 },2000)
-                return false;
             }
         })
 
+        //check for the presence of the message because returning false from foreach is iffy
+        if(macroIssueMessage != ""){
+            return false;
+        }
         return true;
-        
     }
     
 
@@ -522,6 +531,33 @@ Create entry
         let warningText = document.getElementById("warning")
         warningText.innerText = message
     }
+
+    var clearListButton = document.getElementById("clearComponentList")
+    clearListButton.addEventListener("click",function(event){
+        //remove all from list 
+        mealComponents = []
+        //clear the UI 
+        componentsWrapper.innerHTML = ""
+
+    })
+
+    testSubmit.addEventListener("click",function(event){
+        //gather the list 
+        fetch('http://192.168.1.122:8000/api/createMeal',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify(mealComponents)
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log("Success: ",result)
+        })
+        .catch(error =>{
+            console.log("Error: ",error)
+        })
+    })
 
 </script>
 

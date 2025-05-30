@@ -533,6 +533,15 @@ def createMealEntry():
 
     return render_template("createMealEntry.html")
 
+#meal endpoint for v2 meals using meal components 
+@app.route("/api/createMeal",methods=['POST'])
+@flask_login.login_required
+def api_createMeal():
+    data = request.get_json()
+    app.logger.info(f"API meal components data : {data}")
+
+    return jsonify({"message":"Data recieved successfully"})
+
 @app.route("/add-workout",methods=['GET','POST'])
 @flask_login.login_required
 def addWorkout():
