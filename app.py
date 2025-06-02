@@ -537,10 +537,24 @@ def createMealEntry():
 @app.route("/api/createMeal",methods=['POST'])
 @flask_login.login_required
 def api_createMeal():
-    data = request.get_json()
-    app.logger.info(f"API meal components data : {data}")
+    requestData = request.get_json()
+    
+    data = {
+        "entry_data":requestData,
+        "entry_name":requestData['name'],
+        "user_id": flask_login.current_user.id
+    }
 
-    return jsonify({"message":"Data recieved successfully"})
+    app.logger.info(f"API meal components data (processed): {data}")
+    try:
+        response = supabase.table("macro_entry").insert(data).execute()
+        app.logger.info(f"NEW MEALS SUPA RESPONSE  = {response}")
+        return jsonify({"message":"Data stored successfully"})
+    except Exception as e:
+        app.logger.info(f"RESPONSE FROM SUPA error = {e}")
+        #flash(f"something went wrong :: {e}")
+        return jsonify({"message":f"an error occured {e}"})
+
 
 @app.route("/add-workout",methods=['GET','POST'])
 @flask_login.login_required

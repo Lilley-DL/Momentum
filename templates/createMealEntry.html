@@ -22,6 +22,10 @@ Create entry
             <h2 for="entryName">Meal Name:</h2>
             <input type="text" name="entryName" id="meal-name-input" required min="4" max="50">
         </div>
+        <div class="meal-input" id="datetime-wrapper">
+            <h2>Date & Time:</h2>
+            <input type="datetime-local" name="date" id="datetime">
+        </div>
 
         <div class="meal-input" id="name-input-wrapper">
             <h3 for="entryName">Component Name:</h3>
@@ -118,6 +122,11 @@ Create entry
 {% block scripts %}
 
 <script>
+
+    const now = new Date();
+    const localISOTime = now.toISOString().slice(0,16); // YYYY-MM-DDTHH:MM
+    var mealDate = document.getElementById('datetime')
+    mealDate.value = localISOTime;
 
     var testSubmit = document.getElementById("testSubmit")
     var mealNameInput = document.getElementById("meal-name-input")
@@ -547,21 +556,37 @@ Create entry
     })
 
     testSubmit.addEventListener("click",function(event){
-        //gather the list 
-        fetch('http://192.168.1.122:8000/api/createMeal',{
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body: JSON.stringify(mealComponents)
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log("Success: ",result)
-        })
-        .catch(error =>{
-            console.log("Error: ",error)
-        })
+        //get the name for the entire meal 
+        let mealName = mealNameInput.value
+        //check the and length 
+        if(mealName.length > 3){
+
+            var mealData = {
+                name:mealName,
+                components:mealComponents,
+                dateTime:mealDate.value
+            }
+
+            fetch('{{url_for("api_createMeal")}}',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify(mealData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log("Success: ",result)
+            })
+            .catch(error =>{
+                console.log("Error: ",error)
+            })
+        }else{
+                displayWarning("meal needs to have a name")
+                setTimeout(()=>{
+                    displayWarning("")
+                },2000)
+        }
     })
 
 </script>
