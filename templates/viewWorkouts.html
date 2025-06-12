@@ -53,6 +53,7 @@
         {% endif %}
 
         <a href="{{url_for('viewWorkout', workout_id=workout.workout_id) }}">View workout</a>
+        <a href="{{url_for('editWorkout', workout_id=workout.workout_id) }}">Edit </a>
         <hr>
     </div>
     {% endfor %}

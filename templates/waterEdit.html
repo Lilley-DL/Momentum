@@ -11,7 +11,7 @@
 
 {% if entry %}
     
-<form id="water-entry-form" action="/" method="post">
+<form id="water-entry-form" action="{{url_for('editWater', entry_id=entry.entry_id)}}" method="post">
     <label for="amount">Amount (ml):</label>
     <input type="number" name="amount" id="water-input" min="100" required value="{{entry['entry_data']['amount']}}" >
     <br>

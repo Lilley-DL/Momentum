@@ -55,6 +55,40 @@ class Workout:
         else:
                 self.zippedSets = list(zip(self.workout_data['movements'],self.workout_data['sets']))
 
+    ##FROM GEMINI
+    def to_dict(self):
+        # This method is crucial for JSON serialization
+        workout_dict = {
+            "id": self.workout_id,
+            "name": self.name,
+            "date": self.dateTime.isoformat() if isinstance(self.dateTime, datetime) else self.dateTime,
+        }
+
+        if hasattr(self, 'duration') and self.duration is not None:
+            workout_dict['duration'] = self.duration
+            workout_dict['type'] = 'other' # Assuming you want to explicitly set type if it's 'other'
+        else:
+            workout_dict['sets'] = self.sets
+            #workout_dict['movements'] = self.movements
+            # --- THE CRITICAL PART: CONVERT ZIPPED SETS FROM LIST OF TUPLES TO LIST OF LISTS ---
+            workout_dict['zippedSets'] = [list(item) for item in self.zippedSets]
+            # You might also want to add 'type' if it's not 'other'
+            if 'type' in self.workout_data:
+                 workout_dict['type'] = self.workout_data['type']
+            else:
+                 # Default type if not explicitly set in workout_data
+                 workout_dict['type'] = 'weights' # Or whatever your default is
+
+        # Add other common workout_data fields if they exist and are always present
+        # This structure needs to match what you expect in your frontend form
+        if 'category' in self.workout_data:
+            workout_dict['category'] = self.workout_data['category']
+        if 'effort' in self.workout_data:
+            workout_dict['effort'] = self.workout_data['effort']
+        # Be careful here, as your `workout_data` might contain more fields than your `Workout` class directly manages
+        # It's better to explicitly list all fields you want to serialize.
+
+        return workout_dict
 
     def __str__(self):
         return json.dumps(self.workout_data) ##could change this to the __dict__ maybe ?
@@ -360,9 +394,6 @@ def viewWorkouts():
         flash(e)
         return redirect("/profile")
 
-
-
-
 @app.route("/view/workout/<workout_id>",methods=['GET']) #workout id from supa is an int 
 @flask_login.login_required
 def viewWorkout(workout_id):
@@ -395,6 +426,38 @@ def viewWorkout(workout_id):
         flash(f"Something went wrong {e}")
         return redirect("/profile")
     
+    ##  EDIT WORKOUT
+@app.route("/edit/workout/<workout_id>",methods=['GET']) #workout id from supa is an int 
+@flask_login.login_required
+def editWorkout(workout_id):
+    try:
+        response =  supabase.table("workout").select("*").eq('id',workout_id).eq("user_id",flask_login.current_user.id).maybe_single().execute()
+        #check the user id too 
+        if response:
+            #app.logger.info(f"Single workout response :: {response}")
+            wjson = response.data['workout_json']
+            wjson['id'] = response.data['id']
+            app.logger.info(f" SINGLE OBJECT JSON = {wjson}")
+        else:
+            flash("No workout with that id exists")
+            return render_template("viewWorkout.html")
+
+        try:
+            workoutObject = Workout(response.data)
+            app.logger.info(f" SINGLE OBJECT = {workoutObject}")
+            #flash(f"WORKOUT {workoutObject}")
+            return render_template("editWorkout.html",workout=workoutObject)
+        
+        except Exception as e:
+            app.logger.info(f"Something wnet wronmg with single object {e}")
+            flash(f"Something went wrong {e}")
+            return render_template("viewWorkout.html")
+
+        #show the page 
+    except Exception as e:
+        flash(f"Something went wrong {e}")
+        return redirect("/profile")
+
 
 @app.route("/waterEntry",methods=['GET','POST'])
 @flask_login.login_required
@@ -445,16 +508,40 @@ def waterEntry():
 @flask_login.login_required
 def editWater(entry_id):
     #listen for the form post first 
+    if request.method == 'POST':
+        #get the new value 
+        amount = request.form.get('amount')
+        date = request.form.get('date')
 
-    #get the new value 
-    try:
-        response = supabase.table("water").select("*").eq('entry_id',entry_id).eq("user_id",flask_login.current_user.id).maybe_single().execute()
-        app.logger.info(f"WATER EDIT {response}")
-        response.data['entry_data']['date'] = datetime.fromisoformat(response.data['entry_data']['date'])
-        return render_template("waterEdit.html",entry=response.data)
-    except Exception as e:
-        flash(f"something went wrong {e}")
-        return redirect(url_for('waterEntry'))
+        data = {
+            "amount":amount,
+            "date":date
+        }
+
+        waterObject = {
+            'entry_data':data,
+            "user_id": flask_login.current_user.id
+        }
+        try:
+            response = supabase.table("water").update(waterObject).eq("entry_id",entry_id).execute()
+            #response = supabase.table("water").select("*").eq('entry_id',entry_id).eq("user_id",flask_login.current_user.id).execute()
+            app.logger.info(f"WATER EDIT {response}")
+            
+            return redirect(url_for('waterEntry'))
+            
+        except Exception as e:
+            flash(f"something went wrong {e}")
+            return redirect(url_for('waterEntry'))
+    
+    else:
+        try:
+            response = supabase.table("water").select("*").eq('entry_id',entry_id).eq("user_id",flask_login.current_user.id).maybe_single().execute()
+            app.logger.info(f"WATER EDIT {response}")
+            response.data['entry_data']['date'] = datetime.fromisoformat(response.data['entry_data']['date'])
+            return render_template("waterEdit.html",entry=response.data)
+        except Exception as e:
+            flash(f"something went wrong {e}")
+            return redirect(url_for('waterEntry'))
 
 @app.route("/deleteWaterEntry/<entry_id>",methods=["GET"])
 @flask_login.login_required

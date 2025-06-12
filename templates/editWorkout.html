@@ -1,0 +1,388 @@
+{% extends 'base.html' %}
+{% block title %}
+    Edit Workout
+{% endblock title %}
+
+{% if errors %}
+    {{errors}}
+{% endif %}
+
+{% block content %}
+
+{% if workout %}
+    {{workout}}
+
+<h1>Edit Workout</h1>
+
+    <form id="workout-form" action="/add-workout" method="post">
+        <input type="hidden" name="type" value="weights">
+
+        <div id="info-section" class="form-section">
+            <label for="date">Date:</label>
+            <input type="datetime-local" name="date" id="date" required>
+        
+            <label for="name">Workout name:</label>
+            <input type="text" name="workout-name" id="workout-name" required>
+        
+            <label for="category">Category</label>
+            <select name="category" id="workout-category">
+                <option value="chest">Chest</option>
+                <option value="back">Back</option>
+                <option value="shoulders">Shoulders</option>
+                <option value="core">Core</option>
+                <option value="arms">Arms</option>
+                <option value="push">Push</option>
+                <option value="pull">Pull</option>
+                <option value="legs">Legs</option>
+                <option value="mixed">Mixed</option>
+            </select>
+        </div>
+
+        <div id="movements-section" class="form-section">
+            <!-- the wrapper for the movments. filled mainly by javascript -->
+            <div class="" id="movements-wrapper">
+
+            </div>
+
+            <h3 class="section-title">Exercises:</h3>
+            
+            <label for="movement">Exercise Name: </label>
+            <input type="text" class="movement-input" id="movement" maxlength="20" minlength="3" size="12">
+            <label for="weight-format">Weight format:</label>
+            <select name="weight-format" id="weight-format" class="movement-input" >
+                <option value="kg">kg</option>
+                <option value="lb">lb</option>
+                <option value="bw">BW</option>
+            </select>
+
+            <button id="add_movementbutton">Add</button>
+            <span id="warning"></span>
+            <br>
+
+        </div>
+
+        <div class="form-section">
+
+            <label for="effort">Effort: </label>
+            <select name="effort" id="workout-effort" class="movement-input">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+                <option value="too_hard">Too hard</option>
+            </select>
+            <br>
+            <input type="submit" value="Submit">
+        </div>
+    
+    </form>
+{% endif %}
+
+{% endblock  %}
+
+{% block scripts %}
+<script>
+
+    var workout = {{workout.to_dict() | tojson}}
+    console.log("workout : ",workout)
+    console.log("sets : ",workout.zippedSets)
+
+    let movementsList = []
+
+    let weightCount = 0;
+
+    let movements = 0;
+    // i may need some sort of state for the count of movements and reps&sets 
+    let movementsWrapper = document.getElementById("movements-wrapper")
+
+    let movementNameInput = document.getElementById("movement")
+
+    //let repssetsWrapper = document.getElementById("repsSets-wrapper")
+    
+    let addMovementButton = document.getElementById("add_movementbutton")
+
+    let weightFormat = document.getElementById("weight-format")
+
+    var timerShowButton = document.getElementById("timer-show")
+    var closeTimer = document.getElementById("rest-close")
+    var timerDialog = document.getElementById("timer-dialog")
+
+    var startTimer = document.getElementById("start-timer")
+    var endTimer = document.getElementById("end-timer")
+   // var pauseTimer = document.getElementById("pause-timer")
+
+    var timerSelect = document.getElementById("rest-duration-select")
+    var timerDisplay = document.getElementById("rest-timer-display")
+
+    //set date
+    var dateInput = document.getElementById("date")
+    dateInput.value = workout.date
+    //set name
+    var nameInput = document.getElementById("workout-name")
+    nameInput.value = workout.name
+    //set category 
+    var workoutCategory = document.getElementById("workout-category")
+
+    if(workout.category){
+        let category = workout.category
+        for(let i = 0; i < workoutCategory.options.length;i++){
+            if(workoutCategory.options[i].value == category){
+                workoutCategory.options[i].selected = true
+                break
+            }
+        }
+    }
+
+
+
+    addMovementButton.addEventListener("click",function(e){
+        event.preventDefault()
+
+        let movementName = movementNameInput.value.trim()
+        console.log(movementName)
+        if(movementName != ""){
+
+            //check for the  name in the list 
+            if(!movementsList.includes(movementName)){
+                //add it to list if it doesnt exist 
+                movementsList.push(movementName)
+                addMovement(movementName)
+            }else{
+                displayWarning("Name already taken")
+                setTimeout(()=>{
+                    displayWarning("")
+                },2000)
+                return
+            }  
+            
+        }else{
+            displayWarning("Name cant be blank")
+            setTimeout(()=>{
+                displayWarning("")
+            },2000)
+            return
+        }
+
+        movementNameInput.value = ""
+
+
+    })
+
+
+    function addMovement(name){
+
+        movements = movements +1
+
+        //div to hold the top elements 
+        let controlsDiv = document.createElement("div")
+        controlsDiv.classList.add("movement-controls")
+
+        //create the new form element 
+        //add it to the workout form as a child 
+        let nameLabel = document.createElement("input")
+        nameLabel.setAttribute("name","movement")
+        nameLabel.id = name
+        nameLabel.value = name
+        nameLabel.className = "movement-input"
+        nameLabel.classList.add("movement-name-label")
+        nameLabel.classList.add("readonly-input")
+        nameLabel.readOnly = true
+        nameLabel.size = 10
+
+        // a div for it all to go into 
+        let setsWrapper = document.createElement("div")
+        setsWrapper.id = "sets-wrapper"
+
+        //add exercise name to top oif sets 
+        ensureSetHeader(setsWrapper,name+"-sets-wrapper",name)
+
+        //add reps button
+        let addSetsbutton = document.createElement("button")
+        addSetsbutton.innerHTML = "Add set"
+        addSetsbutton.id = "addsetbutton"
+        addSetsbutton.className = "movement-input"
+        
+
+        let removeMovementButton = document.createElement("button")
+        removeMovementButton.innerHTML = "X"
+        removeMovementButton.className = "movement-input"
+
+        //div for the movements
+        let movementWrapper = document.createElement("div")
+        movementWrapper.id = name
+        movementWrapper.className = "movement-wrapper"
+
+
+        controlsDiv.appendChild(nameLabel)
+        controlsDiv.appendChild(addSetsbutton)
+        controlsDiv.appendChild(removeMovementButton)
+
+        movementWrapper.append(controlsDiv)
+
+        movementWrapper.append(document.createElement("br"))
+        movementWrapper.prepend(setsWrapper)
+
+        ensureHeader(movementsWrapper)
+        movementsWrapper.append(movementWrapper)
+
+        //make sure the input isnt blank so i can pass the movement name onto the sets id
+        addSetsbutton.addEventListener("click",function(e){
+            event.preventDefault()
+            addrepsandsets(setsWrapper,name)                
+        })
+
+        removeMovementButton.addEventListener("click",function(e){
+            console.log("Remove set button = ",event.target.parentElement.parentElement)
+            event.target.parentElement.parentElement.remove()
+            //remove from the namesList 
+            // cant remember why i added this. probably going to create UI from state ? 
+            let index = movementsList.indexOf(event.target.parentElement.parentElement.id)
+
+            if(index > -1){
+                movementsList.splice(index,1)
+            }
+            console.log(movementsList)
+
+        })
+
+        
+    }
+
+    function addrepsandsets(wrapper,movementName){
+
+        console.log(movementName)
+        weightCount = weightCount + 1
+
+        let exerciseName = document.createElement("span")
+        exerciseName.innerText = movementName
+        //create the new form element 
+        //add it to the workout form as a child 
+        let weightLabel = document.createElement("label")
+        weightLabel.setAttribute("name","Weight:")
+        weightLabel.innerText = "Weight:"
+
+        let repsLabel = document.createElement("label")
+        repsLabel.setAttribute("name","Reps:")
+        repsLabel.innerText = "Reps:"
+
+        let weightInput = document.createElement("input")
+        let repsInput = document.createElement("input")
+    
+        weightInput.name = movementName + "_weight"
+        weightInput.className = "setinput"
+        //check weight format
+        if(weightFormat.value == "bw"){
+            weightInput.type = "text"
+            weightInput.value = "BW"
+            weightInput.classList.add("readonly-input")
+            weightInput.readOnly = true
+        }else{
+            //weightInput.name = movementName + "_weight"
+            weightInput.type = "number"
+            weightInput.placeholder = weightFormat.value
+            weightInput.required = true
+            //set step ? 
+            weightInput.step = "0.1"
+            weightInput.min = 0
+
+            //weightInput.className = "setinput"
+        }
+       
+
+        repsInput.name = movementName +"_reps"
+        repsInput.type = "number"
+        repsInput.placeholder = "Reps"
+        repsInput.required = true 
+        repsInput.className = "setinput" //this might be an issue with the next word
+        repsInput.enterKeyHint = "Next"
+        //repsInput.setAttribute("enterkeyhint","AAH")
+        repsInput.min = 1
+
+        //remove button 
+        let removeSetButton = document.createElement("button")
+        removeSetButton.innerHTML = "X"
+        removeSetButton.id = "delete-set-button"
+
+        // a div for it all to go into 
+        let setWrapper = document.createElement("div")
+        setWrapper.id = "set-wrapper"
+        //think this should be a class identifier not an id 
+        
+        setWrapper.appendChild(weightLabel)
+        setWrapper.appendChild(weightInput)
+        setWrapper.appendChild(repsLabel)
+        setWrapper.appendChild(repsInput)
+        setWrapper.appendChild(removeSetButton)
+        //setWrapper.appendChild(document.createElement("br"))
+
+        wrapper.append(setWrapper)
+
+        weightInput.focus()
+
+        weightInput.addEventListener('keydown',function(e){
+            if(e.key == "Escape"){
+                event.target.parentElement.remove()
+            }
+        })
+
+        repsInput.addEventListener('keydown',function(e){
+            
+            //console.log(e.key)
+            if(e.keyCode == 9){
+                event.preventDefault()
+
+            }else if(e.key == "Enter"){
+                event.preventDefault()
+            
+                let parentElement = this.parentElement.parentElement
+                console.log(this.parentElement.parentElement)
+                //addSetButton.getElementById("addsetbutton").focus()
+                addrepsandsets(parentElement,movementName)
+                
+            }else if(e.key == "Escape"){
+                event.target.parentElement.remove()
+            }else{
+                this.innerText = e.key
+            }
+        })
+
+        removeSetButton.addEventListener("click",function(e){
+            event.preventDefault()
+            event.target.parentElement.remove()
+        })
+
+    }
+
+    function ensureHeader(container) {
+        if (!document.getElementById('sets-header')) {
+            const header = document.createElement('h4');
+            header.id = 'sets-header';
+            header.textContent = 'Sets :';
+            container.prepend(header);
+        }
+    }
+
+    function ensureSetHeader(container,header_id,exerciseName) {
+        if (!document.getElementById(header_id)) {
+            const header = document.createElement('span');
+            header.classList.add("exercise-sets-title")
+            header.id = header_id;
+            header.textContent = exerciseName;
+            container.prepend(header);
+        }
+    }
+
+    function displayWarning(message){
+        let warningText = document.getElementById("warning")
+        warningText.innerText = message
+    }
+
+
+
+    function changeButtonDisplay(button,newValue){
+        button.innerHTML = newValue
+    }
+
+
+
+</script>
+{% endblock scripts %}
