@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}
+    Macro entries
+{% endblock title %}
+
+{% if errors %}
+    {{errors}}
+{% endif %}
+
+{% block content %}
+
+{% if entry %}
+    
+<form id="water-entry-form" action="/" method="post">
+    <label for="amount">Amount (ml):</label>
+    <input type="number" name="amount" id="water-input" min="100" required value="{{entry['entry_data']['amount']}}" >
+    <br>
+    <label for="date">Date:</label>
+    {{entry['entry_data']['date']}}
+    <input type="datetime-local" id="date" name="date" value="{{entry['entry_data']['date']}}">
+    <input class="nav-button" type="submit" value="Submit">
+</form>
+
+{% endif %}
+
+
+{% endblock  %}
+
+{% block scripts %}
+<script>
+    // Get today's date in the format 'YYYY-MM-DD'
+    const today = new Date().toISOString().split('T')[0];
+    // Set the default value of the date input
+    //document.getElementById('date').value = today;
+    //what about dates in the future ?
+    //do i allow that ?
+
+    //get the date and amount span 
+
+
+</script>
+    
+{% endblock scripts %}

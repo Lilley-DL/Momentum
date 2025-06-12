@@ -319,7 +319,12 @@ def viewMeals():
         aggregatedMeals.reverse()
         #format the dates for the aggregated data 
         for entry in aggregatedMeals:
-            app.logger.info(f"aggregate meal :: {entry}")
+            #app.logger.info(f"aggregate meal :: {entry}")
+            if 'components' in entry['aggregated_data'][0]:
+                app.logger.info(f"aggregate meal datetime :: {entry['aggregated_data'][0]['dateTime']}")
+                componentDate = datetime.fromisoformat(entry['aggregated_data'][0]['dateTime'])
+                app.logger.info(f"aggregate meal datetime FORMATTED :: {componentDate}")
+             
       
 
         macroResponse = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).order("created", desc=True).execute()
@@ -429,12 +434,27 @@ def waterEntry():
             # app.logger.info(f"Water tracking select all == {response}")
 
             waterEntries = response.data if response.data else []
-
+            app.logger.info(f"Water entries = {waterEntries}")
         except Exception as e :
             flash(f"Something went wrong {e}")
             return redirect(url_for('waterEntry'))
 
         return render_template("waterTracking.html",entries=waterEntries)
+
+@app.route("/edit/water/<entry_id>",methods=["GET","POST"])
+@flask_login.login_required
+def editWater(entry_id):
+    #listen for the form post first 
+
+    #get the new value 
+    try:
+        response = supabase.table("water").select("*").eq('entry_id',entry_id).eq("user_id",flask_login.current_user.id).maybe_single().execute()
+        app.logger.info(f"WATER EDIT {response}")
+        response.data['entry_data']['date'] = datetime.fromisoformat(response.data['entry_data']['date'])
+        return render_template("waterEdit.html",entry=response.data)
+    except Exception as e:
+        flash(f"something went wrong {e}")
+        return redirect(url_for('waterEntry'))
 
 @app.route("/deleteWaterEntry/<entry_id>",methods=["GET"])
 @flask_login.login_required
@@ -655,17 +675,6 @@ def addWorkout():
 
             return render_template("addWorkout.html", pastWorkouts=pastWorkouts)
 
-    # if request.method == 'GET':
-    #     pastWorkouts = None
-    #     try:
-    #         lastWokrouts = supabase.rpc("get_workouts_by_user_2", {"p_user_id": flask_login.current_user.id}).order("date", desc=True).limit(7).execute()
-    #         app.logger.info(f"LAST 7 WORKOUTS :: {lastWokrouts}")
-    
-    #         pastWorkouts = lastWokrouts
-    #     except Exception as e:
-    #         app.logger.info(f"SOMETHING WENT WRONG retreving WORKOUTs :: {e}")
-
-    #     return render_template("addWorkout.html", pastWorkouts=pastWorkouts)
 
 ##alternate workout route 
 @app.route("/add_alt_workout",methods=['GET','POST'])

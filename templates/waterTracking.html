@@ -14,7 +14,7 @@
     <input type="number" name="amount" id="water-input" min="100" required >
     <br>
     <label for="date">Date:</label>
-    <input type="date" id="date" name="date">
+    <input type="datetime-local" id="date" name="date" required>
     <input class="nav-button" type="submit" value="Submit">
 </form>
 
@@ -29,6 +29,7 @@
             <span id="water-amount">{{entry.entry_data['amount']}}</span>
             <br>
             <a href="{{url_for('deleteWaterEntry', entry_id=entry.entry_id)}}">Delete</a>
+            <a href="{{url_for('editWater', entry_id=entry.entry_id)}}">Edit</a>
             <hr>
         </form>
     {% endfor %}
