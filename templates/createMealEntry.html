@@ -506,8 +506,6 @@ Create entry
         removeComponentButton.addEventListener("click", function(event){
             console.log(this.parentElement)
             //remove the UI element
-            // this.parentElement.remove()
-            
             // OR would it be better to clear the whole thing and just build from the list state ??
             //get the id 
             let elementid = this.parentElement.id //this may get fucky with spaces in the name ? 
@@ -521,6 +519,12 @@ Create entry
                 }
 
             })
+        })
+
+        var editComponentButton = document.createElement("button")
+        editComponentButton.innerText = "Edit"
+        editComponentButton.addEventListener("click",  function(event){
+            //put the  components eleents back into the inputs 
         })
 
         componentDiv.innerHTML = "<span class='component'>" + component.name+ "<br>"+"Kcal:" +component.calories+"</span>"

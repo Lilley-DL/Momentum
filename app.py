@@ -427,9 +427,87 @@ def viewWorkout(workout_id):
         return redirect("/profile")
     
     ##  EDIT WORKOUT
-@app.route("/edit/workout/<workout_id>",methods=['GET']) #workout id from supa is an int 
+@app.route("/edit/workout/<workout_id>",methods=['GET','POST']) #workout id from supa is an int 
 @flask_login.login_required
 def editWorkout(workout_id):
+    if request.method == 'POST':
+        try:
+            #this is basically the exact code copied fromt he submit endpoint
+            if flask_login.current_user.is_authenticated: #probably dont need this 
+                workoutObject = {}
+                movementsObject = {}
+
+                if request.method == 'POST':
+                    app.logger.info(f" WORKOUT EDIT FORM == {request.form}")
+                    #get ther form values 
+                    #DONT FORGET the reps&sets and rthe movements will be lists 
+                    movements = request.form.getlist("movement")
+                    reps = request.form.getlist("reps")
+
+                    cleanMovements = []
+                    cleanReps = []
+
+                    for mov in movements:
+                        cleanMovements.append(clean(mov))
+                    
+                    workoutObject['name'] = clean(request.form.get("workout-name"))
+                    workoutObject['date'] = request.form.get("date")
+                    workoutObject['weight_format'] = request.form.get("weight-format")
+                    # workoutObject['movements'] = movements
+                    workoutObject['movements'] = cleanMovements
+                    workoutObject['sets'] = []
+                    workoutObject['category'] = request.form.get("category")
+                    workoutObject['effort'] = request.form.get("effort")
+
+                    workoutObject['type'] = request.form.get("type")
+
+                    #split the string on the underscore to get the movement and the reps and weight ? 
+                    #check movements length 
+                    for m in movements:
+
+                        cleanWeights = []
+                        cleanReps = []
+                        weights = request.form.getlist(m+"_weight")
+                        reps = request.form.getlist(m+"_reps")
+
+                        for w in weights:
+                            cleanWeights.append(clean(w))
+                        
+                        for r in reps:
+                            cleanReps.append(clean(r))
+
+                        combined = list(zip(cleanWeights,cleanReps))
+
+                        movementsObject['movement'] = clean(m)
+                        movementsObject['sets'] = combined
+
+                        c2 = [combined]
+                        
+                        workoutObject['sets'] += c2
+
+                    data = json.dumps(workoutObject)
+                    app.logger.info(f" WORKOUT :: {data}")
+
+                    supaData = {
+                        "workout_json":workoutObject,
+                        "user_id": flask_login.current_user.id
+                    }
+
+                    try:
+                        #response = supabase.table("water").update(waterObject).eq("entry_id",entry_id).execute()
+                        response = supabase.table("workout").update(supaData).eq('id',workout_id).execute()
+                        app.logger.info(f"Workout edited sucesfully :: ")
+                        return redirect(url_for('viewWorkouts'))
+                    except Exception as e:
+                        app.logger.info(f"SOMETHING WENT WRONG EDITING WORKOUT :: {e}")
+
+                        flash(f"Something went wrong {e}")
+                        return redirect(url_for('viewWorkouts'))
+
+        except Exception as e:
+            flash(e)
+            return render_template("viewWorkout.html")
+    
     try:
         response =  supabase.table("workout").select("*").eq('id',workout_id).eq("user_id",flask_login.current_user.id).maybe_single().execute()
         #check the user id too 

@@ -10,11 +10,10 @@
 {% block content %}
 
 {% if workout %}
-    {{workout}}
-
+    
 <h1>Edit Workout</h1>
 
-    <form id="workout-form" action="/add-workout" method="post">
+    <form id="workout-form" action="{{url_for('editWorkout', workout_id=workout.to_dict().id)}}" method="post">
         <input type="hidden" name="type" value="weights">
 
         <div id="info-section" class="form-section">
@@ -83,9 +82,7 @@
 <script>
 
     var workout = {{workout.to_dict() | tojson}}
-    console.log("workout : ",workout)
-    console.log("sets : ",workout.zippedSets)
-
+   
     let movementsList = []
 
     let weightCount = 0;
@@ -121,6 +118,7 @@
     nameInput.value = workout.name
     //set category 
     var workoutCategory = document.getElementById("workout-category")
+    var workoutEffort = document.getElementById("workout-effort")
 
     if(workout.category){
         let category = workout.category
@@ -129,6 +127,35 @@
                 workoutCategory.options[i].selected = true
                 break
             }
+        }
+    }
+    //set the effort 
+    if(workout.effort){
+        let effort = workout.effort
+        for(let i = 0; i < workoutEffort.options.length; i++){
+            if(workoutEffort.options[i].value == effort ){
+                workoutEffort.options[i].selected = true
+                break
+            }
+        }
+    }
+
+    //add the exercises called movements from olderversion,should probably change this 
+    for(let i = 0; i < workout.zippedSets.length; i++){
+       
+        var exerciseName = workout.zippedSets[i][0]
+        //
+        addMovement(exerciseName) 
+        
+        for(let j = 0; j < workout.zippedSets[i][1].length; j++){
+            //get the id for the wrapper ? 
+            let wrapper = document.getElementById(exerciseName)
+            let setsWrapper = wrapper.querySelector("#sets-wrapper")
+            let weight = workout.zippedSets[i][1][j][0]
+            let reps = workout.zippedSets[i][1][j][1]
+            
+            //addrepsandsetsWithValues(setsWrapper,exerciseName,reps,weight)
+            addrepsandsets(setsWrapper,exerciseName,reps,weight)
         }
     }
 
@@ -163,8 +190,6 @@
         }
 
         movementNameInput.value = ""
-
-
     })
 
 
@@ -247,7 +272,7 @@
         
     }
 
-    function addrepsandsets(wrapper,movementName){
+    function addrepsandsets(wrapper,movementName,reps = null,weight = null){
 
         console.log(movementName)
         weightCount = weightCount + 1
@@ -283,7 +308,9 @@
             //set step ? 
             weightInput.step = "0.1"
             weightInput.min = 0
-
+            if(weight){
+                weightInput.value = weight
+            }
             //weightInput.className = "setinput"
         }
        
@@ -296,6 +323,10 @@
         repsInput.enterKeyHint = "Next"
         //repsInput.setAttribute("enterkeyhint","AAH")
         repsInput.min = 1
+
+        if(reps){
+            repsInput.value = reps
+        }
 
         //remove button 
         let removeSetButton = document.createElement("button")
@@ -381,7 +412,6 @@
     function changeButtonDisplay(button,newValue){
         button.innerHTML = newValue
     }
-
 
 
 </script>
