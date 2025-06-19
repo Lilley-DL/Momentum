@@ -584,9 +584,22 @@ footer div{
     }
 
     /* meal coponents  */
+    #meal-components-wrapper{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     .component{
         margin-top: 5px;
         display: flex;
+        flex-direction: column;
+        max-width: 50%;
+    }
+
+    .editComponentDiv{
+        display: flex;
+        flex-direction: column;
     }
 
     #dashboard-wrapper{

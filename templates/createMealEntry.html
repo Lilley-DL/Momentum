@@ -504,18 +504,19 @@ Create entry
         var removeComponentButton = document.createElement("button")
         removeComponentButton.innerText = "X"
         removeComponentButton.addEventListener("click", function(event){
-            console.log(this.parentElement)
+            //this is probably a terrible way to do this 
+            console.log(this.parentElement.parentElement)
             //remove the UI element
             // OR would it be better to clear the whole thing and just build from the list state ??
             //get the id 
-            let elementid = this.parentElement.id //this may get fucky with spaces in the name ? 
+            let elementid = this.parentElement.parentElement.id //this may get fucky with spaces in the name ? 
             mealComponents.forEach(component =>{
                 
                 if(component.name == elementid){
                     console.log("Removing : " , component.name)
                     let index = mealComponents.indexOf(component)
                     mealComponents.splice(index,1)
-                    this.parentElement.remove()
+                    this.parentElement.parentElement.remove()
                 }
 
             })
@@ -524,11 +525,96 @@ Create entry
         var editComponentButton = document.createElement("button")
         editComponentButton.innerText = "Edit"
         editComponentButton.addEventListener("click",  function(event){
-            //put the  components eleents back into the inputs 
+            //put the  components elements back into the inputs 
+            let editDiv = this.parentElement.parentElement.querySelector(".editComponentDiv")
+            if(editDiv.style.display == "none"){
+
+                editDiv.style.display = "flex"
+            }else{
+                editDiv.style.display = "none"
+
+            }
         })
 
+        //wrap the remove and edit in a div 
+        var componentControlsDiv = document.createElement("div")
+        componentControlsDiv.classList.add("component-controls-wrapper")
+        componentControlsDiv.appendChild(editComponentButton)
+        componentControlsDiv.appendChild(removeComponentButton)
+
+
+        // to make it easier for editing im going to make the list a list of drop downs with inputs that 
+        //corespond with the component data 
+        var name = document.createElement("input")
+        name.classList.add("component-edit-input")
+        name.value = component.name
+
+        var calories = document.createElement("input")
+        calories.classList.add("component-edit-input")
+        calories.value = component.calories
+        
+        var protein = document.createElement("input")
+        protein.classList.add("component-edit-input")
+        protein.value = component.protein
+
+        var fats = document.createElement("input")
+        fats.classList.add("component-edit-input")
+        fats.value = component.fats
+
+        var carbs = document.createElement("input")
+        carbs.classList.add("component-edit-input")
+        carbs.value = component.carbs
+
+        var fibre = document.createElement("input")
+        fibre.classList.add("component-edit-input")
+        fibre.value = component.fibre
+        //do they need labels ? 
+        var nameLabel = document.createElement("label")
+        var calLabel = document.createElement("label")
+        var proteinLabel = document.createElement("label")
+        var fatsLabel = document.createElement("label")
+        var carbsLabel = document.createElement("label")
+        var fibreLabel = document.createElement("label")
+
+        nameLabel.innerText = "Name:"
+        calLabel.innerText = "Calories:"
+        proteinLabel.innerText = "Protein:"
+        fatsLabel.innerText = "Ftas:"
+        carbsLabel.innerText = "Carbs:"
+        fibreLabel.innerText = "Fibre:"
+
+
         componentDiv.innerHTML = "<span class='component'>" + component.name+ "<br>"+"Kcal:" +component.calories+"</span>"
-        componentDiv.appendChild(removeComponentButton)
+        //componentDiv.appendChild(removeComponentButton)
+        componentDiv.appendChild(componentControlsDiv)
+
+        //add the labels and inputs to a seperate div that is not shown ? 
+        var editingDiv = document.createElement("div")
+        editingDiv.classList.add("editComponentDiv")  
+        editingDiv.appendChild(nameLabel)
+        editingDiv.appendChild(name)
+
+        editingDiv.appendChild(calLabel)
+        editingDiv.appendChild(calories)
+
+        editingDiv.appendChild(proteinLabel)
+        editingDiv.appendChild(protein)
+
+        editingDiv.appendChild(fatsLabel)
+        editingDiv.appendChild(fats)
+        
+        editingDiv.appendChild(carbsLabel)
+        editingDiv.appendChild(carbs)
+
+        editingDiv.appendChild(fibreLabel)
+        editingDiv.appendChild(fibre)
+
+        //set thedisplay to none 
+        editingDiv.style.display = "none"
+        
+
+        //add the edit div to the main div 
+        componentDiv.appendChild(editingDiv)
 
         //add it to the UI wrapper 
         componentsWrapper.appendChild(componentDiv)
