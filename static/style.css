@@ -583,11 +583,21 @@ footer div{
         background-color: #aac2cd;
     }
 
+    .clearMacroButton{
+        background-color: #90d5f5;
+        color: #9B5DE5;
+        font-size: large;
+        border: 0px;
+    }
     /* meal coponents  */
+    #component-list-controls{
+        margin-top: 20px;
+    }
+
     #meal-components-wrapper{
         display: flex;
         flex-direction: column;
-        align-items: center;
+        padding-left: 50px;
     }
 
     .component{

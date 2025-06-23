@@ -24,7 +24,7 @@ Create entry
         </div>
         <div class="meal-input" id="datetime-wrapper">
             <h2>Date & Time:</h2>
-            <input type="datetime-local" name="date" id="datetime">
+            <input style="font-size: larger;" type="datetime-local" name="date" id="datetime">
         </div>
 
         <div class="meal-input" id="name-input-wrapper">
@@ -44,22 +44,22 @@ Create entry
             <div>
                 <label for="protein">Protein:</label>
                 <input max="999" class="macroInput" type="number" id="proteinInput" name="protein" min="0" step="0.01" value="0" >
-                <input class="clearMacroButton" type="button" value="x">
+                <input class="clearMacroButton " type="button" value="x">
             </div>
             <div>
                 <label for="fats">Fat:</label>
                 <input  class="macroInput" type="number" id="fatsInput" name="fats" min="0" max="999" step="0.01" value="0" > 
-                <input class="clearMacroButton" type="button" value="x">
+                <input class="clearMacroButton " type="button" value="x">
             </div>
             <div>
                 <label for="carbs">Carbs:</label>
                 <input class="macroInput" type="number" id="carbsInput" name="carbs" min="0" step="0.01" value="0" >
-                <input class="clearMacroButton" type="button" value="x">
+                <input class="clearMacroButton " type="button" value="x">
             </div>
             <div>
                 <label for="fibre">Fibre:</label>
                 <input class="macroInput" type="number" id="fibreInput" name="fibre" min="0" step="0.01" value="0" >
-                <input class="clearMacroButton" type="button" value="x">
+                <input class="clearMacroButton " type="button" value="x">
             </div>
         </div>
         <br>
@@ -107,15 +107,16 @@ Create entry
     </div>
 </div>
 <div id="component-list-controls">
-    <button id="addComponentButton">Add Meal Component</button>
-    <button id="clearComponentList">Clear all</button>
+    <button style="max-width:fit-content;"  class="nav-button" id="addComponentButton">Add Meal Component</button>
+    <button style="max-width:fit-content;" class="nav-button" id="clearComponentList">Clear Components</button>
 </div>
 
 <div id="meal-components-wrapper">
     
 </div>
+<hr>
 <input class="nav-button" type="submit" value="Submit" form="meal-entry-form">
-<button id="testSubmit">Submit all</button>
+<button class="nav-button" id="testSubmit">Submit all</button>
 
 {% endblock %}
 
