@@ -549,26 +549,32 @@ Create entry
         // to make it easier for editing im going to make the list a list of drop downs with inputs that 
         //corespond with the component data 
         var name = document.createElement("input")
+        name.id = component.name+"-"+"name"
         name.classList.add("component-edit-input")
         name.value = component.name
 
         var calories = document.createElement("input")
+        calories.id = component.name+"-"+"calories"
         calories.classList.add("component-edit-input")
         calories.value = component.calories
         
         var protein = document.createElement("input")
+        protein.id = component.name+"-"+"protein"
         protein.classList.add("component-edit-input")
         protein.value = component.protein
 
         var fats = document.createElement("input")
+        fats.id = component.name+"-"+"fats"
         fats.classList.add("component-edit-input")
         fats.value = component.fats
 
         var carbs = document.createElement("input")
+        carbs.id = component.name+"-"+"carbs"
         carbs.classList.add("component-edit-input")
         carbs.value = component.carbs
 
         var fibre = document.createElement("input")
+        fibre.id = component.name+"-"+"fibre"
         fibre.classList.add("component-edit-input")
         fibre.value = component.fibre
         //do they need labels ? 
@@ -582,7 +588,7 @@ Create entry
         nameLabel.innerText = "Name:"
         calLabel.innerText = "Calories:"
         proteinLabel.innerText = "Protein:"
-        fatsLabel.innerText = "Ftas:"
+        fatsLabel.innerText = "Fats:"
         carbsLabel.innerText = "Carbs:"
         fibreLabel.innerText = "Fibre:"
 
@@ -622,7 +628,17 @@ Create entry
         //add it to the UI wrapper 
         componentsWrapper.appendChild(componentDiv)
         clearInputs()
+
+        var editInputs = document.getElementsByClassName("component-edit-input")
+        Array.from(editInputs).forEach(input => {
+            input.addEventListener("change",function(event){
+                console.log(this.id, " value changed ",this.value)
+            })
+        })
+
     }
+
+    
 
     //clear inputs after adding a meal coponent
     function clearInputs(){
