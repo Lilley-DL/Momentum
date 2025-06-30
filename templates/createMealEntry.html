@@ -14,7 +14,7 @@ Create entry
 {% endif %}
 <h1>Meal information</h1>
 <span id="warning"></span>
-<div id="meal-main-wrapper">
+<div id="meal-main-wrapper">        
 
 
     <form action="/createMealEntry" method="post" id="meal-entry-form">
@@ -451,15 +451,25 @@ Create entry
             //?HOW will i get the name, loop over each element and grab the name attribute ??
             console.log("Component : ", component)
             
-            //add to the list of components 
-            mealComponents.push(component)
-            console.log("Component LIST : ", mealComponents)
-            
-            //clear the old UI list 
-            componentsWrapper.innerHTML = ""
-            mealComponents.forEach(component =>{
-                addComponentUI(component)
-            })
+            //check the name
+            //this should probably be a try and exception 
+            if(checkComponentName(component.name)){
+                //show a warning 
+                displayWarningForTime("Component already exists",2000)
+            }else{
+                //do theother  stuff 
+                
+                //add to the list of components 
+                mealComponents.push(component)
+                console.log("Component LIST : ", mealComponents)
+                
+                //clear the old UI list 
+                componentsWrapper.innerHTML = ""
+                mealComponents.forEach(component =>{
+                    addComponentUI(component)
+                })
+            }
+
         }
 
     })
@@ -629,17 +639,34 @@ Create entry
         componentsWrapper.appendChild(componentDiv)
         clearInputs()
 
+        //not sure this is in the correct place 
         var editInputs = document.getElementsByClassName("component-edit-input")
         Array.from(editInputs).forEach(input => {
             input.addEventListener("change",function(event){
-                console.log(this.id, " value changed ",this.value)
+                //parse the component name from the ID 
+                let parts = this.id.split('-')
+                let componentName = parts[0]
+                let valueName = parts[1]
+                let value = this.value
+                //find that component then update the relvent value
+                console.log("Component being edited = ",parts[0]) 
+                console.log("Component value being edited = ",parts[1]) 
+                updateComponentValue(componentName,valueName,value)
             })
         })
 
     }
 
-    
+    function updateComponentValue(componentName,valueName,value){
+        mealComponents.forEach(component =>{
+            if(component.name == componentName){
+                component[valueName] = value
+            }
+        })
+        console.log("Updated component list : ",mealComponents)
+    }
 
+    
     //clear inputs after adding a meal coponent
     function clearInputs(){
         
@@ -698,6 +725,13 @@ Create entry
         }
     })
 
+    function displayWarningForTime(message,time = 1000){
+        displayWarning(message)
+        setTimeout(()=>{
+            displayWarning("")
+        },time)
+    }
+
     //reset the macro ionputs back to zero
     function resetMacroInputs(){
             Array.from(macroInputs).forEach(input => {
@@ -709,6 +743,12 @@ Create entry
         event.preventDefault()
         resetMacroInputs()
     })
+
+    function checkComponentName(componentName){
+        //does this really need to  be in here ? 
+        return mealComponents.some(component => component.name === componentName)
+
+    }
 
 </script>
 
