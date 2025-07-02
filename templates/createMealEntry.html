@@ -167,6 +167,15 @@ Create entry
     var useCalcButton = document.getElementById("useCalcButton")
     let restArrow = document.getElementById("pw-arrow-path")
 
+    //listenfor blur toset to 0
+    Array.from(macroInputs).forEach(input => {
+        input.addEventListener("blur",()=>{
+            if(input.value.trim() == "" || isNaN(Number(input.value))){
+                input.value = 0
+            }
+        })
+    })
+
     //collapse/hide by default 
     calcInput.style.display = "none"
     calcButtonsWrapper.style.display = "none"
@@ -749,6 +758,8 @@ Create entry
         return mealComponents.some(component => component.name === componentName)
 
     }
+
+
 
 </script>
 
