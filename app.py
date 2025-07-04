@@ -346,14 +346,14 @@ def viewMeals():
     
     try:
         #new function for aggregating the meals 
-        meals = supabase.rpc("get_user_entry_aggregates", {"p_user_id": current_user.id}).execute()
-        # app.logger.info(f"AGGREGATE MEALS = {meals.data}")
+        meals = supabase.rpc("get_user_entry_aggregates_3", {"p_user_id": current_user.id}).execute()
+        app.logger.info(f"AGGREGATE MEALS = {meals.data}")
         aggregatedMeals = meals.data if meals.data else []
         #reverse the list so they are date descending 
         aggregatedMeals.reverse()
         #format the dates for the aggregated data 
         for entry in aggregatedMeals:
-            #app.logger.info(f"aggregate meal :: {entry}")
+            app.logger.info(f"aggregate meal :: {entry}")
             if 'components' in entry['aggregated_data'][0]:
                 app.logger.info(f"aggregate meal datetime :: {entry['aggregated_data'][0]['dateTime']}")
                 componentDate = datetime.fromisoformat(entry['aggregated_data'][0]['dateTime'])
@@ -739,6 +739,19 @@ def api_createMeal():
         app.logger.info(f"RESPONSE FROM SUPA error = {e}")
         #flash(f"something went wrong :: {e}")
         return jsonify({"message":f"an error occured {e}"})
+
+@app.route("/edit/meal/<meal_id>", methods=['GET'])
+@flask_login.login_required
+def editMeal(meal_id):
+
+    try:
+        response = supabase.table("macro_entry").select("*").eq('entry_id',meal_id).eq("user_id",flask_login.current_user.id).maybe_single().execute()
+        app.logger.info(f"MEAL DATA = {response}")
+        return render_template("editMeal.html")
+    except Exception as e:
+        app.logger.info(f"RESPONSE FROM SUPA error = {e}")
+        flash(f"error = {e}")
+        return render_template("editMeal.html")
 
 
 @app.route("/add-workout",methods=['GET','POST'])
