@@ -125,6 +125,8 @@ Edit meal
 
 <script>
 
+    var meal = {{meal | tojson}}
+
     const now = new Date();
     const localISOTime = now.toISOString().slice(0,16); // YYYY-MM-DDTHH:MM
     var mealDate = document.getElementById('datetime')
@@ -709,12 +711,13 @@ Edit meal
             //check the length of the components list 
             if(mealComponents.length > 0){
                 var mealData = {
+                    meal_id:meal.meal_id,
                     name:mealName,
                     components:mealComponents,
                     dateTime:mealDate.value
                 }
 
-                fetch('{{url_for("api_createMeal")}}',{
+                fetch('{{url_for("api_editMeal")}}',{
                     method:'POST',
                     headers:{
                         'Content-Type':'application/json'
@@ -768,6 +771,25 @@ Edit meal
 
     }
 
+    
+    console.log("Loaded meal :",meal)
+    mealDate.value = meal.dateTime
+    mealNameInput.value = meal.name
+
+
+    Array.from(meal.components).forEach(component =>{
+        
+        //ideally this should be a function because it is used somewhere else 
+        //add to the list of components 
+                mealComponents.push(component)
+                console.log("Component LIST : ", mealComponents)
+                
+                //clear the old UI list 
+                componentsWrapper.innerHTML = ""
+                mealComponents.forEach(component =>{
+                    addComponentUI(component)
+                })
+   })
 
 
 </script>

@@ -93,6 +93,12 @@ class Workout:
     def __str__(self):
         return json.dumps(self.workout_data) ##could change this to the __dict__ maybe ?
 
+class Meal:
+    def __init__(self,data):
+        self.id = data['entry_id']
+        self.data = data['entry_data']
+        self.name = ['entry_name']
+
 #database thingssssss
 #should allow for development using a dev database
 #if app.debug:
@@ -739,6 +745,33 @@ def api_createMeal():
         app.logger.info(f"RESPONSE FROM SUPA error = {e}")
         #flash(f"something went wrong :: {e}")
         return jsonify({"message":f"an error occured {e}"})
+    
+@app.route("/api/editMeal",methods=['POST'])
+@flask_login.login_required
+def api_editMeal():
+    requestData = request.get_json()
+    
+    entryData = {
+        'name':requestData['name'],
+        'components':requestData['components'],
+        'dateTime':requestData['dateTime']
+    }
+
+    data = {
+        "entry_data":entryData,
+        "entry_name":requestData['name'],
+        "user_id": flask_login.current_user.id
+    }
+
+    app.logger.info(f"API EDIT meal components data (processed): {data}")
+    try:
+        response = supabase.table("macro_entry").update(data).eq('entry_id',requestData['meal_id']).execute()
+        app.logger.info(f"UPDATE MEALS SUPA RESPONSE  = {response}")
+        return jsonify({"message":"Data updated successfully"})
+    except Exception as e:
+        app.logger.info(f"RESPONSE FROM SUPA error = {e}")
+        return jsonify({"message":f"an error occured while updating : {e}"})
+
 
 @app.route("/edit/meal/<meal_id>", methods=['GET'])
 @flask_login.login_required
@@ -746,8 +779,11 @@ def editMeal(meal_id):
 
     try:
         response = supabase.table("macro_entry").select("*").eq('entry_id',meal_id).eq("user_id",flask_login.current_user.id).maybe_single().execute()
-        app.logger.info(f"MEAL DATA = {response}")
-        return render_template("editMeal.html")
+        app.logger.info(f"MEAL DATA = {response.data}")
+        mealData = response.data['entry_data']
+        mealData['meal_id'] = response.data['entry_id']
+        # return render_template("editMeal.html",meal = response.data['entry_data'])
+        return render_template("editMeal.html",meal = mealData)
     except Exception as e:
         app.logger.info(f"RESPONSE FROM SUPA error = {e}")
         flash(f"error = {e}")

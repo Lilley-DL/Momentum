@@ -99,6 +99,21 @@ footer div{
     display: flex;
     flex-direction: column;
 }
+
+#entry-name{
+    font-weight: bold;
+    font-size: larger;
+}
+
+.entry-data{
+padding-bottom: 3px;
+}
+
+.entry-data-wrapper{
+    display: flex;
+    flex-direction: column;
+}
+
 /* meal entry  */
 /* meal name */
 

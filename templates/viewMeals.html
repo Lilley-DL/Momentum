@@ -31,41 +31,36 @@
          
             {% for entry in entry.aggregated_data %}
             <div class="entry-wrapper">
-                <span class="antry-data" id="entry-name">{{entry.entry_data.name}}</span>
+                <span class="entry-title" id="entry-name">{{entry.entry_data.name}}</span>
                 {% if entry.entry_data['components'] %}
-                    Components 
-                    {% for component in entry.entry_data.components %}
-                        {% for key in component %}
-                            {{key}} : {{component[key]}}
+                    <span style="font-weight: bold;">Componentss</span>
+                    <div class="entry-data-wrapper">
+                        {% for component in entry.entry_data.components %}
+                            {% for key in component %}
+                                <div class="entry-data">{{key}} : {{component[key]}}</div>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
+                    </div>
                 {% endif %}
-                {#
-                {% for thing in entry.entry_data %}
-                
-                {% if entry.entry_data['components'] %}
-                {% for component in entry.entry_data['components'] %}
-                cmpt {{component}}
-                {% endfor %}
-                {% endif %}
-                {% endfor %}
-                #}
 
+                {#
                 {% if entry.components %}
                 <h5>meal components</h5>
-                    {% for component in entry.components %}
-                        {% for key in component %}
-                           {{key}} :: {{component[key]}}
-                           <br>
-                        {% endfor %}
-                        <hr>
-                    {% endfor %}
-                    
+                {% for component in entry.components %}
+                {% for key in component %}
+                {{key}} :: {{component[key]}}
+                <br>
+                {% endfor %}
+                <hr>
+                {% endfor %}
+                
                 {%else%}
-                    {% for key in entry %}
-                    <span class="macro-key entry-data">{{key}}: {{entry[key]}}</span>
-                    {% endfor %}
+                {% for key in entry %}
+                <span class="macro-key entry-data">{{key}}: {{entry[key]}}</span>
+                {% endfor %}
                 {% endif %}
+                #}
+                
                 <a href="{{url_for('editMeal',meal_id=entry.entry_id)}}">Edit</a>
             </div>
             {% endfor %}
