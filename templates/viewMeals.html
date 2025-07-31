@@ -42,24 +42,6 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-
-                {#
-                {% if entry.components %}
-                <h5>meal components</h5>
-                {% for component in entry.components %}
-                {% for key in component %}
-                {{key}} :: {{component[key]}}
-                <br>
-                {% endfor %}
-                <hr>
-                {% endfor %}
-                
-                {%else%}
-                {% for key in entry %}
-                <span class="macro-key entry-data">{{key}}: {{entry[key]}}</span>
-                {% endfor %}
-                {% endif %}
-                #}
                 
                 <a href="{{url_for('editMeal',meal_id=entry.entry_id)}}">Edit</a>
             </div>
@@ -71,29 +53,6 @@
     {% endfor %}
 {% endif %}
 
-<h3>Meal entries</h3>
-{% if entries %}
-    {% for entry in entries %}
-    <h3>{{entry.entry_name}} </h3>
-    {% set entry_date = entry.created %}
-    <h5>{{entry_date}}</h5>
-        {% for key in entry.entry_data %}
-            {{key}} ::
-            {{entry.entry_data[key]}}
-            <br>
-        {% endfor %}
-        <a href="{{url_for('deleteMealEntry',entry_id=entry.entry_id)}}">Delete meal</a>
-        <hr>
-    {% endfor %}
-{% endif %}
-
-{% if totalCals %}
-    {% for date in totalCals %}
-        <h4>{{date.entry_date}}</h4>
-        Kcal: {{date.total_value}}
-    {% endfor %}
-
-{% endif %}
 
 
 {% endblock  %}
@@ -113,6 +72,8 @@
             content.classList.toggle("show")
         })
     })
+
+
 
 
 

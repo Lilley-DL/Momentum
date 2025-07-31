@@ -118,6 +118,18 @@ Create entry
 <hr>
 <!-- <input class="nav-button" type="submit" value="Submit" form="meal-entry-form"> -->
 <button class="nav-button" id="submit">Submit</button>
+<div id="help-wrapper">
+    <h4>Help:</h4>
+    <a id="help-modal-link" href="#">What are components? <img id="modal-icon" src="{{ url_for('static', filename='icons/modal_icon_v2.svg') }}" width="15px" alt="" srcset=""></a>
+    <a id="help-modal-link-calc" href="#">How do i use the calculator?<img id="modal-icon" src="{{ url_for('static', filename='icons/modal_icon_v2.svg') }}" width="15px" alt="" srcset=""></a>
+    <dialog id="help-modal">
+        <h3>What are meal components? </h3>
+        <p>"Think of meal components as the individual foods that make up your plate. Instead of
+            'Chicken Stir-fry,' log 'Chicken,' 'Broccoli,' and 'Rice' separately for better insights."
+        </p>
+        <button id="close-modal">X</button>
+    </dialog>
+</div>
 
 {% endblock %}
 
@@ -767,6 +779,21 @@ Create entry
         return mealComponents.some(component => component.name === componentName)
 
     }
+
+
+    let helpButton = document.getElementById("help-modal-button")
+    let helpLink = document.getElementById("help-modal-link")
+    let helpDialog =  document.getElementById("help-modal")
+    let closeModal = document.getElementById("close-modal")
+
+    helpLink.addEventListener("click", function(event){
+        helpDialog.showModal()
+    })
+
+    closeModal.addEventListener("click",function(event){
+        helpDialog.close()
+    })
+
 
 
 

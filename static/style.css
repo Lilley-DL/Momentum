@@ -199,8 +199,10 @@ padding-bottom: 3px;
     min-height: 20%;
 }
 
-#use-button{
-
+/* meal entry help wrapper  */
+#help-wrapper{
+    display: flex;
+    flex-direction: column;
 }
 
 /* nav cards  */
@@ -654,9 +656,7 @@ padding-bottom: 3px;
     }
 
     /* Past workouts */
-    #pastworkouts-wrapper{
-        
-    }
+
     #pastworkouts{
         display: none;
     }

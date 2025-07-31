@@ -99,17 +99,6 @@ class Meal:
         self.data = data['entry_data']
         self.name = ['entry_name']
 
-#database thingssssss
-#should allow for development using a dev database
-#if app.debug:
-    #
-    # DATABASE_URL = os.environ.get('DEV_DATABASE_URL')
-    #database object instance 
-    #db = Database(DATABASE_URL)
-#else:
-    #use supabase here ?
-    #DATABASE_URL = os.environ.get('DATABASE_URL')
-
 class SignupForm(FlaskForm):
     email = EmailField('Email: ',validators=[DataRequired()])
     password = PasswordField('Password: ',validators=[DataRequired()])
@@ -365,14 +354,7 @@ def viewMeals():
                 componentDate = datetime.fromisoformat(entry['aggregated_data'][0]['dateTime'])
                 app.logger.info(f"aggregate meal datetime FORMATTED :: {componentDate}")
              
-      
-
-        macroResponse = supabase.table("macro_entry").select("*").eq("user_id", current_user.id).order("created", desc=True).execute()
-        macroEntries = macroResponse.data if macroResponse.data else []
-        #format the created dates
-        for entry in macroEntries:
-            entry['created'] = format_date(entry['created'])
-        return render_template("viewMeals.html",entries=macroEntries,aggregates=meals.data)
+        return render_template("viewMeals.html",aggregates=meals.data)
     except Exception as e:
         flash(e)
         return render_template("viewMeals.html")
