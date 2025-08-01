@@ -205,6 +205,10 @@ padding-bottom: 3px;
     flex-direction: column;
 }
 
+.help-step{
+    font-weight: bold;
+}
+
 /* nav cards  */
 .nav-card-wrapper{
     margin: 2vh 5vw;

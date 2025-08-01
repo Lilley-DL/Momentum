@@ -116,7 +116,7 @@ Create entry
     
 </div>
 <hr>
-<!-- <input class="nav-button" type="submit" value="Submit" form="meal-entry-form"> -->
+
 <button class="nav-button" id="submit">Submit</button>
 <div id="help-wrapper">
     <h4>Help:</h4>
@@ -128,6 +128,23 @@ Create entry
             'Chicken Stir-fry,' log 'Chicken,' 'Broccoli,' and 'Rice' separately for better insights."
         </p>
         <button id="close-modal">X</button>
+    </dialog>
+    <dialog id="calc-help-modal">
+        <h3>How to use the calculator</h3>
+        <p>
+            The calculator is useful for finding the total calories or macro values for an ingredient.
+            <br> 
+            Here's how it works:
+            <br>
+            <span class="help-step">Example:</span> You have 169 grams of chicken breast, which has 1.65 calories per gram.
+            <br>
+            <span class="help-step">Step 1:</span> Select the input field you want to fill (e.g., the calories field).
+            <br>
+            <span class="help-step">Step 2:</span> Use the calculator to find the total value (1.65 x 169).
+            <br>
+            <span class="help-step">Step 3:</span> Click the "Use result" button to automatically insert the total into your selected field.
+        </p>
+        <button id="calc-close-modal">X</button>
     </dialog>
 </div>
 
@@ -782,6 +799,7 @@ Create entry
 
 
     let helpButton = document.getElementById("help-modal-button")
+
     let helpLink = document.getElementById("help-modal-link")
     let helpDialog =  document.getElementById("help-modal")
     let closeModal = document.getElementById("close-modal")
@@ -792,6 +810,18 @@ Create entry
 
     closeModal.addEventListener("click",function(event){
         helpDialog.close()
+    })
+
+    let helpLinkCalc = document.getElementById("help-modal-link-calc")
+    let helpDialogCalc =  document.getElementById("calc-help-modal")
+    let closeModalCalc = document.getElementById("calc-close-modal")
+
+    helpLinkCalc.addEventListener("click", function(event){
+        helpDialogCalc.showModal()
+    })
+
+    closeModalCalc.addEventListener("click",function(event){
+        helpDialogCalc.close()
     })
 
 
