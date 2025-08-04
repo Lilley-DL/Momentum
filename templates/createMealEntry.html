@@ -28,8 +28,8 @@ Create entry
         </div>
 
         <div class="meal-input" id="name-input-wrapper">
-            <h3 for="entryName">Component Name:</h3>
-            <input type="text" name="entryName" id="entry-name" required min="4" max="50">
+            <h3 for="componentName">Component Name:</h3>
+            <input type="text" name="componentName" id="entry-name" required min="4" max="50">
         </div>
 
         <div class="meal-input" id="calories-input-wrapper">
@@ -124,8 +124,8 @@ Create entry
     <a id="help-modal-link-calc" href="#">How do i use the calculator?<img id="modal-icon" src="{{ url_for('static', filename='icons/modal_icon_v2.svg') }}" width="15px" alt="" srcset=""></a>
     <dialog id="help-modal">
         <h3>What are meal components? </h3>
-        <p>"Think of meal components as the individual foods that make up your plate. Instead of
-            'Chicken Stir-fry,' log 'Chicken,' 'Broccoli,' and 'Rice' separately for better insights."
+        <p>Think of meal components as the individual foods that make up your plate. Instead of
+            'Chicken Stir-fry,' log 'Chicken,' 'Broccoli,' and 'Rice' separately for better insights.
         </p>
         <button id="close-modal">X</button>
     </dialog>
@@ -171,11 +171,13 @@ Create entry
     var calcButtons = document.getElementsByClassName("calc-button")
     var calcButtonsWrapper = document.getElementById("calcButtons")
 
+    //the "x" to the right of the field 
     var clearButtons = document.getElementsByClassName("clearMacroButton")
 
     var useReultButton = document.getElementById("use-button");
 
     var addComponentButton = document.getElementById("addComponentButton")
+    var clearListButton = document.getElementById("clearComponentList")
     var macroInputs = document.getElementsByClassName("macroInput")
     var componentName = document.getElementById("entry-name")
 
@@ -720,15 +722,6 @@ Create entry
         warningText.innerText = message
     }
 
-    var clearListButton = document.getElementById("clearComponentList")
-    clearListButton.addEventListener("click",function(event){
-        //remove all from list 
-        mealComponents = []
-        //clear the UI 
-        componentsWrapper.innerHTML = ""
-
-    })
-
     submitMeal.addEventListener("click",function(event){
         //get the name for the entire meal 
         let mealName = mealNameInput.value
@@ -753,6 +746,9 @@ Create entry
                 .then(response => response.json())
                 .then(result => {
                     console.log("Success: ",result)
+                    //if the meal was submitted ok then clear all and show a success message
+                    resetAll()
+                    displayWarningForTime("Meal saved successfully",4000)
                 })
                 .catch(error =>{
                     console.log("Error: ",error)
@@ -796,6 +792,24 @@ Create entry
         return mealComponents.some(component => component.name === componentName)
 
     }
+
+    function clearComponentList(){
+        //remove all from list 
+        mealComponents = []
+        //clear the UI 
+        componentsWrapper.innerHTML = ""
+    }
+
+    function resetAll(){
+        //reset mmeal name 
+        mealNameInput.value = ""
+        resetMacroInputs();
+        clearComponentList();
+    }
+    
+    clearListButton.addEventListener("click",function(event){
+        clearComponentList()
+    })
 
 
     let helpButton = document.getElementById("help-modal-button")
