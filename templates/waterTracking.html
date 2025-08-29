@@ -14,8 +14,8 @@
     <input type="number" name="amount" id="water-input" min="100" required >
     <br>
     <label for="date">Date:</label>
-    <input type="datetime-local" id="date" name="date" required>
-    <input class="nav-button" type="submit" value="Submit">
+    <input type="datetime-local" id="date-input" name="date" required>
+    <input class="nav-button" type="submit" value="Submit" id="date">
 </form>
 
 <h3>Water entries</h3>
@@ -49,13 +49,10 @@
 {% block scripts %}
 <script>
     // Get today's date in the format 'YYYY-MM-DD'
-    const today = new Date().toISOString().split('T')[0];
-    // Set the default value of the date input
-    document.getElementById('date').value = today;
-    //what about dates in the future ?
-    //do i allow that ?
-
-    //get the date and amount span 
+    const now = new Date();
+    const localISOTime = now.toISOString().slice(0,16); // YYYY-MM-DDTHH:MM
+    var mealDate = document.getElementById('date-input')
+    mealDate.value = localISOTime;
 
 
 </script>
