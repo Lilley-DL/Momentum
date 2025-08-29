@@ -156,6 +156,11 @@
 {% block scripts %}
 <script>
 
+    const now = new Date();
+    const localISOTime = now.toISOString().slice(0,16); // YYYY-MM-DDTHH:MM
+    let dateInput = document.getElementById("date")
+    dateInput.value = localISOTime;
+
     let movementsList = []
 
     let weightCount = 0;
