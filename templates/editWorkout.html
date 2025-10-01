@@ -295,7 +295,7 @@
         weightInput.name = movementName + "_weight"
         weightInput.className = "setinput"
         //check weight format
-        if(weightFormat.value == "bw"){
+        if(weightFormat.value == "bw" || weight == "BW"){
             weightInput.type = "text"
             weightInput.value = "BW"
             weightInput.classList.add("readonly-input")
